@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntitiesDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="urn:mace:funet.fi:haka"
+	xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata sstc-saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd">
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+			<ds:Reference URI="">
+				<ds:Transforms>
+					<ds:Transform
+						Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+					<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<ds:DigestValue>0rIGF1OXLs7BW5pi5bG3vH5c3q4=</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue>
+			rO7wr09yVS2ayGe0OQtU2qm7ycNV3sNPSwtujQOpU7E6JO3S1nIYz4ufZwj0lrlc6JtuvHVZnnjI
+			DXDvyMSlML3yPuA6oDTOdQLF8sB/tfjF6ITYnGHSUF1QjY54Y9lldT7YdPmJOb/j+seMe759Wlkl
+			GI+sjmLJ7TOxfXb9r49nuCAAJSOgKqBG7o0uKfua3kRuESWykxff7UdCwGR8dmWmagjjucvORy7x
+			/g4GLi1SdoUhZZOHv1YMIpOnUDSeYttq3yMYUmB1R5icPzpZnOw5fDxDMWuDpGUV9ncpxcUg+qSI
+			vjokm051oYDp4z3BYnRB5N2EcbDv5/zCvQ1CFw==
+		</ds:SignatureValue>
+		<ds:KeyInfo>
+			<ds:KeyValue>
+				<ds:RSAKeyValue>
+					<ds:Modulus>
+						uY3FNgdTQofKA0jqsAy627rt1VOMOhaqsKT/n8L+gluN59FVoDqQfLmz2Px6IAzpy4yMcIML/dNO
+						STiZr+WnOUa1GniWCxZ8dTpNde2PE/dOR/WiP6W/pnxVYkxA8SqPgAeuxMj+Bg35XfNcrs+w7G0/
+						iDutzmEHUhpyskckFpl3LSpxS7/L8gpIluAIgdGoa5DAiEw4utmYtGt9aYn/P1DamAcYWwfNjjT/
+						AhofodC5jW9SguKaoLEFKYoQPeqE3HF+Xdg478Bar7crfkterYevQxUlGnhLoYnjwkRzct9vHHDc
+						P8Lk5F0jHhhvzlkeB5ksQbmspoINyLDV1O5cAQ==
+					</ds:Modulus>
+					<ds:Exponent>AQAB</ds:Exponent>
+				</ds:RSAKeyValue>
+			</ds:KeyValue>
+			<ds:X509Data>
+				<ds:X509Certificate>
+					MIIDTDCCAjQCCQDfPZpLFrnNNjANBgkqhkiG9w0BAQUFADBoMQswCQYDVQQGEwJGSTEQMA4GA1UE
+					CAwHRmlubGFuZDEOMAwGA1UEBwwFRXNwb28xDDAKBgNVBAoMA0NTQzENMAsGA1UECwwESGFrYTEa
+					MBgGA1UEAwwRSGFrYV90ZXN0X01EX3NpZ24wHhcNMTEwODI2MTIwNTA2WhcNMTQwODI1MTIwNTA2
+					WjBoMQswCQYDVQQGEwJGSTEQMA4GA1UECAwHRmlubGFuZDEOMAwGA1UEBwwFRXNwb28xDDAKBgNV
+					BAoMA0NTQzENMAsGA1UECwwESGFrYTEaMBgGA1UEAwwRSGFrYV90ZXN0X01EX3NpZ24wggEiMA0G
+					CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC5jcU2B1NCh8oDSOqwDLrbuu3VU4w6FqqwpP+fwv6C
+					W43n0VWgOpB8ubPY/HogDOnLjIxwgwv9005JOJmv5ac5RrUaeJYLFnx1Ok117Y8T905H9aI/pb+m
+					fFViTEDxKo+AB67EyP4GDfld81yuz7DsbT+IO63OYQdSGnKyRyQWmXctKnFLv8vyCkiW4AiB0ahr
+					kMCITDi62Zi0a31pif8/UNqYBxhbB82ONP8CGh+h0LmNb1KC4pqgsQUpihA96oTccX5d2DjvwFqv
+					tyt+S16th69DFSUaeEuhiePCRHNy328ccNw/wuTkXSMeGG/OWR4HmSxBuaymgg3IsNXU7lwBAgMB
+					AAEwDQYJKoZIhvcNAQEFBQADggEBAD53yi7l9hmneQylhiDT9eG1eZigBQrSJlJgDj7ddpqwLCVL
+					/JZrakKXstYoG8RW1mU9tMhYA3Ldkb+N7j3FdCnJcQ1mfTXfpeiotr2HNT51zBXaXNReySMGfb22
+					7HBhKDGUkQHL4+3qyBolAiemwTNzmlYY3e9tAdbeOvzBgPoXFhtdF9uqLFG8w6QlQ9BApcD5dq1C
+					wG6WdP2wS1ioBM0d8nwjdBmc9zTbo6byddXisI7HPBj9YrU0+ZwRqP7gxDmuHWIfZU8DAVEAqXrf
+					W7hIKYyvPKZNRqqSwdGotiUyBwP1kZDAujDmuvrg7CHKqENLw5J4C1V62rWTtyy1WJk=
+				</ds:X509Certificate>
+			</ds:X509Data>
+		</ds:KeyInfo>
+	</ds:Signature>
+
+	<!-- 2.0 SP @ aitta2.funet.fi -->
+	<EntityDescriptor entityID="https://aitta2.funet.fi/shibboleth">
+		<SPSSODescriptor
+			protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
+			<Extensions>
+				<idpdisc:DiscoveryResponse
+					xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+					Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+					Location="https://aitta2.funet.fi/Shibboleth.sso/DS" index="1" />
+			</Extensions>
+			<KeyDescriptor>
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<ds:X509Data>
+						<ds:X509Certificate>MIIEPjCCAyagAwIBAgIRALEZ6nLwIsHiSKLF/cifrbUwDQYJKoZIhvcNAQEFBQAw
+							NjELMAkGA1UEBhMCTkwxDzANBgNVBAoTBlRFUkVOQTEWMBQGA1UEAxMNVEVSRU5B
+							IFNTTCBDQTAeFw0xMDA2MTQwMDAwMDBaFw0xMjA2MTMyMzU5NTlaMIGcMQswCQYD
+							VQQGEwJGSTEOMAwGA1UEERMFMDIxMDExEDAOBgNVBAgTB1V1c2ltYWExDjAMBgNV
+							BAcTBUVzcG9vMRYwFAYDVQQJEw1LZWlsYXJhbnRhIDE0MSkwJwYDVQQKEyBDU0Mg
+							LSBJVCBDZW50ZXIgZm9yIFNjaWVuY2UgTHRkLjEYMBYGA1UEAxMPYWl0dGEyLmZ1
+							bmV0LmZpMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHRrUmroMmxQAjBCAv
+							Uw5fakKYbibWKCDhjKFbygM3btA4NwWyZ+KiPLwOnJHeP5Ch1ETqUVi2aXXlKt9r
+							ZBj7wSknjiEaD//KBm0DNX3E65c35Kbfn6K0Lygj4Hq3ulDOlWmSPgZXlrYC2krp
+							aXttxXIuY+Hs0IftjE6TFYgHhQIDAQABo4IBYjCCAV4wHwYDVR0jBBgwFoAUDL2T
+							aAzz3qujSWsrN1dH6pDjue0wHQYDVR0OBBYEFOcYECyfYbEZaWfdYt+4sUSDx24b
+							MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+							BwMBBggrBgEFBQcDAjAYBgNVHSAEETAPMA0GCysGAQQBsjEBAgIdMDoGA1UdHwQz
+							MDEwL6AtoCuGKWh0dHA6Ly9jcmwudGNzLnRlcmVuYS5vcmcvVEVSRU5BU1NMQ0Eu
+							Y3JsMG0GCCsGAQUFBwEBBGEwXzA1BggrBgEFBQcwAoYpaHR0cDovL2NydC50Y3Mu
+							dGVyZW5hLm9yZy9URVJFTkFTU0xDQS5jcnQwJgYIKwYBBQUHMAGGGmh0dHA6Ly9v
+							Y3NwLnRjcy50ZXJlbmEub3JnMBoGA1UdEQQTMBGCD2FpdHRhMi5mdW5ldC5maTAN
+							BgkqhkiG9w0BAQUFAAOCAQEAVylxb/6Yzum3HWiZSm4fSXCCDYYjK3FCzdfGxLIe
+							i91OhUAit0YfkaTRu6A9Zg6wpORm+C4h+ovBF4EdnnS+CvgQah7n2FIFrlfODAJD
+							oVz1u0Z9yo2ftWUPyadwqbKlcbBaS+AGOHwzgv6hJWVV+aAOw+S2xoXjMDujyRiL
+							8L63ypAzrrwXTFlcQlz9c/fir9EgYlRnsqV1yOoL3lM2ow1IN5DcPgtdg7UrvpQb
+							EViYvX7XAn6qV5D0ytrONHSUivOZmCPSgSLr/JoqOllSEPGtwpkOGERwGRMZ67nB
+							RcIP+5aH3PSju+fJV01N+mipWFgtyR6mnHDzFfP4JihFiw==
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+
+
+			<SingleLogoutService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+				Location="https://aitta2.funet.fi/Shibboleth.sso/SLO/Redirect" />
+
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+			</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+			</NameIDFormat>
+
+
+			<AssertionConsumerService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://aitta2.funet.fi/Shibboleth.sso/SAML2/POST"
+				index="1" isDefault="true" />
+
+
+
+
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">aitta2.funet.fi testi-SP
+				v. 2.0</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">aitta2.funet.fi
+				testi-SP v. 2.0</OrganizationDisplayName>
+			<OrganizationURL xml:lang="en">http://www.csc.fi/
+			</OrganizationURL>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<GivenName>Haka</GivenName>
+			<EmailAddress>haka@csc.fi</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+	<!-- Shib 2.0 IdP aitta2.funet.fi Apache+Tomcat -->
+	<EntityDescriptor entityID="https://aitta2.funet.fi/idp/shibboleth"
+		xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd">
+		<IDPSSODescriptor
+			protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+			<Extensions>
+				<shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+					regexp="false">funet.fi</shibmd:Scope>
+			</Extensions>
+			<KeyDescriptor>
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<ds:X509Data>
+						<ds:X509Certificate>MIIEPjCCAyagAwIBAgIRALEZ6nLwIsHiSKLF/cifrbUwDQYJKoZIhvcNAQEFBQAw
+							NjELMAkGA1UEBhMCTkwxDzANBgNVBAoTBlRFUkVOQTEWMBQGA1UEAxMNVEVSRU5B
+							IFNTTCBDQTAeFw0xMDA2MTQwMDAwMDBaFw0xMjA2MTMyMzU5NTlaMIGcMQswCQYD
+							VQQGEwJGSTEOMAwGA1UEERMFMDIxMDExEDAOBgNVBAgTB1V1c2ltYWExDjAMBgNV
+							BAcTBUVzcG9vMRYwFAYDVQQJEw1LZWlsYXJhbnRhIDE0MSkwJwYDVQQKEyBDU0Mg
+							LSBJVCBDZW50ZXIgZm9yIFNjaWVuY2UgTHRkLjEYMBYGA1UEAxMPYWl0dGEyLmZ1
+							bmV0LmZpMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHRrUmroMmxQAjBCAv
+							Uw5fakKYbibWKCDhjKFbygM3btA4NwWyZ+KiPLwOnJHeP5Ch1ETqUVi2aXXlKt9r
+							ZBj7wSknjiEaD//KBm0DNX3E65c35Kbfn6K0Lygj4Hq3ulDOlWmSPgZXlrYC2krp
+							aXttxXIuY+Hs0IftjE6TFYgHhQIDAQABo4IBYjCCAV4wHwYDVR0jBBgwFoAUDL2T
+							aAzz3qujSWsrN1dH6pDjue0wHQYDVR0OBBYEFOcYECyfYbEZaWfdYt+4sUSDx24b
+							MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+							BwMBBggrBgEFBQcDAjAYBgNVHSAEETAPMA0GCysGAQQBsjEBAgIdMDoGA1UdHwQz
+							MDEwL6AtoCuGKWh0dHA6Ly9jcmwudGNzLnRlcmVuYS5vcmcvVEVSRU5BU1NMQ0Eu
+							Y3JsMG0GCCsGAQUFBwEBBGEwXzA1BggrBgEFBQcwAoYpaHR0cDovL2NydC50Y3Mu
+							dGVyZW5hLm9yZy9URVJFTkFTU0xDQS5jcnQwJgYIKwYBBQUHMAGGGmh0dHA6Ly9v
+							Y3NwLnRjcy50ZXJlbmEub3JnMBoGA1UdEQQTMBGCD2FpdHRhMi5mdW5ldC5maTAN
+							BgkqhkiG9w0BAQUFAAOCAQEAVylxb/6Yzum3HWiZSm4fSXCCDYYjK3FCzdfGxLIe
+							i91OhUAit0YfkaTRu6A9Zg6wpORm+C4h+ovBF4EdnnS+CvgQah7n2FIFrlfODAJD
+							oVz1u0Z9yo2ftWUPyadwqbKlcbBaS+AGOHwzgv6hJWVV+aAOw+S2xoXjMDujyRiL
+							8L63ypAzrrwXTFlcQlz9c/fir9EgYlRnsqV1yOoL3lM2ow1IN5DcPgtdg7UrvpQb
+							EViYvX7XAn6qV5D0ytrONHSUivOZmCPSgSLr/JoqOllSEPGtwpkOGERwGRMZ67nB
+							RcIP+5aH3PSju+fJV01N+mipWFgtyR6mnHDzFfP4JihFiw==
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+
+
+
+
+
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+			</NameIDFormat>
+
+			<SingleSignOnService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+				Location="https://aitta2.funet.fi:8443/idp/profile/SAML2/Redirect/SSO" />
+
+		</IDPSSODescriptor>
+		<AttributeAuthorityDescriptor
+			protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+			<Extensions>
+				<shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+					regexp="false">funet.fi</shibmd:Scope>
+			</Extensions>
+			<KeyDescriptor>
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<ds:X509Data>
+						<ds:X509Certificate>MIIEPjCCAyagAwIBAgIRALEZ6nLwIsHiSKLF/cifrbUwDQYJKoZIhvcNAQEFBQAw
+							NjELMAkGA1UEBhMCTkwxDzANBgNVBAoTBlRFUkVOQTEWMBQGA1UEAxMNVEVSRU5B
+							IFNTTCBDQTAeFw0xMDA2MTQwMDAwMDBaFw0xMjA2MTMyMzU5NTlaMIGcMQswCQYD
+							VQQGEwJGSTEOMAwGA1UEERMFMDIxMDExEDAOBgNVBAgTB1V1c2ltYWExDjAMBgNV
+							BAcTBUVzcG9vMRYwFAYDVQQJEw1LZWlsYXJhbnRhIDE0MSkwJwYDVQQKEyBDU0Mg
+							LSBJVCBDZW50ZXIgZm9yIFNjaWVuY2UgTHRkLjEYMBYGA1UEAxMPYWl0dGEyLmZ1
+							bmV0LmZpMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHRrUmroMmxQAjBCAv
+							Uw5fakKYbibWKCDhjKFbygM3btA4NwWyZ+KiPLwOnJHeP5Ch1ETqUVi2aXXlKt9r
+							ZBj7wSknjiEaD//KBm0DNX3E65c35Kbfn6K0Lygj4Hq3ulDOlWmSPgZXlrYC2krp
+							aXttxXIuY+Hs0IftjE6TFYgHhQIDAQABo4IBYjCCAV4wHwYDVR0jBBgwFoAUDL2T
+							aAzz3qujSWsrN1dH6pDjue0wHQYDVR0OBBYEFOcYECyfYbEZaWfdYt+4sUSDx24b
+							MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+							BwMBBggrBgEFBQcDAjAYBgNVHSAEETAPMA0GCysGAQQBsjEBAgIdMDoGA1UdHwQz
+							MDEwL6AtoCuGKWh0dHA6Ly9jcmwudGNzLnRlcmVuYS5vcmcvVEVSRU5BU1NMQ0Eu
+							Y3JsMG0GCCsGAQUFBwEBBGEwXzA1BggrBgEFBQcwAoYpaHR0cDovL2NydC50Y3Mu
+							dGVyZW5hLm9yZy9URVJFTkFTU0xDQS5jcnQwJgYIKwYBBQUHMAGGGmh0dHA6Ly9v
+							Y3NwLnRjcy50ZXJlbmEub3JnMBoGA1UdEQQTMBGCD2FpdHRhMi5mdW5ldC5maTAN
+							BgkqhkiG9w0BAQUFAAOCAQEAVylxb/6Yzum3HWiZSm4fSXCCDYYjK3FCzdfGxLIe
+							i91OhUAit0YfkaTRu6A9Zg6wpORm+C4h+ovBF4EdnnS+CvgQah7n2FIFrlfODAJD
+							oVz1u0Z9yo2ftWUPyadwqbKlcbBaS+AGOHwzgv6hJWVV+aAOw+S2xoXjMDujyRiL
+							8L63ypAzrrwXTFlcQlz9c/fir9EgYlRnsqV1yOoL3lM2ow1IN5DcPgtdg7UrvpQb
+							EViYvX7XAn6qV5D0ytrONHSUivOZmCPSgSLr/JoqOllSEPGtwpkOGERwGRMZ67nB
+							RcIP+5aH3PSju+fJV01N+mipWFgtyR6mnHDzFfP4JihFiw==
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+
+			<AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+				Location="https://aitta2.funet.fi:8443/idp/profile/SAML1/SOAP/AttributeQuery" />
+			<AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+				Location="https://aitta2.funet.fi:8443/idp/profile/SAML2/SOAP/AttributeQuery" />
+			<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+			</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+			</NameIDFormat>
+		</AttributeAuthorityDescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">Example Identity Provider
+			</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">aitta2.funet.fi
+				Shibboleth 2</OrganizationDisplayName>
+			<OrganizationURL xml:lang="en">http://www.csc.fi
+			</OrganizationURL>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<SurName>Haka</SurName>
+			<EmailAddress>haka@csc.fi</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+
+	<EntityDescriptor xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+		entityID="https://testidp.funet.fi/idp/shibboleth" xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd">
+		<IDPSSODescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+			xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+			protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+			<Extensions xmlns:shibmd="urn:mace:shibboleth:metadata:1.0">
+				<shibmd:Scope regexp="false" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0">funet.fi
+				</shibmd:Scope>
+			</Extensions>
+			<KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<ds:X509Data>
+						<ds:X509Certificate>MIIEwTCCA6mgAwIBAgIQYP/4QB+ZKFjYKAVXID0nzDANBgkqhkiG9w0BAQUFADA2
+							MQswCQYDVQQGEwJOTDEPMA0GA1UEChMGVEVSRU5BMRYwFAYDVQQDEw1URVJFTkEg
+							U1NMIENBMB4XDTExMTIyMTAwMDAwMFoXDTEzMTIyMDIzNTk1OVowgYcxCzAJBgNV
+							BAYTAkZJMRAwDgYDVQQIEwdVdXNpbWFhMQ4wDAYDVQQHEwVFc3BvbzEpMCcGA1UE
+							ChMgQ1NDIC0gSVQgQ2VudGVyIGZvciBTY2llbmNlIEx0ZC4xEDAOBgNVBAsTB1Vu
+							a25vd24xGTAXBgNVBAMTEHRlc3RpZHAuZnVuZXQuZmkwggEiMA0GCSqGSIb3DQEB
+							AQUAA4IBDwAwggEKAoIBAQDN75yeyjgPE3XWolKTH6VkF7+UF+PNVnH/wgLFJYEB
+							X4p3tn4S5dlO793gkwGY8dKJ3OAZu7uxraUwDcRRIPKy1MS97g/kjehhfiTMZFYG
+							3XdIM2n4VJUmU4MD9OuMryc1FOWnaC0uZHqH4tmNLY03nPsVZhc0HXxw0Cu7VKwH
+							ZzVwqvmtOdGOBg9G0P1/oMovxoWdtyE18/LXSqNPAq2R5dhi0xSAb0/fIprVtu4M
+							pQqTVxHVdCQZhhtj6TDDZ7gLMvh5OBCq2J0Uk/9O1Pq/eVDhwmdottEihA7JQzXL
+							w68OsjlSOZnApRDqp9DtWV7SgFrQmv95TOuYuyYoKHJTAgMBAAGjggF3MIIBczAf
+							BgNVHSMEGDAWgBQMvZNoDPPeq6NJays3V0fqkOO57TAdBgNVHQ4EFgQUoZeJk0s9
+							PL0R55LYTWJTVWkCOL4wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
+							VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBgGA1UdIAQRMA8wDQYLKwYBBAGy
+							MQECAh0wOgYDVR0fBDMwMTAvoC2gK4YpaHR0cDovL2NybC50Y3MudGVyZW5hLm9y
+							Zy9URVJFTkFTU0xDQS5jcmwwbQYIKwYBBQUHAQEEYTBfMDUGCCsGAQUFBzAChilo
+							dHRwOi8vY3J0LnRjcy50ZXJlbmEub3JnL1RFUkVOQVNTTENBLmNydDAmBggrBgEF
+							BQcwAYYaaHR0cDovL29jc3AudGNzLnRlcmVuYS5vcmcwLwYDVR0RBCgwJoIQdGVz
+							dGlkcC5mdW5ldC5maYISdGVzdGlkcDAxLmZ1bmV0LmZpMA0GCSqGSIb3DQEBBQUA
+							A4IBAQAWjisN2gVk+xdov2/IvXgElyh1m+jPxYrFt2o0HgS/27Kk2j3YM4UvNCDi
+							kw4hpFX0gLZZp3LsqatA/TCUVkP68ynCcl/tPnfHIKIhNFn4X/ImLi8w5V7xlu/g
+							tFGjY/5N1jP7JUoMYPIL2RgqW3iWtu5xWNIZzfAck5yfxtVYENMSJqevKmC5nMe8
+							gReLwK2wE1S+0aOmaFE8NJ/nQePBvkarwkFJJfFTkJOXVBQiSc8OToMIf8YXq614
+							RwGkr3rmJz3Ltyd63ErcOGLLJ41WiEihVl3EcaWeOt2zYVdEk+81QM8o0lWzja2a
+							10N3k6u8EdWmFjNV+F7wVR9bfAby
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<SingleLogoutService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+				Location="https://testidp.funet.fi/idp/profile/SAML2/Redirect/SLO" />
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+			</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+			</NameIDFormat>
+			<SingleSignOnService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+				Location="https://testidp.funet.fi/idp/profile/SAML2/Redirect/SSO" />
+		</IDPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="fi">Haka Testiorganisaatio
+			</OrganizationName>
+			<OrganizationName xml:lang="en">Haka Testing Organization
+			</OrganizationName>
+			<OrganizationName xml:lang="sv">Haka Testning
+				Organisation</OrganizationName>
+			<OrganizationDisplayName xml:lang="fi">Haka
+				Testiorganisaatio</OrganizationDisplayName>
+			<OrganizationDisplayName xml:lang="en">Haka
+				Testing Organization</OrganizationDisplayName>
+			<OrganizationDisplayName xml:lang="sv">Haka
+				Testning Organisation</OrganizationDisplayName>
+			<OrganizationURL xml:lang="fi">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+			<OrganizationURL xml:lang="en">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+			<OrganizationURL xml:lang="sv">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<GivenName>Sami</GivenName>
+			<SurName>Silén</SurName>
+			<EmailAddress>sami.silen@csc.fi</EmailAddress>
+		</ContactPerson>
+		<ContactPerson contactType="support">
+			<GivenName>Sami</GivenName>
+			<SurName>Silén</SurName>
+			<EmailAddress>haka@csc.fi</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+
+	<EntityDescriptor xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+		entityID="https://testsp.funet.fi/shibboleth" xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd">
+		<SPSSODescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+			protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+			<KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<ds:X509Data>
+						<ds:X509Certificate>MIIEvzCCA6egAwIBAgIRAKRULYU3WHpksZozyyYrzX0wDQYJKoZIhvcNAQEFBQAw
+							NjELMAkGA1UEBhMCTkwxDzANBgNVBAoTBlRFUkVOQTEWMBQGA1UEAxMNVEVSRU5B
+							IFNTTCBDQTAeFw0xMTEyMjEwMDAwMDBaFw0xMzEyMjAyMzU5NTlaMIGGMQswCQYD
+							VQQGEwJGSTEQMA4GA1UECBMHVXVzaW1hYTEOMAwGA1UEBxMFRXNwb28xKTAnBgNV
+							BAoTIENTQyAtIElUIENlbnRlciBmb3IgU2NpZW5jZSBMdGQuMRAwDgYDVQQLEwdV
+							bmtub3duMRgwFgYDVQQDEw90ZXN0c3AuZnVuZXQuZmkwggEiMA0GCSqGSIb3DQEB
+							AQUAA4IBDwAwggEKAoIBAQCy6judML9eKFPbOQtDpycZ3MIHp+5iOnSiCoAPjTy0
+							IORIs/NuoSEPMktZTqzsm2CVIutDjQhdYEjjjyJjcZ8NCFQu3OBzSQOYlYfcbzu8
+							lLC5deKyd7baxhFKmUdsyXJdhOt9lDyTFV9NG72Vv52FzlMvfb9FVsHEFYg4Yf6a
+							nZU25NGNaA4yZym3mgrh7KAtrWth+UB/dvN9tozO9OeusMxUFx6JlncFeIDZi8zp
+							whGGNikxFsc5JqJfUv7nxwczDENOQkO4WEc0OPHdbp8D31NE6GIQJdEWM9CRvNKT
+							6o7tYRhHvOYBXJRXxRAFh8QWYda5jvmiN2Rs9RXF6zdlAgMBAAGjggF1MIIBcTAf
+							BgNVHSMEGDAWgBQMvZNoDPPeq6NJays3V0fqkOO57TAdBgNVHQ4EFgQUHSEm+PFa
+							WmA+lW+vcuaPUoK78YUwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
+							VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBgGA1UdIAQRMA8wDQYLKwYBBAGy
+							MQECAh0wOgYDVR0fBDMwMTAvoC2gK4YpaHR0cDovL2NybC50Y3MudGVyZW5hLm9y
+							Zy9URVJFTkFTU0xDQS5jcmwwbQYIKwYBBQUHAQEEYTBfMDUGCCsGAQUFBzAChilo
+							dHRwOi8vY3J0LnRjcy50ZXJlbmEub3JnL1RFUkVOQVNTTENBLmNydDAmBggrBgEF
+							BQcwAYYaaHR0cDovL29jc3AudGNzLnRlcmVuYS5vcmcwLQYDVR0RBCYwJIIPdGVz
+							dHNwLmZ1bmV0LmZpghF0ZXN0c3AwMS5mdW5ldC5maTANBgkqhkiG9w0BAQUFAAOC
+							AQEAUk9pt+MSNAhwtZZMBiv3su88r/ivDpDUqL0/5x89ug8LZJkVZMztBZN9fUnG
+							oCaF6OKC25njh84xEMKclRvmESpNtRPA0EOvyTyseS8vGAqJrZMXx93S/nc+Ggs1
+							mkjuB3lJJ777mo1XB3J5003Vab272c99DEdcD51RYumHVcXZg8MHebitVx3r8Bnl
+							Wmke2V/dJIJdauGC2tem+1r8EV4xsTV++/TYmiBnZeerux8zMMrQRU9d3EIcgQzf
+							ClftBU/2L55q28f3vnWxqSc+KhMkqGQlc6EjTrjgeV76IBiEAMD8efsSlP75Kjbb
+							cfWUQ0nna9+RdRzEPU96X5RJVg==
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<SingleLogoutService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+				Location="https://testsp.funet.fi/Shibboleth.sso/SLO/Redirect" />
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+			</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+			</NameIDFormat>
+			<AssertionConsumerService
+				Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://testsp.funet.fi/Shibboleth.sso/SAML2/POST"
+				index="1" isDefault="true" />
+			<AttributeConsumingService index="1"
+				isDefault="true">
+				<ServiceName xml:lang="fi">Test SP</ServiceName>
+				<ServiceName xml:lang="en">Test SP</ServiceName>
+				<ServiceName xml:lang="sv">Test SP</ServiceName>
+				<ServiceDescription xml:lang="fi">Attribuuttitestipalvelu
+				</ServiceDescription>
+				<ServiceDescription xml:lang="en">Attribute test
+					service</ServiceDescription>
+				<RequestedAttribute FriendlyName="cn"
+					Name="urn:oid:2.5.4.3" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+				<RequestedAttribute FriendlyName="displayName"
+					Name="urn:oid:2.16.840.1.113730.3.1.241" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+				<RequestedAttribute FriendlyName="eduPersonPrincipalName"
+					Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+				<RequestedAttribute FriendlyName="schacHomeOrganization"
+					Name="urn:oid:1.3.6.1.4.1.25178.1.2.9" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+				<RequestedAttribute FriendlyName="schacHomeOrganizationType"
+					Name="urn:oid:1.3.6.1.4.1.25178.1.2.10" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+				<RequestedAttribute FriendlyName="sn"
+					Name="urn:oid:2.5.4.4" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+			</AttributeConsumingService>
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="fi">Haka Testiorganisaatio
+			</OrganizationName>
+			<OrganizationName xml:lang="en">Haka Testing Organization
+			</OrganizationName>
+			<OrganizationName xml:lang="sv">Haka Testning
+				Organisation</OrganizationName>
+			<OrganizationDisplayName xml:lang="fi">Haka
+				Testiorganisaatio</OrganizationDisplayName>
+			<OrganizationDisplayName xml:lang="en">Haka
+				Testing Organization</OrganizationDisplayName>
+			<OrganizationDisplayName xml:lang="sv">Haka
+				Testning Organisation</OrganizationDisplayName>
+			<OrganizationURL xml:lang="fi">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+			<OrganizationURL xml:lang="en">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+			<OrganizationURL xml:lang="sv">https://aitta2.funet.fi/haka
+			</OrganizationURL>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<GivenName>Sami</GivenName>
+			<SurName>Silén</SurName>
+			<EmailAddress>sami.silen@csc.fi</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+
+
+</EntitiesDescriptor>
