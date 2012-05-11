@@ -121,40 +121,30 @@
 					class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
 					<constructor-arg>
 						<bean
-                            class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                            <constructor-arg>
-                                <value type="java.io.File">classpath:security/haka_test_metadata_signed.xml</value>
-                            </constructor-arg>
+							class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+							<constructor-arg>
+								<value type="java.io.File">classpath:security/haka_test_metadata_signed.xml
+								</value>
+							</constructor-arg>
 							<property name="parserPool" ref="parserPool" />
 						</bean>
 					</constructor-arg>
 					<constructor-arg>
-                        <bean
-                            class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                            <property name="requireLogoutResponseSigned" value="false" />
-                        </bean>
-                    </constructor-arg>
-					<property name="metadataTrustCheck" value="false"/>
-				</bean>
-				<!-- 
-				<bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
-					<constructor-arg>
-						<value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value>
+						<bean
+							class="org.springframework.security.saml.metadata.ExtendedMetadata">
+							<property name="requireLogoutResponseSigned" value="false" />
+						</bean>
 					</constructor-arg>
-					<constructor-arg>
-						<value type="int">5000</value>
-					</constructor-arg>
-					<property name="parserPool" ref="parserPool" />
+					<property name="metadataTrustCheck" value="false" />
 				</bean>
-				-->
-				<!--  
 				<bean
 					class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
 					<constructor-arg>
 						<bean
 							class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
 							<constructor-arg>
-								<value type="java.io.File">classpath:security/sp_metadata.xml</value>
+								<value type="java.io.File">classpath:security/oph_sp.xml
+								</value>
 							</constructor-arg>
 							<property name="parserPool" ref="parserPool" />
 						</bean>
@@ -163,28 +153,41 @@
 						<bean
 							class="org.springframework.security.saml.metadata.ExtendedMetadata">
 							<property name="local" value="true" />
-							<property name="alias" value="localhost" />
-							<property name="securityProfile" value="metaiop" />
+							<property name="alias" value="ophSP" />
+							<property name="securityProfile" value="null" />
 							<property name="signingKey" value="haka_selfsigned" />
 							<property name="encryptionKey" value="haka_selfsigned" />
 							<property name="tlsKey" value="haka_selfsigned" />
 							<property name="requireArtifactResolveSigned" value="false" />
-							<property name="requireLogoutRequestSigned" value="false" />
+							<property name="requireLogoutRequestSigned" value="true" />
 							<property name="requireLogoutResponseSigned" value="false" />
 						</bean>
 					</constructor-arg>
-					<property name="metadataRequireSignature" value="true" />
 					<property name="metadataTrustCheck" value="false" />
 				</bean>
-				-->
+				<!-- <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider"> 
+					<constructor-arg> <value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value> 
+					</constructor-arg> <constructor-arg> <value type="int">5000</value> </constructor-arg> 
+					<property name="parserPool" ref="parserPool" /> </bean> -->
+				<!-- <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate"> 
+					<constructor-arg> <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider"> 
+					<constructor-arg> <value type="java.io.File">classpath:security/sp_metadata.xml</value> 
+					</constructor-arg> <property name="parserPool" ref="parserPool" /> </bean> 
+					</constructor-arg> <constructor-arg> <bean class="org.springframework.security.saml.metadata.ExtendedMetadata"> 
+					<property name="local" value="true" /> <property name="alias" value="localhost" 
+					/> <property name="securityProfile" value="metaiop" /> <property name="signingKey" 
+					value="haka_selfsigned" /> <property name="encryptionKey" value="haka_selfsigned" 
+					/> <property name="tlsKey" value="haka_selfsigned" /> <property name="requireArtifactResolveSigned" 
+					value="false" /> <property name="requireLogoutRequestSigned" value="false" 
+					/> <property name="requireLogoutResponseSigned" value="false" /> </bean> 
+					</constructor-arg> <property name="metadataRequireSignature" value="true" 
+					/> <property name="metadataTrustCheck" value="false" /> </bean> -->
 			</list>
 		</constructor-arg>
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
-		<!--  
-		<property name="hostedSPName"
-			value="http://localhost:8080/service-provider-app/saml/metadata/alias/sade_oph_test" />
-		-->
+		<!-- <property name="hostedSPName" value="http://localhost:8080/service-provider-app/saml/metadata/alias/sade_oph_test" 
+			/> -->
 		<!-- OPTIONAL property: can tell the system which IDP should be used for 
 			authenticating user by default. -->
 		<!-- <property name="defaultIDP" value="http://localhost:8080/opensso"/> -->
@@ -242,7 +245,7 @@
 	<bean id="processor"
 		class="org.springframework.security.saml.processor.SAMLProcessorImpl">
 		<constructor-arg>
-			<list>	
+			<list>
 				<ref bean="redirectBinding" />
 				<ref bean="postBinding" />
 				<ref bean="artifactBinding" />
