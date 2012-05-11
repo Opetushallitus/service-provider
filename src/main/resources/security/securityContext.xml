@@ -186,8 +186,7 @@
 		</constructor-arg>
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
-		<!-- <property name="hostedSPName" value="http://localhost:8080/service-provider-app/saml/metadata/alias/sade_oph_test" 
-			/> -->
+		<property name="hostedSPName" value="https://reppu.hard.ware.fi:8443/service-provider-app/saml/metadata/alias/ophSP" />
 		<!-- OPTIONAL property: can tell the system which IDP should be used for 
 			authenticating user by default. -->
 		<!-- <property name="defaultIDP" value="http://localhost:8080/opensso"/> -->
