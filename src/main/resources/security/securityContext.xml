@@ -46,10 +46,14 @@
 	</bean>
 
 	<!-- Handler deciding where to redirect user after successful login -->
-	<bean id="successRedirectHandler"
-		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-		<property name="defaultTargetUrl" value="/" />
+	<bean id="successRedirectHandler" class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler">
+	    <property name="defaultTargetUrl" value="${authentication.redirect}" />
 	</bean>
+	<!-- <bean id="successRedirectHandler"
+		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<property name="defaultTargetUrl" value="http://localhost:8081/web/guest/home" />
+		<property name="targetUrlParameter" value="redirect" />
+	</bean>-->
 	<!-- Use the following for interpreting RelayState coming from unsolicited 
 		response as redirect URL: <bean id="successRedirectHandler" class="org.springframework.security.saml.SAMLRelayStateSuccessHandler"> 
 		<property name="defaultTargetUrl" value="/" /> </bean> -->
@@ -57,7 +61,7 @@
 	<!-- Handler for successful logout -->
 	<bean id="successLogoutHandler"
 		class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-		<property name="defaultTargetUrl" value="/logout.jsp" />
+		<property name="defaultTargetUrl" value="${authentication.redirect}" />
 	</bean>
 
 	<!-- Register authentication manager with SAML provider -->
@@ -186,10 +190,30 @@
 		</constructor-arg>
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
-		<property name="hostedSPName" value="https://reppu.hard.ware.fi:8443/service-provider-app/saml/metadata/alias/ophSP" />
+		<property name="hostedSPName" value="${authentication.hostedsp}" />
 		<!-- OPTIONAL property: can tell the system which IDP should be used for 
 			authenticating user by default. -->
 		<!-- <property name="defaultIDP" value="http://localhost:8080/opensso"/> -->
+	</bean>
+	
+	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
+	   <property name="authenticationService" ref="authenticationService" />
+       <property name="userManagementService" ref="userManagementService" />
+	</bean>
+	
+	<bean id="userDetailsService" class="fi.vm.sade.saml.userdetails.DelegatingUserDetailsService">
+	   <property name="tokenProviders">
+	       <list>
+	           <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider" parent="idpBasedTokenProviderParent">
+	               <property name="supportedProviders">
+	                   <list>
+	                       <value>https://aitta2.funet.fi/idp/shibboleth</value>
+	                       <value>https://testidp.funet.fi/idp/shibboleth</value>
+	                   </list>
+	               </property>
+	           </bean>
+	       </list>
+	   </property>
 	</bean>
 
 	<!-- SAML Authentication Provider responsible for validating of received 
@@ -198,6 +222,7 @@
 		class="org.springframework.security.saml.SAMLAuthenticationProvider">
 		<!-- OPTIONAL property: can be used to store/load user data after login -->
 		<!-- <property name="userDetails" ref="bean" /> -->
+		<property name="userDetails" ref="userDetailsService" />
 	</bean>
 
 	<!-- Provider of default SAML Context -->
