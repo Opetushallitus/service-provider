@@ -16,74 +16,82 @@ import fi.vm.sade.auth.service.UserManagementService;
 
 /**
  * @author tommiha
- *
+ * 
  */
 public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthTokenProvider {
 
     private List<String> supportedProviders;
     private UserManagementService userManagementService;
     private AuthenticationService authenticationService;
-    
-    /* (non-Javadoc)
-     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#providesToken(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#providesToken(java
+     * .lang.String)
      */
     @Override
     public boolean providesToken(String idp) {
-        if(supportedProviders != null) {
+        if (supportedProviders != null) {
             return supportedProviders.contains(idp);
         }
         return false;
     }
-    
+
     /*
      * (non-Javadoc)
-     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#createAuthenticationToken(org.springframework.security.saml.SAMLCredential)
+     * 
+     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#
+     * createAuthenticationToken
+     * (org.springframework.security.saml.SAMLCredential)
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = null;
-        if(getUserManagementService().henkiloExists(getIDPUniqueKey(), getUniqueIdentifier(credential))) {
-            henkilo = getUserManagementService().getHenkiloByTunniste(getIDPUniqueKey(), getUniqueIdentifier(credential));
-        } else {
+        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+                getUniqueIdentifier(credential));
+        if (henkilo == null) {
             henkilo = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo(henkilo);
         }
         return getAuthenticationService().generateAuthTokenForHenkilo(henkilo);
     }
-    
+
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
         Attribute attrib = null;
-        for(Attribute attr : credential.getAttributes()) {
-            if(attr.getFriendlyName().equalsIgnoreCase(attributeName)) {
+        for (Attribute attr : credential.getAttributes()) {
+            if (attr.getFriendlyName().equalsIgnoreCase(attributeName)) {
                 attrib = attr;
                 break;
             }
         }
-        
-        if(attrib == null) {
+
+        if (attrib == null) {
             return null;
         }
-        
+
         XMLObject obj = attrib.getAttributeValues().get(0);
-        if(obj instanceof XSString) {
+        if (obj instanceof XSString) {
             return ((XSString) obj).getValue();
         }
         return null;
     }
-    
+
     /**
      * Creates Henkilo from SAMLCredentials.
+     * 
      * @param credential
      * @return
      */
     protected abstract HenkiloDTO createIdentity(SAMLCredential credential);
-    
+
     /**
      * Returns IDP unique key.
+     * 
      * @return
      */
     protected abstract String getIDPUniqueKey();
-    
+
     /**
      * 
      * @param credential
@@ -112,7 +120,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     }
 
     /**
-     * Entity IDs (from SAML provider metadata) supported by this token provider.
+     * Entity IDs (from SAML provider metadata) supported by this token
+     * provider.
+     * 
      * @param supportedProviders
      */
     public void setSupportedProviders(List<String> supportedProviders) {
