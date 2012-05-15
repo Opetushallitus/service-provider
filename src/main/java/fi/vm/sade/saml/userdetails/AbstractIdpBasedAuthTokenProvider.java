@@ -10,6 +10,7 @@ import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.springframework.security.saml.SAMLCredential;
 
+import fi.vm.sade.auth.model.dto.HenkiloDTO;
 import fi.vm.sade.auth.service.AuthenticationService;
 import fi.vm.sade.auth.service.UserManagementService;
 
@@ -34,6 +35,22 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         return false;
     }
     
+    /*
+     * (non-Javadoc)
+     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#createAuthenticationToken(org.springframework.security.saml.SAMLCredential)
+     */
+    @Override
+    public String createAuthenticationToken(SAMLCredential credential) {
+        HenkiloDTO henkilo = null;
+        if(getUserManagementService().henkiloExists(getIDPUniqueKey(), getUniqueIdentifier(credential))) {
+            henkilo = getUserManagementService().getHenkiloByTunniste(getIDPUniqueKey(), getUniqueIdentifier(credential));
+        } else {
+            henkilo = createIdentity(credential);
+            henkilo = getUserManagementService().addHenkilo(henkilo);
+        }
+        return getAuthenticationService().login(henkilo);
+    }
+    
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
         Attribute attrib = null;
         for(Attribute attr : credential.getAttributes()) {
@@ -55,11 +72,24 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     }
     
     /**
+     * Creates Henkilo from SAMLCredentials.
+     * @param credential
+     * @return
+     */
+    protected abstract HenkiloDTO createIdentity(SAMLCredential credential);
+    
+    /**
      * Returns IDP unique key.
      * @return
      */
     protected abstract String getIDPUniqueKey();
     
+    /**
+     * 
+     * @param credential
+     * @return
+     */
+    protected abstract String getUniqueIdentifier(SAMLCredential credential);
 
     public UserManagementService getUserManagementService() {
         return userManagementService;
