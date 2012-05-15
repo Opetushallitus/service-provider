@@ -48,7 +48,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             henkilo = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo(henkilo);
         }
-        return getAuthenticationService().login(henkilo);
+        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo);
     }
     
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
