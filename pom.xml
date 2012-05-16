@@ -27,6 +27,10 @@
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
+			<resource>
+			     <directory>src/main/profile/${env}</directory>
+			     <filtering>true</filtering>
+			</resource>
 		</resources>
 	</build>
 
