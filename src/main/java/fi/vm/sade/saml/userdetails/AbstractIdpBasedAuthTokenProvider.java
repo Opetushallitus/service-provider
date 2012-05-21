@@ -10,9 +10,9 @@ import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.auth.model.dto.HenkiloDTO;
-import fi.vm.sade.auth.service.AuthenticationService;
-import fi.vm.sade.auth.service.UserManagementService;
+import fi.vm.sade.authentication.model.dto.HenkiloDTO;
+import fi.vm.sade.authentication.service.AuthenticationService;
+import fi.vm.sade.authentication.service.UserManagementService;
 
 /**
  * @author tommiha

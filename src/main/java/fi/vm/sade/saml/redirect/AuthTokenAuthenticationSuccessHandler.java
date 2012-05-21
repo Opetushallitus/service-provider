@@ -4,6 +4,7 @@
 package fi.vm.sade.saml.redirect;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,13 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             if(token.getDetails() != null && token.getDetails() instanceof String) {
                 String authToken = (String) token.getDetails();
                 String targetUrl = getDefaultTargetUrl();
+                String delimiter = "";
                 if(targetUrl.contains("?")) {
-                    targetUrl += "&" + AUTH_TOKEN_PARAMETER + "=" + authToken;
+                    delimiter = "&";
+                } else {
+                    delimiter = "?";
                 }
+                targetUrl += delimiter + AUTH_TOKEN_PARAMETER + "=" + URLEncoder.encode(authToken, "UTF-8");
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
                 return;
             }

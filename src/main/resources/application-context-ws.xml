@@ -8,11 +8,11 @@
 	">
 
     <jaxws:client id="authenticationService"
-        serviceClass="fi.vm.sade.auth.service.AuthenticationService" 
+        serviceClass="fi.vm.sade.authentication.service.AuthenticationService" 
         address="${auth.webservice.url}" />
 
     <jaxws:client id="userManagementService"
-        serviceClass="fi.vm.sade.auth.service.UserManagementService"
+        serviceClass="fi.vm.sade.authentication.service.UserManagementService"
         address="${usermanagement.webservice.url}" 
     />
 
