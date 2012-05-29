@@ -5,7 +5,7 @@ package fi.vm.sade.saml.userdetails.haka;
 
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.model.dto.HenkiloDTO;
+import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 
 /**
