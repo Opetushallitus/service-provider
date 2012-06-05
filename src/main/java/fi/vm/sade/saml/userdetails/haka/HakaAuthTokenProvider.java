@@ -5,17 +5,17 @@ package fi.vm.sade.saml.userdetails.haka;
 
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
+import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 
 /**
  * @author tommiha
- *
+ * 
  */
 public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     public static final String HAKA = "haka";
-    
+
     @Override
     protected String getIDPUniqueKey() {
         return HAKA;
@@ -27,8 +27,8 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     }
 
     @Override
-    protected HenkiloDTO createIdentity(SAMLCredential credential) {
-        HenkiloDTO henkilo = new HenkiloDTO();
+    protected AddHenkiloData createIdentity(SAMLCredential credential) {
+        AddHenkiloData henkilo = new AddHenkiloData();
         henkilo.setEtunimet(getFirstAttributeValue(credential, "givenName"));
         henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
         henkilo.setKutsumanimi(getFirstAttributeValue(credential, "givenName"));
