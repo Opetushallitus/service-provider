@@ -12,6 +12,7 @@ import org.springframework.security.saml.SAMLCredential;
 
 import fi.vm.sade.authentication.service.AuthenticationService;
 import fi.vm.sade.authentication.service.UserManagementService;
+import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
 
 /**
@@ -48,14 +49,21 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
-                getUniqueIdentifier(credential));
+        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(), getUniqueIdentifier(credential));
         if (henkilo == null) {
             henkilo = createIdentity(credential);
-            henkilo = getUserManagementService().addHenkilo(henkilo);
+
+            AddHenkiloData addHenkiloData = new AddHenkiloData();
+            addHenkiloData.setEtunimet(henkilo.getEtunimet());
+            addHenkiloData.setHetu(henkilo.getHetu());
+            addHenkiloData.setKotikunta(henkilo.getKotikunta());
+            addHenkiloData.setKutsumanimi(henkilo.getKutsumanimi());
+            addHenkiloData.setSukunimi(henkilo.getSukunimi());
+            addHenkiloData.setSukupuoli(henkilo.getSukupuoli());
+            addHenkiloData.setTurvakielto(henkilo.isTurvakielto());
+            henkilo = getUserManagementService().addHenkilo(addHenkiloData);
         }
-        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
-                getUniqueIdentifier(credential));
+        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(), getUniqueIdentifier(credential));
     }
 
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
