@@ -199,6 +199,7 @@
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
 	   <property name="authenticationService" ref="authenticationService" />
        <property name="userManagementService" ref="userManagementService" />
+       <property name="organisaatioService" ref="organisaatioService" />
 	</bean>
 	
 	<bean id="userDetailsService" class="fi.vm.sade.saml.userdetails.DelegatingUserDetailsService">

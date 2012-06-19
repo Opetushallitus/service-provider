@@ -16,4 +16,7 @@
         address="${usermanagement.webservice.url}" 
     />
 
+
+	<bean id="organisaatioService" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceMock"/>
+
 </beans>
