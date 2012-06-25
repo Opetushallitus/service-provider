@@ -18,7 +18,9 @@ import fi.vm.sade.authentication.service.UserManagementService;
 import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
 import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
+import fi.vm.sade.organisaatio.api.model.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.service.OrganisaatioService;
+import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
  * @author tommiha
@@ -60,51 +62,46 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
         if (henkilo == null) {
-            AddHenkiloData addHenkiloData = createIdentity(credential);
-            henkilo = getUserManagementService().addHenkilo(addHenkiloData);
+            IdentityData addHenkiloData = createIdentity(credential);
+            henkilo = getUserManagementService().addHenkilo((AddHenkiloData) addHenkiloData);
 
             List<AddHenkiloToOrganisaatiosData> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosData>();
-            /*
-             * logger.info("domainNimi: " + addHenkiloData.getDomainNimi());
-             * List<OrganisaatioDTO> list =
-             * organisaatioService.findOrganisaatiosByDomainNimi(addHenkiloData
-             * .getDomainNimi());
-             * 
-             * OrganisaatioDTO o = new OrganisaatioDTO();
-             * 
-             * 
-             * if (list != null && list.size() > 0) {
-             * AddHenkiloToOrganisaatiosData ohdata = new
-             * AddHenkiloToOrganisaatiosData();
-             * 
-             * OrganisaatioDTO organisaatioDTO = list.get(0);
-             * ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
-             * 
-             * // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero()); //
-             * ohdata.setTehtavanimike(oh.getTehtavanimike()); //
-             * ohdata.setPuhelinnumero(oh.getPuhelinnumero()); //
-             * ohdata.setSahkopostiosoite(oh.getSahkopostiosoite());
-             * 
-             * ohdatas.add(ohdata);
-             * 
-             * henkilo =
-             * userManagementService.addHenkiloToOrganisaatios(henkilo.
-             * getOidHenkilo(), ohdatas); }
-             */
-            AddHenkiloToOrganisaatiosData ohdata = new AddHenkiloToOrganisaatiosData();
 
-            ohdata.setOrganisaatioOid("1.2.2004.10");
+            List<OrganisaatioDTO> list = organisaatioService.findOrganisaatiosByDomainNimi(addHenkiloData
+                    .getDomainNimi());
 
-            // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero());
-            // ohdata.setTehtavanimike(oh.getTehtavanimike());
-            // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
-            ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+            OrganisaatioDTO o = new OrganisaatioDTO();
 
-            ohdatas.add(ohdata);
+            // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
+            // tulee, otetaan ensimmäinen..
+            if (list != null && list.size() > 0) {
+                AddHenkiloToOrganisaatiosData ohdata = new AddHenkiloToOrganisaatiosData();
 
-            logger.info("insert organisations");
+                OrganisaatioDTO organisaatioDTO = list.get(0);
+                ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
+
+                // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero());
+                // ohdata.setTehtavanimike(oh.getTehtavanimike());
+                // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
+                ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+
+                ohdatas.add(ohdata);
+            }
+
+            // FIXME: kehitystä varten. voi poistaa, kun testiympäristö saadaan
+            // joskus pyörimään
+            if (addHenkiloData.getDomainNimi().equals("funet.fi")) {
+
+                AddHenkiloToOrganisaatiosData ohdata = new AddHenkiloToOrganisaatiosData();
+
+                ohdata.setOrganisaatioOid("1.2.2004.10");
+                ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+
+                ohdatas.add(ohdata);
+            }
+
             henkilo = userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
-            logger.info("inserted organisations");
+
         }
         return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
@@ -136,7 +133,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      * @param credential
      * @return
      */
-    protected abstract AddHenkiloData createIdentity(SAMLCredential credential);
+    protected abstract IdentityData createIdentity(SAMLCredential credential);
 
     /**
      * Returns IDP unique key.

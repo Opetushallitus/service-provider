@@ -5,8 +5,8 @@ package fi.vm.sade.saml.userdetails.haka;
 
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
+import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
  * @author tommiha
@@ -27,8 +27,8 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     }
 
     @Override
-    protected AddHenkiloData createIdentity(SAMLCredential credential) {
-        AddHenkiloData henkilo = new AddHenkiloData();
+    protected IdentityData createIdentity(SAMLCredential credential) {
+        IdentityData henkilo = new IdentityData();
 
         henkilo.setEtunimet(getFirstAttributeValue(credential, "givenName"));
         henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
@@ -37,8 +37,6 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
 
-        // TODO: remove this
-        henkilo.setDomainNimi("www.esa.fi");
         return henkilo;
     }
 }
