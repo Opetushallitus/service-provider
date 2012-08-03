@@ -15,9 +15,6 @@
 
 	<build>
 		<finalName>service-provider-app</finalName>
-		<filters>
-            <filter>src/main/filter/filter-${env}.properties</filter>
-        </filters>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
