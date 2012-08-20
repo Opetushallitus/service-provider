@@ -18,8 +18,9 @@ import fi.vm.sade.authentication.service.UserManagementService;
 import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
 import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.service.OrganisaatioService;
+import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioSearchCriteriaDTO;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
@@ -59,18 +60,16 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
-                getUniqueIdentifier(credential));
+        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(), getUniqueIdentifier(credential));
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo((AddHenkiloData) addHenkiloData);
 
             List<AddHenkiloToOrganisaatiosData> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosData>();
 
-            List<OrganisaatioDTO> list = organisaatioService.findOrganisaatiosByDomainNimi(addHenkiloData
-                    .getDomainNimi());
-
-            OrganisaatioDTO o = new OrganisaatioDTO();
+            OrganisaatioSearchCriteriaDTO criteria = new OrganisaatioSearchCriteriaDTO();
+            criteria.setOrganisaatioDomainNimi(addHenkiloData.getDomainNimi());
+            List<OrganisaatioDTO> list = organisaatioService.searchOrganisaatios(criteria);
 
             // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
             // tulee, otetaan ensimmäinen..
@@ -103,8 +102,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             henkilo = userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
 
         }
-        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
-                getUniqueIdentifier(credential));
+        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(), getUniqueIdentifier(credential));
     }
 
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
