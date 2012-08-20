@@ -17,6 +17,6 @@
     />
 
 
-	<bean id="organisaatioService" class="fi.vm.sade.organisaatio.service.OrganisaatioServiceMock"/>
+	<bean id="organisaatioService" class="fi.vm.sade.organisaatio.api.OrganisaatioServiceMock"/>
 
 </beans>
