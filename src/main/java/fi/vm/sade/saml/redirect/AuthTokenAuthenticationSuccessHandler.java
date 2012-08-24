@@ -13,10 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.util.StringUtils;
+
+import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 
 /**
  * @author tommiha
@@ -26,20 +24,15 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     public static final String AUTH_TOKEN_PARAMETER = "authToken";
     
-    private RequestCache requestCache = new HttpSessionRequestCache();
-    
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
-        String targetUrl = getDefaultTargetUrl();
         
-        if (savedRequest != null) {
-            if(StringUtils.hasText(request.getParameter(getTargetUrlParameter()))) {
-                requestCache.removeRequest(request, response);
-            }
-            
-            targetUrl = savedRequest.getRedirectUrl();
+        String targetUrl = getDefaultTargetUrl();
+        String sessionTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
+        
+        if (sessionTargetUrl != null) {
+            targetUrl = sessionTargetUrl;
         }
         
         if(authentication instanceof AbstractAuthenticationToken) {
