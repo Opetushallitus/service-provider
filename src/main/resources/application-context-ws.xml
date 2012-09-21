@@ -13,9 +13,23 @@
 
     <jaxws:client id="userManagementService"
         serviceClass="fi.vm.sade.authentication.service.UserManagementService"
-        address="${usermanagement.webservice.url}" 
-    />
+        address="${usermanagement.webservice.url}" >
 
+        <!-- configure interceptor for WSS header -->
+        <jaxws:inInterceptors>
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken Timestamp" />
+                        <entry key="passwordType" value="PasswordText" />
+                        <entry key="passwordCallback">
+                            <bean class="fi.vm.sade.saml.userdetails.PropertyBackedCallback"/>
+                        </entry>
+                    </map>
+                </constructor-arg>
+            </bean>
+        </jaxws:inInterceptors>
+    </jaxws:client>
 
 	<bean id="organisaatioService" class="fi.vm.sade.organisaatio.api.OrganisaatioServiceMock"/>
 
