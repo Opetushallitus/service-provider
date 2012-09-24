@@ -113,6 +113,12 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bundle</artifactId>
         </dependency>
+        <!-- TODO: bamboolla ongelmia dependencyjen kanssa, lokaalissa buildattu wari toimii, bamboolla buildattu ja luokalle deployattu wari ei sisällä tätä? -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
 
     </dependencies>
 
