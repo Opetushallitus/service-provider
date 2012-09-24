@@ -60,7 +60,8 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(), getUniqueIdentifier(credential));
+        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+                getUniqueIdentifier(credential));
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo((AddHenkiloData) addHenkiloData);
@@ -87,22 +88,11 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                 ohdatas.add(ohdata);
             }
 
-            // FIXME: kehitystä varten. voi poistaa, kun testiympäristö saadaan
-            // joskus pyörimään
-            if (addHenkiloData.getDomainNimi().equals("funet.fi")) {
-
-                AddHenkiloToOrganisaatiosData ohdata = new AddHenkiloToOrganisaatiosData();
-
-                ohdata.setOrganisaatioOid("1.2.2004.10");
-                ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
-
-                ohdatas.add(ohdata);
-            }
-
             henkilo = userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
 
         }
-        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(), getUniqueIdentifier(credential));
+        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
+                getUniqueIdentifier(credential));
     }
 
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
