@@ -107,7 +107,13 @@
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
         </dependency>
+        <!-- TODO: eetu: userManagementServicelle konffattu WSS4JOutInterceptor, joka löytyy cxf-bundle -jarista, mutta ei ollut dependencyissä,
+        jonka takia jboss deployt failaa, lisäsin depsun, voisitko käydä nuo läpi, esim että riittääkö pelkkä cxf-bundle -depsukka -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-bundle</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>
