@@ -13,17 +13,18 @@ import java.io.IOException;
  */
 public class PropertyBackedCallback implements CallbackHandler {
 
-    private @Value("${webservice.username}") String username;
-
-    private @Value("${webservice.password}") String password;
+    private String password;
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 
         WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
 
-        pc.setIdentifier(username);
         pc.setPassword(password);
 
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

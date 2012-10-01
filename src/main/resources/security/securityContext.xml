@@ -147,8 +147,7 @@
 						<bean
 							class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
 							<constructor-arg>
-								<value type="java.io.File">classpath:security/oph_sp.xml
-								</value>
+								<value type="java.io.File">${haka.sp.metadatafile}</value>
 							</constructor-arg>
 							<property name="parserPool" ref="parserPool" />
 						</bean>
@@ -199,6 +198,7 @@
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
 	   <property name="authenticationService" ref="authenticationService" />
        <property name="userManagementService" ref="userManagementService" />
+       <property name="serviceProviderService" ref="serviceProviderService" />
        <property name="organisaatioService" ref="organisaatioService" />
 	</bean>
 	

@@ -3,7 +3,18 @@
  */
 package fi.vm.sade.saml.userdetails;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fi.vm.sade.authentication.service.ServiceProviderService;
+import org.opensaml.saml2.core.Attribute;
+import org.opensaml.xml.XMLObject;
+import org.opensaml.xml.schema.XSString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.saml.SAMLCredential;
+
+import fi.vm.sade.authentication.service.AuthenticationService;
 import fi.vm.sade.authentication.service.UserManagementService;
 import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
@@ -12,18 +23,6 @@ import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioSearchCriteriaDTO;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.xml.XMLObject;
-import org.opensaml.xml.schema.XSString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.saml.SAMLCredential;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author tommiha
@@ -34,8 +33,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<String> supportedProviders;
-    private ServiceProviderService serviceProviderService;
     private UserManagementService userManagementService;
+    private ServiceProviderService serviceProviderService;
+    private AuthenticationService authenticationService;
     private OrganisaatioService organisaatioService;
 
     /*
@@ -62,7 +62,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = getServiceProviderService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+        HenkiloDTO henkilo = serviceProviderService.getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
@@ -85,7 +85,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                 // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero());
                 // ohdata.setTehtavanimike(oh.getTehtavanimike());
                 // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
+
                 ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+                ohdata = fillExtraPersonData(credential, ohdata);
 
                 ohdatas.add(ohdata);
             }
@@ -100,7 +102,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
         Attribute attrib = null;
         for (Attribute attr : credential.getAttributes()) {
-            if (attr.getFriendlyName().equalsIgnoreCase(attributeName)) {
+            if (attr.getFriendlyName() != null && attr.getFriendlyName().equalsIgnoreCase(attributeName)) {
                 attrib = attr;
                 break;
             }
@@ -139,6 +141,37 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     protected abstract String getUniqueIdentifier(SAMLCredential credential);
 
+    /**
+     * This method can be used to fill extra data such as work title, phone numbers etc. to henkilo data.
+     * @param henkiloData
+     * @return
+     */
+    protected abstract AddHenkiloToOrganisaatiosData fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosData henkiloData);
+
+    public UserManagementService getUserManagementService() {
+        return userManagementService;
+    }
+
+    public void setUserManagementService(UserManagementService userManagementService) {
+        this.userManagementService = userManagementService;
+    }
+
+    public ServiceProviderService getServiceProviderService() {
+        return serviceProviderService;
+    }
+
+    public void setServiceProviderService(ServiceProviderService serviceProviderService) {
+        this.serviceProviderService = serviceProviderService;
+    }
+
+    public AuthenticationService getAuthenticationService() {
+        return authenticationService;
+    }
+
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     public List<String> getSupportedProviders() {
         return supportedProviders;
     }
@@ -161,19 +194,4 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         this.organisaatioService = organisaatioService;
     }
 
-    public ServiceProviderService getServiceProviderService() {
-        return serviceProviderService;
-    }
-
-    public void setServiceProviderService(ServiceProviderService serviceProviderService) {
-        this.serviceProviderService = serviceProviderService;
-    }
-
-    public UserManagementService getUserManagementService() {
-        return userManagementService;
-    }
-
-    public void setUserManagementService(UserManagementService userManagementService) {
-        this.userManagementService = userManagementService;
-    }
 }
