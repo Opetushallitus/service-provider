@@ -3,17 +3,7 @@
  */
 package fi.vm.sade.saml.userdetails;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.xml.XMLObject;
-import org.opensaml.xml.schema.XSString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.saml.SAMLCredential;
-
-import fi.vm.sade.authentication.service.AuthenticationService;
+import fi.vm.sade.authentication.service.ServiceProviderService;
 import fi.vm.sade.authentication.service.UserManagementService;
 import fi.vm.sade.authentication.service.types.AddHenkiloData;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
@@ -22,6 +12,18 @@ import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioSearchCriteriaDTO;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
+import org.opensaml.saml2.core.Attribute;
+import org.opensaml.xml.XMLObject;
+import org.opensaml.xml.schema.XSString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.saml.SAMLCredential;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author tommiha
@@ -32,8 +34,8 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<String> supportedProviders;
+    private ServiceProviderService serviceProviderService;
     private UserManagementService userManagementService;
-    private AuthenticationService authenticationService;
     private OrganisaatioService organisaatioService;
 
     /*
@@ -60,7 +62,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = getUserManagementService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+        HenkiloDTO henkilo = getServiceProviderService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
@@ -91,7 +93,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             henkilo = userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
 
         }
-        return getAuthenticationService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
+        return getServiceProviderService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
     }
 
@@ -137,22 +139,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     protected abstract String getUniqueIdentifier(SAMLCredential credential);
 
-    public UserManagementService getUserManagementService() {
-        return userManagementService;
-    }
-
-    public void setUserManagementService(UserManagementService userManagementService) {
-        this.userManagementService = userManagementService;
-    }
-
-    public AuthenticationService getAuthenticationService() {
-        return authenticationService;
-    }
-
-    public void setAuthenticationService(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
-    }
-
     public List<String> getSupportedProviders() {
         return supportedProviders;
     }
@@ -175,4 +161,19 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         this.organisaatioService = organisaatioService;
     }
 
+    public ServiceProviderService getServiceProviderService() {
+        return serviceProviderService;
+    }
+
+    public void setServiceProviderService(ServiceProviderService serviceProviderService) {
+        this.serviceProviderService = serviceProviderService;
+    }
+
+    public UserManagementService getUserManagementService() {
+        return userManagementService;
+    }
+
+    public void setUserManagementService(UserManagementService userManagementService) {
+        this.userManagementService = userManagementService;
+    }
 }

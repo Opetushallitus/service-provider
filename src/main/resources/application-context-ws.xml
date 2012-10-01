@@ -7,9 +7,9 @@
 	   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
 	">
 
-    <jaxws:client id="authenticationService"
-        serviceClass="fi.vm.sade.authentication.service.AuthenticationService" 
-        address="${auth.webservice.url}" />
+    <jaxws:client id="serviceProviderService"
+                  serviceClass="fi.vm.sade.authentication.service.ServiceProviderService"
+                  address="${serviceProvider.webservice.url}" />
 
     <jaxws:client id="userManagementService"
         serviceClass="fi.vm.sade.authentication.service.UserManagementService"
