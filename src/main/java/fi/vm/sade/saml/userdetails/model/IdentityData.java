@@ -1,8 +1,8 @@
 package fi.vm.sade.saml.userdetails.model;
 
-import fi.vm.sade.authentication.service.types.AddHenkiloData;
+import fi.vm.sade.authentication.service.types.AddHenkiloDataType;
 
-public class IdentityData extends AddHenkiloData {
+public class IdentityData extends AddHenkiloDataType {
 
     /**
      * 

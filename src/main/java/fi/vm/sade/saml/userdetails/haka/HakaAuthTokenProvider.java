@@ -3,7 +3,7 @@
  */
 package fi.vm.sade.saml.userdetails.haka;
 
-import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
+import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
 import org.springframework.security.saml.SAMLCredential;
 
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
@@ -42,7 +42,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     }
 
     @Override
-    protected AddHenkiloToOrganisaatiosData fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosData henkiloData) {
+    protected AddHenkiloToOrganisaatiosDataType fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosDataType henkiloData) {
         // Fill extra fields
         return henkiloData;
     }

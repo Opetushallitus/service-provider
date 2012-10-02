@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.vm.sade.authentication.service.ServiceProviderService;
+import fi.vm.sade.authentication.service.types.AddHenkiloDataType;
+import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
@@ -16,9 +18,7 @@ import org.springframework.security.saml.SAMLCredential;
 
 import fi.vm.sade.authentication.service.AuthenticationService;
 import fi.vm.sade.authentication.service.UserManagementService;
-import fi.vm.sade.authentication.service.types.AddHenkiloData;
-import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosData;
-import fi.vm.sade.authentication.service.types.dto.HenkiloDTO;
+import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioSearchCriteriaDTO;
@@ -62,13 +62,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloDTO henkilo = serviceProviderService.getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+        HenkiloType henkilo = serviceProviderService.getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
-            henkilo = getUserManagementService().addHenkilo((AddHenkiloData) addHenkiloData);
+            henkilo = getUserManagementService().addHenkilo((AddHenkiloDataType) addHenkiloData);
 
-            List<AddHenkiloToOrganisaatiosData> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosData>();
+            List<AddHenkiloToOrganisaatiosDataType> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosDataType>();
 
             OrganisaatioSearchCriteriaDTO criteria = new OrganisaatioSearchCriteriaDTO();
             criteria.setOrganisaatioDomainNimi(addHenkiloData.getDomainNimi());
@@ -77,7 +77,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
             // tulee, otetaan ensimmäinen..
             if (list != null && list.size() > 0) {
-                AddHenkiloToOrganisaatiosData ohdata = new AddHenkiloToOrganisaatiosData();
+                AddHenkiloToOrganisaatiosDataType ohdata = new AddHenkiloToOrganisaatiosDataType();
 
                 OrganisaatioDTO organisaatioDTO = list.get(0);
                 ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
@@ -146,7 +146,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      * @param henkiloData
      * @return
      */
-    protected abstract AddHenkiloToOrganisaatiosData fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosData henkiloData);
+    protected abstract AddHenkiloToOrganisaatiosDataType fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosDataType henkiloData);
 
     public UserManagementService getUserManagementService() {
         return userManagementService;
