@@ -50,7 +50,7 @@
             serviceClass="fi.vm.sade.authentication.service.ServiceProviderService"
             address="${serviceprovider.webservice.url}">
         <jaxws:outInterceptors>
-
+            <ref bean="authInterceptor" />
             <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
         </jaxws:outInterceptors>
     </jaxws:client>
