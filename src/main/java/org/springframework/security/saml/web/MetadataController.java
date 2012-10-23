@@ -242,13 +242,13 @@ public class MetadataController {
         sb.append(request.getContextPath());
 
         String baseURL = sb.toString();
-        log.debug("Base URL {}", baseURL);
+        //DEBUGSAWAY:log.debug("Base URL {}", baseURL);
         return baseURL;
 
     }
 
     protected String getEntityId(HttpServletRequest request) {
-        log.debug("Server name used as entity id {}", request.getServerName());
+        //DEBUGSAWAY:log.debug("Server name used as entity id {}", request.getServerName());
         return request.getServerName();
     }
 
@@ -257,14 +257,14 @@ public class MetadataController {
         Set<String> aliases = keyManager.getAvailableCredentials();
         for (String key : aliases) {
             try {
-                log.debug("Found key {}", key);
+                //DEBUGSAWAY:log.debug("Found key {}", key);
                 Credential credential = keyManager.getCredential(key);
                 if (credential.getPrivateKey() != null) {
-                    log.debug("Adding private key with alias {} and entityID {}", key, credential.getEntityId());
+                    //DEBUGSAWAY:log.debug("Adding private key with alias {} and entityID {}", key, credential.getEntityId());
                     availableKeys.put(key, key + " (" + credential.getEntityId() + ")");
                 }
             } catch (Exception e) {
-                log.debug("Error loading key", e);
+                //DEBUGSAWAY:log.debug("Error loading key", e);
             }
         }
         return availableKeys;
