@@ -161,7 +161,7 @@
 							<property name="signingKey" value="haka_selfsigned" />
 							<property name="encryptionKey" value="haka_selfsigned" />
 							<property name="tlsKey" value="haka_selfsigned" />
-							<property name="requireArtifactResolveSigned" value="false" />
+							<property name="requireArtifactResolveSigned" value="true" />
 							<property name="requireLogoutRequestSigned" value="true" />
 							<property name="requireLogoutResponseSigned" value="false" />
 						</bean>
