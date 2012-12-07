@@ -84,6 +84,12 @@
 		  <artifactId>authentication-api</artifactId>
 		  <version>${project.version}</version>
 		</dependency>
+
+        <dependency>
+            <groupId>fi.vm.sade.auth</groupId>
+            <artifactId>esb-authorization-support</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		
 		<dependency>
 			<groupId>fi.vm.sade.organisaatio</groupId>
