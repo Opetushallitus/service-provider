@@ -14,7 +14,7 @@
                 <entry key="user" value="${webservice.username}" />
                 <entry key="passwordType" value="PasswordText" />
                 <entry key="passwordCallbackRef">
-                    <bean class="fi.vm.sade.saml.userdetails.PropertyBackedCallback">
+                    <bean class="fi.vm.sade.authentication.authorizationsupport.PropertyBackedCallback">
                         <property name="password" value="${webservice.password}" />
                     </bean>
                 </entry>
