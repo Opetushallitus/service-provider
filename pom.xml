@@ -87,7 +87,7 @@
 
         <dependency>
             <groupId>fi.vm.sade.auth</groupId>
-            <artifactId>esb-authorization-support</artifactId>
+            <artifactId>generic-security</artifactId>
             <version>${project.version}</version>
         </dependency>
 		
