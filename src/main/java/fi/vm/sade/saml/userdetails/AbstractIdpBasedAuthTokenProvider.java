@@ -56,9 +56,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     /*
      * (non-Javadoc)
      * 
-     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#
-     * createAuthenticationToken
-     * (org.springframework.security.saml.SAMLCredential)
+     * @see fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider#createAuthenticationToken(org.springframework.security.saml.SAMLCredential)
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) {

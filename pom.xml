@@ -15,20 +15,58 @@
 
 	<build>
 		<finalName>service-provider-app</finalName>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-			<resource>
-			     <directory>src/main/profile/${env}</directory>
-			     <filtering>true</filtering>
-			</resource>
-		</resources>
+        <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+                            <port>8443</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                            <keystore>cert/keystore</keystore>
+                            <password>tosikiva</password>
+                            <keyPassword>tosikiva</keyPassword>
+                        </connector>
+                    </connectors>
+                    <stopKey>stop</stopKey>
+                    <stopPort>1${webapp.port}</stopPort>
+                    <webAppConfig>
+                        <jettyEnvXml>src/main/webapp/META-INF/jetty-env.xml</jettyEnvXml>
+                        <contextPath>/${project.artifactId}</contextPath>
+                    </webAppConfig>
+                </configuration>
+                <dependencies>
+                    <!-- container will provide logging -->
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                        <version>${slf4j.version}</version>
+                        <scope>compile</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                        <scope>compile</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.portlet</groupId>
+                        <artifactId>portlet-api</artifactId>
+                        <version>${portlet.api.version}</version>
+                        <scope>compile</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.liferay.portal</groupId>
+                        <artifactId>portal-service</artifactId>
+                        <version>6.1.0</version>
+                        <scope>compile</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
 	</build>
 
 	<dependencies>

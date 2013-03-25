@@ -2,59 +2,40 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:cxf="http://cxf.apache.org/core"
 	xsi:schemaLocation="
 	   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+	   http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 	">
 
-    <bean id="authInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
-        <constructor-arg>
-            <map>
-                <entry key="action" value="UsernameToken Timestamp" />
-                <entry key="user" value="${webservice.username}" />
-                <entry key="passwordType" value="PasswordText" />
-                <entry key="passwordCallbackRef">
-                    <bean class="fi.vm.sade.authentication.authorizationsupport.PropertyBackedCallback">
-                        <property name="password" value="${webservice.password}" />
-                    </bean>
-                </entry>
-            </map>
-        </constructor-arg>
+    <bean id="casInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
+        <property name="webCasUrl" value="${web.url.cas}"/>
+        <property name="targetService" value="${cas.service.authentication-service}/j_spring_cas_security_check"/>
+        <property name="appClientUsername" value="${haku.app.username.to.usermanagement}"/>
+        <property name="appClientPassword" value="${haku.app.password.to.usermanagement}"/>
     </bean>
+
+    <cxf:bus>
+        <cxf:outInterceptors>
+            <ref bean="casInterceptor" />
+            <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+        </cxf:outInterceptors>
+    </cxf:bus>
 
     <jaxws:client id="authenticationService"
         serviceClass="fi.vm.sade.authentication.service.AuthenticationService" 
-        address="${auth.webservice.url}">
-
-        <!-- configure interceptor for WSS header -->
-        <jaxws:outInterceptors>
-            <!-- TODO: Palauta, kun autentikaatiopalvelu fiksattu
-            <ref bean="authInterceptor" />-->
-            <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
+        address="${authentication.webservice.url.backend}"/>
 
     <jaxws:client id="userManagementService"
         serviceClass="fi.vm.sade.authentication.service.UserManagementService"
-        address="${usermanagement.webservice.url}" >
-
-
-        <!-- configure interceptor for WSS header -->
-        <jaxws:outInterceptors>
-            <ref bean="authInterceptor" />
-            <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
+        address="${userManagement.webservice.url.backend}" />
 
     <jaxws:client id="serviceProviderService"
             serviceClass="fi.vm.sade.authentication.service.ServiceProviderService"
-            address="${serviceprovider.webservice.url}">
-        <jaxws:outInterceptors>
-            <ref bean="authInterceptor" />
-            <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
+            address="${serviceProvider.webservice.url.backend}"/>
 
-	<bean id="organisaatioService" class="fi.vm.sade.organisaatio.api.OrganisaatioServiceMock"/>
-
+    <jaxws:client id="organisaatioService"
+                  serviceClass="fi.vm.sade.organisaatio.api.model.OrganisaatioService"
+                  address="${organisaatio.webservice.url.backend}" />
 </beans>
