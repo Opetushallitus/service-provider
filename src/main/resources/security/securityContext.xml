@@ -61,7 +61,7 @@
 	<!-- Handler for successful logout -->
 	<bean id="successLogoutHandler"
 		class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-		<property name="defaultTargetUrl" value="${authentication.redirect}" />
+		<property name="defaultTargetUrl" value="${authentication.logout.redirect}" />
 	</bean>
 
 	<!-- Register authentication manager with SAML provider -->
@@ -71,7 +71,9 @@
 	</security:authentication-manager>
 
 	<!-- Logger for SAML messages and events -->
-	<bean id="samlLogger" class="org.springframework.security.saml.log.SAMLDefaultLogger" />
+	<bean id="samlLogger" class="org.springframework.security.saml.log.SAMLDefaultLogger">
+        <property name="logMessages" value="true" />
+    </bean>
 
 	<!-- Central storage of cryptographic keys -->
 	<bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
