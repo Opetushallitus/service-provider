@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>service-provider</artifactId>
 		<groupId>fi.vm.sade.auth</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>3.1-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -126,13 +126,13 @@
         <dependency>
             <groupId>fi.vm.sade.auth</groupId>
             <artifactId>generic-security</artifactId>
-            <version>${project.version}</version>
+            <version>${sade-generic.version}</version>
         </dependency>
 		
 		<dependency>
 			<groupId>fi.vm.sade.organisaatio</groupId>
 			<artifactId>organisaatio-api</artifactId>
-			<version>${project.version}</version>
+			<version>${organisaatio.version}</version>
 		</dependency>
 		
 		<dependency>
