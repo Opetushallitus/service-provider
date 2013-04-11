@@ -25,7 +25,9 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     @Override
     protected String getUniqueIdentifier(SAMLCredential credential) {
-        return getFirstAttributeValue(credential, "eduPersonPrincipalName");
+        String eduPersonPrincipalName = getFirstAttributeValue(credential, "eduPersonPrincipalName");
+        eduPersonPrincipalName = eduPersonPrincipalName.replace('@', '_');
+        return eduPersonPrincipalName;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setEtunimet(getFirstAttributeValue(credential, "givenName"));
         henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
         henkilo.setKutsumanimi(getFirstAttributeValue(credential, "givenName"));
-        henkilo.setKayttajatunnus(getFirstAttributeValue(credential, "eduPersonPrincipalName"));
+        henkilo.setKayttajatunnus(getUniqueIdentifier(credential));
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
