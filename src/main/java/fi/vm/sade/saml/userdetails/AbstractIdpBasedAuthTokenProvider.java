@@ -65,36 +65,43 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo((AddHenkiloDataType) addHenkiloData);
-
-            List<AddHenkiloToOrganisaatiosDataType> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosDataType>();
-
-            OrganisaatioSearchCriteriaDTO criteria = new OrganisaatioSearchCriteriaDTO();
-            criteria.setOrganisaatioDomainNimi(addHenkiloData.getDomainNimi());
-            List<OrganisaatioDTO> list = organisaatioService.searchOrganisaatios(criteria);
-
-            // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
-            // tulee, otetaan ensimmäinen..
-            if (list != null && list.size() > 0) {
-                AddHenkiloToOrganisaatiosDataType ohdata = new AddHenkiloToOrganisaatiosDataType();
-
-                OrganisaatioDTO organisaatioDTO = list.get(0);
-                ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
-
-                // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero());
-                // ohdata.setTehtavanimike(oh.getTehtavanimike());
-                // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
-
-                ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
-                ohdata = fillExtraPersonData(credential, ohdata);
-
-                ohdatas.add(ohdata);
+            try {
+                addOrganisaatioHenkilos(credential, henkilo, addHenkiloData);
+            } catch (Exception e) {
+                logger.warn("Creating org.henkilo failed.", e);
             }
-
-            henkilo = userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
 
         }
         return getServiceProviderService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
+    }
+
+    private void addOrganisaatioHenkilos(SAMLCredential credential, HenkiloType henkilo, IdentityData addHenkiloData) {
+        List<AddHenkiloToOrganisaatiosDataType> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosDataType>();
+
+        OrganisaatioSearchCriteriaDTO criteria = new OrganisaatioSearchCriteriaDTO();
+        criteria.setOrganisaatioDomainNimi(addHenkiloData.getDomainNimi());
+        List<OrganisaatioDTO> list = organisaatioService.searchOrganisaatios(criteria);
+
+        // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
+        // tulee, otetaan ensimmäinen..
+        if (list != null && list.size() > 0) {
+            AddHenkiloToOrganisaatiosDataType ohdata = new AddHenkiloToOrganisaatiosDataType();
+
+            OrganisaatioDTO organisaatioDTO = list.get(0);
+            ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
+
+            // ohdata.setMatkapuhelinnumero(oh.getMatkapuhelinnumero());
+            // ohdata.setTehtavanimike(oh.getTehtavanimike());
+            // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
+
+            ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+            ohdata = fillExtraPersonData(credential, ohdata);
+
+            ohdatas.add(ohdata);
+        }
+
+        userManagementService.addHenkiloToOrganisaatios(henkilo.getOidHenkilo(), ohdatas);
     }
 
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
