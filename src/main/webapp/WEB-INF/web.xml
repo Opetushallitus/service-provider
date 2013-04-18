@@ -13,6 +13,10 @@
             classpath:/application-context.xml
         </param-value>
     </context-param>
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>service-provider-app</param-value>
+    </context-param>
 
 	<listener>
 		<display-name>log listener</display-name>
