@@ -26,7 +26,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     @Override
     protected String getUniqueIdentifier(SAMLCredential credential) {
         String eduPersonPrincipalName = getFirstAttributeValue(credential, "eduPersonPrincipalName");
-        eduPersonPrincipalName = eduPersonPrincipalName.replace('@', '_');
+        eduPersonPrincipalName = eduPersonPrincipalName.replace('@', '-');
         return eduPersonPrincipalName;
     }
 
