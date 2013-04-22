@@ -122,12 +122,6 @@
 		  <artifactId>authentication-api</artifactId>
 		  <version>${project.version}</version>
 		</dependency>
-
-        <dependency>
-            <groupId>fi.vm.sade.auth</groupId>
-            <artifactId>generic-security</artifactId>
-            <version>${sade-generic.version}</version>
-        </dependency>
 		
 		<dependency>
 			<groupId>fi.vm.sade.organisaatio</groupId>
