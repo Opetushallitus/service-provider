@@ -34,13 +34,21 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     protected IdentityData createIdentity(SAMLCredential credential) {
         IdentityData henkilo = new IdentityData();
 
-        henkilo.setEtunimet(getFirstAttributeValue(credential, "givenName"));
+        String nimi = getFirstAttributeValue(credential, "givenName");
+
+        if(nimi == null || "".equals(nimi)) {
+            nimi = getFirstAttributeValue(credential, "displayName");
+        }
+
+        henkilo.setEtunimet(nimi);
         henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
-        henkilo.setKutsumanimi(getFirstAttributeValue(credential, "givenName"));
+        henkilo.setKutsumanimi(nimi);
         henkilo.setKayttajatunnus(getUniqueIdentifier(credential));
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
+
+        logger.info("Creating henkilo data: {}", henkilo);
 
         return henkilo;
     }
