@@ -16,26 +16,48 @@
         <property name="appClientPassword" value="${haku.app.password.to.usermanagement}"/>
     </bean>
 
+    <bean id="organisaatioCasInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
+        <property name="webCasUrl" value="${web.url.cas}"/>
+        <property name="targetService" value="${cas.service.organisaatio-service}/j_spring_cas_security_check"/>
+        <property name="appClientUsername" value="${haku.app.username.to.usermanagement}"/>
+        <property name="appClientPassword" value="${haku.app.password.to.usermanagement}"/>
+    </bean>
+
     <cxf:bus>
         <cxf:outInterceptors>
-            <ref bean="casInterceptor" />
             <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
         </cxf:outInterceptors>
     </cxf:bus>
 
     <jaxws:client id="authenticationService"
         serviceClass="fi.vm.sade.authentication.service.AuthenticationService" 
-        address="${authentication.webservice.url.backend}"/>
+        address="${authentication.webservice.url.backend}">
+        <jaxws:outInterceptors>
+            <ref bean="casInterceptor" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
 
     <jaxws:client id="userManagementService"
         serviceClass="fi.vm.sade.authentication.service.UserManagementService"
-        address="${userManagement.webservice.url.backend}" />
+        address="${userManagement.webservice.url.backend}">
+        <jaxws:outInterceptors>
+            <ref bean="casInterceptor" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
 
     <jaxws:client id="serviceProviderService"
             serviceClass="fi.vm.sade.authentication.service.ServiceProviderService"
-            address="${serviceProvider.webservice.url.backend}"/>
+            address="${serviceProvider.webservice.url.backend}">
+        <jaxws:outInterceptors>
+            <ref bean="casInterceptor" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
 
     <jaxws:client id="organisaatioService"
                   serviceClass="fi.vm.sade.organisaatio.api.model.OrganisaatioService"
-                  address="${organisaatio.webservice.url.backend}" />
+                  address="${organisaatio.webservice.url.backend}">
+        <jaxws:outInterceptors>
+            <ref bean="organisaatioCasInterceptor" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
 </beans>
