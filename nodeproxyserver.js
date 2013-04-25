@@ -24,5 +24,6 @@ var proxy = new httpProxy.HttpProxy({
 });
 
 https.createServer(options.https, function (req, res) {
+    console.log("Got request");
     proxy.proxyRequest(req, res);
 }).listen(443);

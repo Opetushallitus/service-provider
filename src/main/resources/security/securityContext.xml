@@ -78,13 +78,13 @@
 	<!-- Central storage of cryptographic keys -->
 	<bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
 		<constructor-arg value="${keystore.url}" />
-		<constructor-arg type="java.lang.String" value="foobar" />
+		<constructor-arg type="java.lang.String" value="${keystore.password}" />
 		<constructor-arg>
 			<map>
-				<entry key="haka_selfsigned" value="foobar" />
+				<entry key="${sp.keyalias}" value="${sp.keypassword}" />
 			</map>
 		</constructor-arg>
-		<constructor-arg type="java.lang.String" value="haka_selfsigned" />
+		<constructor-arg type="java.lang.String" value="${sp.keyalias}" />
 	</bean>
 
 	<!-- Entry point to initialize authentication, default values taken from 
@@ -135,23 +135,13 @@
 							<property name="parserPool" ref="parserPool" />
 						</bean>
 					</constructor-arg>
-					<constructor-arg>
-						<bean
-							class="org.springframework.security.saml.metadata.ExtendedMetadata">
-							<property name="requireLogoutResponseSigned" value="false" />
-                            <property name="signingKey" value="haka_selfsigned" />
-                            <property name="encryptionKey" value="haka_selfsigned" />
-                            <property name="tlsKey" value="haka_selfsigned" />
-						</bean>
-					</constructor-arg>
 					<property name="metadataTrustCheck" value="false" />
                     <property name="metadataRequireSignature" value="true" />
 				</bean>
 				<bean
 					class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
 					<constructor-arg>
-						<bean
-							class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+						<bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
 							<constructor-arg>
 								<value type="java.io.File">${haka.sp.metadatafile}</value>
 							</constructor-arg>
@@ -159,14 +149,13 @@
 						</bean>
 					</constructor-arg>
 					<constructor-arg>
-						<bean
-							class="org.springframework.security.saml.metadata.ExtendedMetadata">
+						<bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
 							<property name="local" value="true" />
 							<property name="alias" value="ophSP" />
 							<property name="securityProfile" value="null" />
-							<property name="signingKey" value="haka_selfsigned" />
-							<property name="encryptionKey" value="haka_selfsigned" />
-							<property name="tlsKey" value="haka_selfsigned" />
+							<property name="signingKey" value="${sp.keyalias}" />
+							<property name="encryptionKey" value="${sp.keyalias}" />
+							<property name="tlsKey" value="${sp.keyalias}" />
 							<property name="requireArtifactResolveSigned" value="true" />
 							<property name="requireLogoutRequestSigned" value="true" />
 							<property name="requireLogoutResponseSigned" value="false" />
@@ -174,31 +163,11 @@
 					</constructor-arg>
 					<property name="metadataTrustCheck" value="false" />
 				</bean>
-				<!-- <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider"> 
-					<constructor-arg> <value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value> 
-					</constructor-arg> <constructor-arg> <value type="int">5000</value> </constructor-arg> 
-					<property name="parserPool" ref="parserPool" /> </bean> -->
-				<!-- <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate"> 
-					<constructor-arg> <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider"> 
-					<constructor-arg> <value type="java.io.File">classpath:security/sp_metadata.xml</value> 
-					</constructor-arg> <property name="parserPool" ref="parserPool" /> </bean> 
-					</constructor-arg> <constructor-arg> <bean class="org.springframework.security.saml.metadata.ExtendedMetadata"> 
-					<property name="local" value="true" /> <property name="alias" value="localhost" 
-					/> <property name="securityProfile" value="metaiop" /> <property name="signingKey" 
-					value="haka_selfsigned" /> <property name="encryptionKey" value="haka_selfsigned" 
-					/> <property name="tlsKey" value="haka_selfsigned" /> <property name="requireArtifactResolveSigned" 
-					value="false" /> <property name="requireLogoutRequestSigned" value="false" 
-					/> <property name="requireLogoutResponseSigned" value="false" /> </bean> 
-					</constructor-arg> <property name="metadataRequireSignature" value="true" 
-					/> <property name="metadataTrustCheck" value="false" /> </bean> -->
 			</list>
 		</constructor-arg>
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
 		<property name="hostedSPName" value="${authentication.hostedsp}" />
-		<!-- OPTIONAL property: can tell the system which IDP should be used for 
-			authenticating user by default. -->
-		<!-- <property name="defaultIDP" value="http://localhost:8080/opensso"/> -->
 	</bean>
 	
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
@@ -360,7 +329,6 @@
 		factory-method="getEngine" />
 
 	<!-- XML parser pool needed for OpenSAML parsing -->
-	<bean id="parserPool" class="org.opensaml.xml.parse.BasicParserPool"
-		scope="singleton" />
+	<bean id="parserPool" class="org.opensaml.xml.parse.BasicParserPool" scope="singleton" />
 
 </beans>
