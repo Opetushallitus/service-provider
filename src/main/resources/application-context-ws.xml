@@ -12,15 +12,15 @@
     <bean id="casInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
         <property name="webCasUrl" value="${web.url.cas}"/>
         <property name="targetService" value="${cas.service.authentication-service}/j_spring_cas_security_check"/>
-        <property name="appClientUsername" value="${haku.app.username.to.usermanagement}"/>
-        <property name="appClientPassword" value="${haku.app.password.to.usermanagement}"/>
+        <property name="appClientUsername" value="${authentication.app.username.to.usermanagement}"/>
+        <property name="appClientPassword" value="${authentication.app.password.to.usermanagement}"/>
     </bean>
 
     <bean id="organisaatioCasInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
         <property name="webCasUrl" value="${web.url.cas}"/>
         <property name="targetService" value="${cas.service.organisaatio-service}/j_spring_cas_security_check"/>
-        <property name="appClientUsername" value="${haku.app.username.to.usermanagement}"/>
-        <property name="appClientPassword" value="${haku.app.password.to.usermanagement}"/>
+        <property name="appClientUsername" value="${authentication.app.username.to.organisaatio}"/>
+        <property name="appClientPassword" value="${authentication.app.password.to.organisaatio}"/>
     </bean>
 
     <cxf:bus>
