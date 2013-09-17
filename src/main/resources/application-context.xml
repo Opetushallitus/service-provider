@@ -6,7 +6,7 @@
              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
       <context:property-placeholder
-        location="classpath:service-provider-app.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/service-provider-app.properties"
+        location="classpath:service-provider-app.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/service-provider-app.properties, file:///${user.home:''}/oph-configuration/override.properties"
         ignore-resource-not-found="true"/>
 
     <import resource="application-context-ws.xml"/>
