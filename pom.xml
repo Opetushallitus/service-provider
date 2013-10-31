@@ -32,6 +32,7 @@
                         </connector>
                     </connectors>
                     <stopKey>stop</stopKey>
+                    <!-- <stopPort>18443</stopPort> -->
                     <stopPort>1${webapp.port}</stopPort>
                     <webAppConfig>
                         <jettyEnvXml>src/main/webapp/META-INF/jetty-env.xml</jettyEnvXml>
@@ -64,12 +65,18 @@
 	</build>
 
 	<dependencies>
-
+        <!--
 		<dependency>
 			<groupId>fi.vm.sade.auth</groupId>
 			<artifactId>spring-security-saml2-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+       -->
+        <dependency>
+            <groupId>org.springframework.security.extensions</groupId>
+            <artifactId>spring-security-saml2-core</artifactId>
+            <version>1.0.0.RC2</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -94,6 +101,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
@@ -114,7 +127,7 @@
         <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <artifactId>generic-common</artifactId>
-            <version>${sade-generic.version}</version>
+            <version>6.3-SNAPSHOT</version>
         </dependency>
 
 		<dependency>
