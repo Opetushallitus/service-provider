@@ -189,6 +189,7 @@
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
 		<property name="hostedSPName" value="${authentication.hostedsp}" />
+        <property name="refreshCheckInterval" value="14400000" /> <!-- metadata refreshed every 4 hrs -->
 	</bean>
 	
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
