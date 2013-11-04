@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd" entityID="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/metadata/alias/ophSP">
   <SPSSODescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-    <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <Extensions>
+        <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/login/alias/ophSP?disco=true" index="1"/>
+      </Extensions>
+      <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
         <ds:X509Data>
           <ds:X509Certificate>MIIDUDCCAjigAwIBAgIET6EfmzANBgkqhkiG9w0BAQUFADBqMQswCQYDVQQGEwJGSTEQMA4GA1UE

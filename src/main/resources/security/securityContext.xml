@@ -124,8 +124,8 @@
 		class="org.springframework.security.saml.metadata.CachingMetadataManager">
 		<constructor-arg>
 			<list>
-				<bean
-					class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <!--
 					<constructor-arg>
 						<bean
 							class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
@@ -136,10 +136,25 @@
 							<property name="parserPool" ref="parserPool" />
 						</bean>
 					</constructor-arg>
-					<property name="metadataTrustCheck" value="false" />
+					-->
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                            <constructor-arg>
+                                <value type="java.lang.String">http://haka.funet.fi/metadata/haka_test_metadata_signed.xml</value>
+                            </constructor-arg>
+                            <constructor-arg>
+                                <!-- Timeout for metadata loading in ms -->
+                                <value type="int">5000</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool"/>
+                            <property name="minRefreshDelay" value="14400000"/> <!-- min refresh delay 4h -->
+                            <property name="maxRefreshDelay" value="86400000"/> <!-- max refresh delay 24h -->
+                        </bean>
+                    </constructor-arg>
+                    <property name="metadataTrustCheck" value="false" />
                     <property name="metadataRequireSignature" value="true" />
 				</bean>
-				<bean
+                <bean
 					class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
 					<constructor-arg>
 						<bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
@@ -160,6 +175,11 @@
 							<property name="requireArtifactResolveSigned" value="true" />
 							<property name="requireLogoutRequestSigned" value="true" />
 							<property name="requireLogoutResponseSigned" value="false" />
+                            <property name="idpDiscoveryEnabled" value="true"/>
+                            <property name="idpDiscoveryURL" value="https://testsp.funet.fi/shibboleth/WAYF"/>
+                            <!--
+                            <property name="idpDiscoveryResponseURL" value="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/login/alias/ophSP?disco=true"/>
+						    -->
 						</bean>
 					</constructor-arg>
 					<property name="metadataTrustCheck" value="false" />

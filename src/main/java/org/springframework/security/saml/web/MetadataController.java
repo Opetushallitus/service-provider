@@ -153,8 +153,9 @@ public class MetadataController {
         generator.setNameID(Arrays.asList(metadata.getNameID()));
 
         EntityDescriptor descriptor = generator.generateMetadata();
-        ExtendedMetadata extendedMetadata = new ExtendedMetadata();
-        generator.generateExtendedMetadata(extendedMetadata);
+        ExtendedMetadata extendedMetadata = generator.generateExtendedMetadata();
+        //ExtendedMetadata extendedMetadata = new ExtendedMetadata();
+        //generator.generateExtendedMetadata(extendedMetadata);
         extendedMetadata.setSecurityProfile(metadata.getSecurityProfile());
         extendedMetadata.setRequireLogoutRequestSigned(metadata.isRequireLogoutRequestSigned());
         extendedMetadata.setRequireLogoutResponseSigned(metadata.isRequireLogoutResponseSigned());
