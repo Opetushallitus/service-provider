@@ -138,20 +138,25 @@
 					</constructor-arg>
 					-->
                     <constructor-arg>
-                        <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                        <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
                             <constructor-arg>
-                                <value type="java.lang.String">http://haka.funet.fi/metadata/haka_test_metadata_signed.xml</value>
+                                <value type="java.lang.String">https://haka.funet.fi/metadata/haka_test_metadata_signed.xml</value>
                             </constructor-arg>
                             <constructor-arg>
                                 <!-- Timeout for metadata loading in ms -->
                                 <value type="int">5000</value>
                             </constructor-arg>
+                            <constructor-arg>
+                                <value type="java.lang.String">/data00/oph/authentication/haka_metadata.xml</value>
+                            </constructor-arg>
                             <property name="parserPool" ref="parserPool"/>
-                            <property name="minRefreshDelay" value="14400000"/> <!-- min refresh delay 4h -->
-                            <property name="maxRefreshDelay" value="86400000"/> <!-- max refresh delay 24h -->
+                            <!-- min refresh delay 4h -->
+                            <property name="minRefreshDelay" value="600000" />  <!--value="14400000"/> -->
+                            <!-- max refresh delay 24h -->
+                            <property name="maxRefreshDelay" value="600000" /> <!--value="86400000"/> -->
                         </bean>
                     </constructor-arg>
-                    <property name="metadataTrustCheck" value="false" />
+                    <property name="metadataTrustCheck" value="true" />
                     <property name="metadataRequireSignature" value="true" />
 				</bean>
                 <bean
@@ -189,7 +194,8 @@
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
 		<property name="hostedSPName" value="${authentication.hostedsp}" />
-        <property name="refreshCheckInterval" value="14400000" /> <!-- metadata refreshed every 4 hrs -->
+        <!-- metadata refreshed every 4 hrs -->
+        <!-- <property name="refreshCheckInterval" value="14400000" /> -->
 	</bean>
 	
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
