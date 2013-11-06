@@ -28,7 +28,6 @@ Kw+wGrPg4Pa4BzpuC+8TUisvoQ4N/aHTtviP1UUEdqkRuTmX7keBZgau+9BPGGudJyME56Fh</ds:X50
     <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SingleLogout/alias/ophSP"/>
     <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SingleLogout/alias/ophSP"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-    <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SSO/alias/ophSP" index="1" isDefault="true"/>
     <AttributeConsumingService index="1" isDefault="true">
       <ServiceName xml:lang="fi">Oppijaportaali</ServiceName>
