@@ -3,7 +3,9 @@
  */
 package fi.vm.sade.saml.userdetails.haka;
 
+import fi.vm.sade.authentication.service.types.AddHenkiloDataType;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
+import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloTyyppiType;
 import org.springframework.security.saml.SAMLCredential;
 
@@ -57,5 +59,20 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     protected AddHenkiloToOrganisaatiosDataType fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosDataType henkiloData) {
         // Fill extra fields
         return henkiloData;
+    }
+
+
+    // TODO: This is just temp solution for release 8.0 (december 2013)
+    // Prevents from new users from registering through HAKA
+    @Override
+    public String createAuthenticationToken(SAMLCredential credential) {
+        HenkiloType henkilo = getServiceProviderService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
+                getUniqueIdentifier(credential));
+        if (henkilo == null) {
+            String eppn = getFirstAttributeValue(credential, "eduPersonPrincipalName");
+            logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
+            return null;
+        }
+        return super.createAuthenticationToken(credential);
     }
 }
