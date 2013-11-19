@@ -13,7 +13,10 @@
         <security:intercept-url pattern="/buildversion.txt" access="permitAll" />
         <security:intercept-url pattern="/saml/web/**"
                                 access="denyAll" />
-		<security:intercept-url pattern="/**"
+        <security:intercept-url pattern="/css/**" access="permitAll" />
+        <security:intercept-url pattern="/img/**" access="permitAll" />
+        <security:intercept-url pattern="/registration_disabled.jsp" access="permitAll" />
+        <security:intercept-url pattern="/**"
 			access="isFullyAuthenticated()" />
 		<security:intercept-url pattern="/logout.jsp"
                                 access="permitAll" />
@@ -68,6 +71,10 @@
 		class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
 		<property name="defaultTargetUrl" value="${authentication.logout.redirect}" />
 	</bean>
+
+    <bean id="hakaAuthenticationFailureHandler" class="fi.vm.sade.saml.redirect.HakaAuthenticationFailureHandler">
+        <property name="hakaAuthFailureUrl" value="/registration_disabled.jsp" />
+    </bean>
 
 	<!-- Register authentication manager with SAML provider -->
 	<security:authentication-manager alias="authenticationManager">
@@ -245,6 +252,7 @@
 	<bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationSuccessHandler" ref="successRedirectHandler" />
+        <property name="authenticationFailureHandler" ref="hakaAuthenticationFailureHandler" />
 	</bean>
 
 	<!-- Processing filter for WebSSO Holder-of-Key profile -->

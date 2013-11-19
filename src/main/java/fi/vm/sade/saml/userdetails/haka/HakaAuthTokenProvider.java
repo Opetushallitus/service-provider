@@ -7,10 +7,13 @@ import fi.vm.sade.authentication.service.types.AddHenkiloDataType;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloTyyppiType;
+import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.saml.SAMLCredential;
 
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
+import org.springframework.security.web.DefaultRedirectStrategy;
 
 /**
  * @author tommiha
@@ -71,7 +74,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         if (henkilo == null) {
             String eppn = getFirstAttributeValue(credential, "eduPersonPrincipalName");
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
-            return null;
+            throw new UnregisteredHakaUserException("Authentication denied for an unregistered Haka user: " + eppn);
         }
         return super.createAuthenticationToken(credential);
     }
