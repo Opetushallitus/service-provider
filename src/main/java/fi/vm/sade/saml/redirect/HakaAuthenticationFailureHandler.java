@@ -11,13 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Juuso
- * Date: 19.11.2013
- * Time: 12:37
- * To change this template use File | Settings | File Templates.
- */
 public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private Logger logger = LoggerFactory.getLogger(HakaAuthenticationFailureHandler.class);
@@ -29,7 +22,6 @@ public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         if(exception instanceof UnregisteredHakaUserException) {
             logger.debug("Redirecting user to {}", hakaAuthFailureUrl);
             getRedirectStrategy().sendRedirect(request, response, hakaAuthFailureUrl);
-            //request.getRequestDispatcher(hakaAuthFailureUrl).forward(request, response);
         }
         else {
             super.onAuthenticationFailure(request, response, exception);
