@@ -108,6 +108,7 @@
 				<property name="forceAuthN" value="true" />
 			</bean>
 		</property>
+        <property name="returnUrl" value="https://${host.virkailija}/service-provider-app/saml/login/alias/ophsp?disco=true" />
 	</bean>
 
 	<!-- IDP Discovery Service -->
