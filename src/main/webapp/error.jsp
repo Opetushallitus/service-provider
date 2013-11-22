@@ -1,23 +1,3 @@
-<%--
-
-    Licensed to Jasig under one or more contributor license
-    agreements. See the NOTICE file distributed with this work
-    for additional information regarding copyright ownership.
-    Jasig licenses this file to you under the Apache License,
-    Version 2.0 (the "License"); you may not use this file
-    except in compliance with the License.  You may obtain a
-    copy of the License at the following location:
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-
---%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ page session="true" %>
 <%@ page pageEncoding="UTF-8" %>
@@ -78,10 +58,8 @@
 <div class="clear margin-bottom-3"></div>
 
 <div class="offset-left-16-4 grid16-8">
-    <h1 class="margin-bottom-3 margin-top-0">Haka-tunnistautumista ei aktivoitu</h1>
-    <p>Suoritit onnistuneen Haka-tunnistautumisen, mutta Haka-tunnuksiisi ei ole liitetty
-    Opintopolku.fi-käyttäjätunnusta. Mikäli haluat tunnistautua Haka-tunnuksilla, ole hyvä
-    ja ota yhteyttä Opintopolku.fi-yhteyshenkilöösi.</p>
+    <h1 class="margin-bottom-3 margin-top-0">${error.title}</h1>
+    <p>${error.description}</p>
     <p><a href="<c:url value="/saml/logout?local=true"/>">Palaa alkuun</a></p>
 </div>
 
@@ -120,41 +98,5 @@
         </div>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="<c:url value="/js/cas.js" />"></script>
-
-		<!-- Piwik -->
-        <script type="text/javascript">
-
-			var siteDomain = document.domain;
-			var piwikSiteId = 2;
-			if(siteDomain=='opintopolku.fi'){
-			   piwikSiteId = 4;
-			}else if(siteDomain=='virkailija.opintopolku.fi'){
-			   piwikSiteId = 3;
-			}else if(siteDomain=='testi.opintopolku.fi'){
-			   piwikSiteId = 1;
-			}else if(siteDomain=='testi.virkailija.opintopolku.fi'){
-			   piwikSiteId = 5;
-			}else{
-			   piwikSiteId = 2;
-			}
-
-			//console.log("siteDomain:"+siteDomain+", piwikSiteId:"+piwikSiteId);
-
-			var _paq = _paq || [];
-			_paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-			_paq.push(["trackPageView"]);
-			_paq.push(["enableLinkTracking"]);
-
-			(function() {
-				var u=(("https:" == document.location.protocol) ? "https" : "http") + "://nat-piwik-poc.oph.ware.fi/analytics/";
-				_paq.push(["setTrackerUrl", u+"piwik.php"]);
-				_paq.push(["setSiteId", piwikSiteId]);
-				var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
-				g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
-			})();
-        </script>
-        <!-- End Piwik Code -->
-
     </body>
 </html>

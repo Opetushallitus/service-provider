@@ -20,8 +20,7 @@ public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         if(exception instanceof UnregisteredHakaUserException) {
-            logger.debug("Redirecting user to {}", hakaAuthFailureUrl);
-            getRedirectStrategy().sendRedirect(request, response, hakaAuthFailureUrl);
+            throw exception;
         }
         else {
             super.onAuthenticationFailure(request, response, exception);
