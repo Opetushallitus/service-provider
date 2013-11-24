@@ -15,7 +15,7 @@
                                 access="denyAll" />
         <security:intercept-url pattern="/css/**" access="permitAll" />
         <security:intercept-url pattern="/img/**" access="permitAll" />
-        <security:intercept-url pattern="/registration_disabled.jsp" access="permitAll" />
+        <security:intercept-url pattern="/error.jsp" access="permitAll" />
         <security:intercept-url pattern="/**"
 			access="isFullyAuthenticated()" />
 		<security:intercept-url pattern="/logout.jsp"
