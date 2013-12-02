@@ -11,18 +11,23 @@
 
 	<security:http entry-point-ref="samlEntryPoint" use-expressions="true">
         <security:intercept-url pattern="/buildversion.txt" access="permitAll" />
-		<security:intercept-url pattern="/**"
+        <security:intercept-url pattern="/saml/web/**"
+                                access="denyAll" />
+        <security:intercept-url pattern="/css/**" access="permitAll" />
+        <security:intercept-url pattern="/img/**" access="permitAll" />
+        <security:intercept-url pattern="/error.jsp" access="permitAll" />
+        <security:intercept-url pattern="/**"
 			access="isFullyAuthenticated()" />
-		<security:intercept-url pattern="/saml/web/**"
-                                access="permitAll" />
 		<security:intercept-url pattern="/logout.jsp"
                                 access="permitAll" />
 		<security:intercept-url pattern="/login.jsp"
                                 access="permitAll" />
 		<security:intercept-url pattern="/favicon.ico"
                                 access="permitAll" />
-		<security:custom-filter before="FIRST"
+		<!--
+        <security:custom-filter before="FIRST"
 			ref="metadataGeneratorFilter" />
+        -->
 		<security:custom-filter after="BASIC_AUTH_FILTER"
 			ref="samlFilter" />
 	</security:http>
@@ -33,8 +38,10 @@
 				filters="samlEntryPoint" />
 			<security:filter-chain pattern="/saml/logout/**"
 				filters="samlLogoutFilter" />
+			<!--
 			<security:filter-chain pattern="/saml/metadata/**"
 				filters="metadataDisplayFilter" />
+			-->
 			<security:filter-chain pattern="/saml/SSO/**"
 				filters="samlWebSSOProcessingFilter" />
 			<security:filter-chain pattern="/saml/SSOHoK/**"
@@ -64,6 +71,10 @@
 		class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
 		<property name="defaultTargetUrl" value="${authentication.logout.redirect}" />
 	</bean>
+
+    <bean id="hakaAuthenticationFailureHandler" class="fi.vm.sade.saml.redirect.HakaAuthenticationFailureHandler">
+        <property name="hakaAuthFailureUrl" value="/registration_disabled.jsp" />
+    </bean>
 
 	<!-- Register authentication manager with SAML provider -->
 	<security:authentication-manager alias="authenticationManager">
@@ -97,6 +108,7 @@
 				<property name="forceAuthN" value="true" />
 			</bean>
 		</property>
+        <property name="returnUrl" value="https://${host.virkailija}/service-provider-app/saml/login/alias/ophSP?disco=true" />
 	</bean>
 
 	<!-- IDP Discovery Service -->
@@ -105,17 +117,21 @@
 	</bean>
 
 	<!-- Filter automatically generates default SP metadata -->
-	<bean id="metadataGeneratorFilter"
+	<!--
+    <bean id="metadataGeneratorFilter"
 		class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
 		<constructor-arg>
-			<bean class="org.springframework.security.saml.metadata.MetadataGenerator" />
+			<bean class="org.springframework.security.saml.metadata.MetadaforceAuthntaGenerator" />
 		</constructor-arg>
 	</bean>
+    -->
 
 	<!-- The filter is waiting for connections on URL suffixed with filterSuffix 
 		and presents SP metadata there -->
-	<bean id="metadataDisplayFilter"
+	<!--
+    <bean id="metadataDisplayFilter"
 		class="org.springframework.security.saml.metadata.MetadataDisplayFilter" />
+    -->
 
 	<!-- IDP Metadata configuration - paths to metadata of IDPs in circle of 
 		trust is here -->
@@ -138,20 +154,25 @@
 					</constructor-arg>
 					-->
                     <constructor-arg>
-                        <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                        <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
                             <constructor-arg>
-                                <value type="java.lang.String">http://haka.funet.fi/metadata/haka_test_metadata_signed.xml</value>
+                                <value type="java.lang.String">https://haka.funet.fi/metadata/haka_test_metadata_signed.xml</value>
                             </constructor-arg>
                             <constructor-arg>
                                 <!-- Timeout for metadata loading in ms -->
                                 <value type="int">5000</value>
                             </constructor-arg>
+                            <constructor-arg>
+                                <value type="java.lang.String">/data00/oph/authentication/haka_metadata.xml</value>
+                            </constructor-arg>
                             <property name="parserPool" ref="parserPool"/>
-                            <property name="minRefreshDelay" value="14400000"/> <!-- min refresh delay 4h -->
-                            <property name="maxRefreshDelay" value="86400000"/> <!-- max refresh delay 24h -->
+                            <!-- min refresh delay 4h -->
+                            <property name="minRefreshDelay" value="600000" />  <!--value="14400000"/> -->
+                            <!-- max refresh delay 24h -->
+                            <property name="maxRefreshDelay" value="600000" /> <!--value="86400000"/> -->
                         </bean>
                     </constructor-arg>
-                    <property name="metadataTrustCheck" value="false" />
+                    <property name="metadataTrustCheck" value="true" />
                     <property name="metadataRequireSignature" value="true" />
 				</bean>
                 <bean
@@ -189,6 +210,8 @@
 		<!-- OPTIONAL used when one of the metadata files contains information 
 			about this service provider -->
 		<property name="hostedSPName" value="${authentication.hostedsp}" />
+        <!-- metadata refreshed every 4 hrs -->
+        <!-- <property name="refreshCheckInterval" value="14400000" /> -->
 	</bean>
 	
 	<bean id="idpBasedTokenProviderParent" class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider" abstract="true">
@@ -230,6 +253,7 @@
 	<bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationSuccessHandler" ref="successRedirectHandler" />
+        <property name="authenticationFailureHandler" ref="hakaAuthenticationFailureHandler" />
 	</bean>
 
 	<!-- Processing filter for WebSSO Holder-of-Key profile -->

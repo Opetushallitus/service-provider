@@ -148,9 +148,5 @@
     <a href="<c:url value="/saml/logout?local=true"/>">Local Logout</a>
 </p>
 
-<p>
-    <a href="<c:url value="/saml/web/metadata"/>">Metadata information</a>
-</p>
-
 </body>
 </html>

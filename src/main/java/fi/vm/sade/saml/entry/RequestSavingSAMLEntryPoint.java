@@ -27,6 +27,8 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 
 	public static final String REDIRECT_KEY = "redirect";
+
+    private String returnUrl;
 	
 	@Override
 	public void commence(HttpServletRequest request,
@@ -57,7 +59,7 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
             List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
             queryParams.add(new Pair<String, String>(SAMLDiscovery.ENTITY_ID_PARAM, context.getLocalEntityId()));
             queryParams.add(new Pair<String, String>(SAMLDiscovery.RETURN_ID_PARAM, IDP_PARAMETER));
-            queryParams.add(new Pair<String, String>(SAMLDiscovery.RETURN_URL_PARAM, "https://itest-virkailija.oph.ware.fi/service-provider-app/saml/login/alias/ophSP?disco=true"));
+            queryParams.add(new Pair<String, String>(SAMLDiscovery.RETURN_URL_PARAM, returnUrl));
             discoveryURL = urlBuilder.buildURL();
 
             logger.debug("Using discovery URL from extended metadata");
@@ -79,5 +81,13 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
         logger.debug("Redirecting to discovery URL {}", discoveryURL);
         HTTPOutTransport response = (HTTPOutTransport) context.getOutboundMessageTransport();
         response.sendRedirect(discoveryURL);
+    }
+
+    public String getReturnUrl() {
+        return returnUrl;
+    }
+
+    public void setReturnUrl(String returnUrl) {
+        this.returnUrl = returnUrl;
     }
 }
