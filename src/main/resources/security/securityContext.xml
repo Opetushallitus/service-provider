@@ -108,7 +108,7 @@
 				<property name="forceAuthN" value="true" />
 			</bean>
 		</property>
-        <property name="returnUrl" value="https://${host.virkailija}/service-provider-app/saml/login/alias/ophSP?disco=true" />
+        <property name="returnUrl" value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true" />
 	</bean>
 
 	<!-- IDP Discovery Service -->
@@ -188,7 +188,7 @@
 					<constructor-arg>
 						<bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
 							<property name="local" value="true" />
-							<property name="alias" value="ophSP" />
+							<property name="alias" value="hakasp" />
 							<property name="securityProfile" value="null" />
 							<property name="signingKey" value="${sp.keyalias}" />
 							<property name="encryptionKey" value="${sp.keyalias}" />
@@ -199,7 +199,7 @@
                             <property name="idpDiscoveryEnabled" value="true"/>
                             <property name="idpDiscoveryURL" value="https://testsp.funet.fi/shibboleth/WAYF"/>
                             <!--
-                            <property name="idpDiscoveryResponseURL" value="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/login/alias/ophSP?disco=true"/>
+                            <property name="idpDiscoveryResponseURL" value="${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/>
 						    -->
 						</bean>
 					</constructor-arg>
