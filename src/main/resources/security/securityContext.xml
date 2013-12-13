@@ -231,6 +231,7 @@
 	                       <value>https://testidp.funet.fi/idp/shibboleth</value>
 	                   </list>
 	               </property>
+                   <property name="registrationEnabled" value="${haka.sp.registration.enabled:false}"></property>
 	           </bean>
 	       </list>
 	   </property>
@@ -245,9 +246,14 @@
 		<property name="userDetails" ref="userDetailsService" />
 	</bean>
 
-	<!-- Provider of default SAML Context -->
-	<bean id="contextProvider"
-		class="org.springframework.security.saml.context.SAMLContextProviderImpl" />
+	<!-- SAML Context for environments with load balancer -->
+	<bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderLB">
+		<property name="scheme" value="https"/>
+		<property name="serverName" value="${host.virkailija}"/>
+		<property name="serverPort" value="443"/>
+		<property name="includeServerPortInRequestURL" value="false"/>
+		<property name="contextPath" value="/service-provider-app"/>
+	</bean>
 
 	<!-- Processing filter for WebSSO profile messages -->
 	<bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">
