@@ -231,7 +231,6 @@
 	                       <value>https://testidp.funet.fi/idp/shibboleth</value>
 	                   </list>
 	               </property>
-                   <property name="registrationEnabled" value="${haka.sp.registration.enabled:false}"></property>
 	           </bean>
 	       </list>
 	   </property>
