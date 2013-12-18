@@ -32,7 +32,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private List<String> supportedProviders;
+//    private List<String> supportedProviders;
     private UserManagementService userManagementService;
     private ServiceProviderService serviceProviderService;
     private AuthenticationService authenticationService;
@@ -47,10 +47,11 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public boolean providesToken(String idp) {
-        if (supportedProviders != null) {
-            return supportedProviders.contains(idp);
-        }
-        return false;
+//        if (supportedProviders != null) {
+//            return supportedProviders.contains(idp);
+//        }
+//        return false;
+        return true;
     }
 
     /*
@@ -177,9 +178,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         this.authenticationService = authenticationService;
     }
 
-    public List<String> getSupportedProviders() {
-        return supportedProviders;
-    }
+//    public List<String> getSupportedProviders() {
+//        return supportedProviders;
+//    }
 
     /**
      * Entity IDs (from SAML provider metadata) supported by this token
@@ -187,9 +188,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      * 
      * @param supportedProviders
      */
-    public void setSupportedProviders(List<String> supportedProviders) {
-        this.supportedProviders = supportedProviders;
-    }
+//    public void setSupportedProviders(List<String> supportedProviders) {
+//        this.supportedProviders = supportedProviders;
+//    }
 
     public OrganisaatioService getOrganisaatioService() {
         return organisaatioService;

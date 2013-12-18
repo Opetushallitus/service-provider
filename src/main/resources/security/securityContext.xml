@@ -199,7 +199,7 @@
                             <property name="idpDiscoveryEnabled" value="true"/>
                             <property name="idpDiscoveryURL" value="https://testsp.funet.fi/shibboleth/WAYF"/>
                             <!--
-                            <property name="idpDiscoveryResponseURL" value="${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/>
+                            <property name="idpDiscoveryResponseURL" value="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/login/alias/hakasp?disco=true"/>
 						    -->
 						</bean>
 					</constructor-arg>
@@ -225,12 +225,7 @@
 	   <property name="tokenProviders">
 	       <list>
 	           <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider" parent="idpBasedTokenProviderParent">
-	               <property name="supportedProviders">
-	                   <list>
-	                       <value>https://aitta2.funet.fi/idp/shibboleth</value>
-	                       <value>https://testidp.funet.fi/idp/shibboleth</value>
-	                   </list>
-	               </property>
+	               <property name="registrationEnabled" value="${haka.sp.registration.enabled:false}"></property>
 	           </bean>
 	       </list>
 	   </property>
