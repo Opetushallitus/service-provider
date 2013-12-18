@@ -139,37 +139,37 @@
 	<bean id="metadata"
 		class="org.springframework.security.saml.metadata.CachingMetadataManager">
 		<constructor-arg>
-            <!-- HUOM! Tämän pitää olla ensimmäisenä, muuten sp:n metadata ladataan hakalta eikä paikallisesti -->
-            <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
-                <constructor-arg>
-                    <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                        <constructor-arg>
-                            <value type="java.io.File">${hakasp.metadatafile}</value>
-                        </constructor-arg>
-                        <property name="parserPool" ref="parserPool" />
-                    </bean>
-                </constructor-arg>
-                <constructor-arg>
-                    <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                        <property name="local" value="true" />
-                        <property name="alias" value="hakasp" />
-                        <property name="securityProfile" value="null" />
-                        <property name="signingKey" value="${sp.keyalias}" />
-                        <property name="encryptionKey" value="${sp.keyalias}" />
-                        <property name="tlsKey" value="${sp.keyalias}" />
-                        <property name="requireArtifactResolveSigned" value="true" />
-                        <property name="requireLogoutRequestSigned" value="true" />
-                        <property name="requireLogoutResponseSigned" value="false" />
-                        <property name="idpDiscoveryEnabled" value="true"/>
-                        <property name="idpDiscoveryURL" value="${haka.wayf.url}"/>
-                        <!--
-                        <property name="idpDiscoveryResponseURL" value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/>
-                        -->
-                    </bean>
-                </constructor-arg>
-                <property name="metadataTrustCheck" value="false" />
-            </bean>
-			<list>
+            <list>
+                <!-- HUOM! Tämän pitää olla ensimmäisenä, muuten sp:n metadata ladataan hakalta eikä paikallisesti -->
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+                            <constructor-arg>
+                                <value type="java.io.File">${hakasp.metadatafile}</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool" />
+                        </bean>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                            <property name="local" value="true" />
+                            <property name="alias" value="hakasp" />
+                            <property name="securityProfile" value="null" />
+                            <property name="signingKey" value="${sp.keyalias}" />
+                            <property name="encryptionKey" value="${sp.keyalias}" />
+                            <property name="tlsKey" value="${sp.keyalias}" />
+                            <property name="requireArtifactResolveSigned" value="true" />
+                            <property name="requireLogoutRequestSigned" value="true" />
+                            <property name="requireLogoutResponseSigned" value="false" />
+                            <property name="idpDiscoveryEnabled" value="true"/>
+                            <property name="idpDiscoveryURL" value="${haka.wayf.url}"/>
+                            <!--
+                            <property name="idpDiscoveryResponseURL" value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/>
+                            -->
+                        </bean>
+                    </constructor-arg>
+                    <property name="metadataTrustCheck" value="false" />
+                </bean>
                 <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
                     <constructor-arg>
                         <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
