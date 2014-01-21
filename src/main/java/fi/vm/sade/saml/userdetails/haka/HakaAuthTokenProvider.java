@@ -20,6 +20,7 @@ import fi.vm.sade.saml.userdetails.model.IdentityData;
 public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     public static final String HAKA_IDP_ID = "haka";
+    private boolean registrationEnabled;
 
     @Override
     protected String getIDPUniqueKey() {
@@ -68,14 +69,20 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     public String createAuthenticationToken(SAMLCredential credential) {
         HenkiloType henkilo = getServiceProviderService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
-        // TODO: This is just temp solution for release 7.0 (november 2013)
-        // Prevents from new users from registering through HAKA_IDP_ID
-        if (henkilo == null) {
+        // Prevents from new users from registering through Haka
+        if (henkilo == null && !isRegistrationEnabled()) {
             String eppn = getFirstAttributeValue(credential, "eduPersonPrincipalName");
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
             throw new UnregisteredHakaUserException("Authentication denied for an unregistered Haka user: " + eppn);
         }
-        // end of temp solution
         return super.createAuthenticationToken(credential);
+    }
+
+    public boolean isRegistrationEnabled() {
+        return registrationEnabled;
+    }
+
+    public void setRegistrationEnabled(boolean registrationEnabled) {
+        this.registrationEnabled = registrationEnabled;
     }
 }
