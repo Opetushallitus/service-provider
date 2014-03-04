@@ -96,7 +96,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             // ohdata.setTehtavanimike(oh.getTehtavanimike());
             // ohdata.setPuhelinnumero(oh.getPuhelinnumero());
 
-            ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
+            // ohdata.setSahkopostiosoite(addHenkiloData.getKayttajatunnus());
             ohdata = fillExtraPersonData(credential, ohdata);
 
             ohdatas.add(ohdata);

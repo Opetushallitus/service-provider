@@ -6,7 +6,9 @@ package fi.vm.sade.saml.userdetails.haka;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloTyyppiType;
+import fi.vm.sade.authentication.service.types.dto.KayttajatiedotType;
 import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.saml.SAMLCredential;
 
@@ -47,7 +49,9 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setEtunimet(nimi);
         henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
         henkilo.setKutsumanimi(nimi);
-        henkilo.setKayttajatunnus(getUniqueIdentifier(credential));
+        KayttajatiedotType kt = new KayttajatiedotType();
+        kt.setUsername(getUniqueIdentifier(credential));
+        henkilo.setKayttajatiedot(kt);
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
