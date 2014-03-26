@@ -3,15 +3,15 @@
  */
 package fi.vm.sade.saml.userdetails.haka;
 
+import java.util.Random;
+
+import org.springframework.security.saml.SAMLCredential;
+
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.service.types.dto.HenkiloTyyppiType;
 import fi.vm.sade.authentication.service.types.dto.KayttajatiedotType;
 import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.saml.SAMLCredential;
-
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
 
@@ -22,6 +22,8 @@ import fi.vm.sade.saml.userdetails.model.IdentityData;
 public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     public static final String HAKA_IDP_ID = "haka";
+    private final int USERNAME_1ST_PART = 5;
+    private final int USERNAME_2ND_PART = 3;
     private boolean registrationEnabled;
 
     @Override
@@ -31,9 +33,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     @Override
     protected String getUniqueIdentifier(SAMLCredential credential) {
-        String eduPersonPrincipalName = getFirstAttributeValue(credential, "eduPersonPrincipalName");
-        eduPersonPrincipalName = eduPersonPrincipalName.replace('@', '-');
-        return eduPersonPrincipalName;
+        return getFirstAttributeValue(credential, "eduPersonPrincipalName");
     }
 
     @Override
@@ -41,16 +41,34 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         IdentityData henkilo = new IdentityData();
 
         String nimi = getFirstAttributeValue(credential, "givenName");
+        String sukunimi = getFirstAttributeValue(credential, "sn");
 
-        if(nimi == null || "".equals(nimi)) {
+        if (nimi == null || "".equals(nimi)) {
             nimi = getFirstAttributeValue(credential, "displayName");
         }
 
         henkilo.setEtunimet(nimi);
-        henkilo.setSukunimi(getFirstAttributeValue(credential, "sn"));
+        henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
         KayttajatiedotType kt = new KayttajatiedotType();
-        kt.setUsername(getUniqueIdentifier(credential));
+        /* This username generator uses 5 first characters from lastname,
+         * followed by 3 first characters from firstname plus additional
+         * random number to prevent duplicates
+         */
+        int endIndex1st = USERNAME_1ST_PART;
+        int endIndex2nd = USERNAME_2ND_PART;
+        if (sukunimi.length() < USERNAME_1ST_PART) {
+            endIndex1st = sukunimi.length() - 1;
+        }
+        if (nimi.length() < USERNAME_2ND_PART) {
+            endIndex2nd = nimi.length() - 1;
+        }
+        Random intGen = new Random();
+        int randomInt = intGen.nextInt(900) + 100; // 100-999
+        // Generated username should be e.g "lastnfir123"
+        String username = sukunimi.substring(0, endIndex1st) + nimi.substring(0, endIndex2nd) + randomInt;
+        
+        kt.setUsername(username);
         henkilo.setKayttajatiedot(kt);
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));

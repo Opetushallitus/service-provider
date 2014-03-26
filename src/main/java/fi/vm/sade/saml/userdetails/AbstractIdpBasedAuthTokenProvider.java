@@ -66,12 +66,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         if (henkilo == null) {
             IdentityData addHenkiloData = createIdentity(credential);
             henkilo = getUserManagementService().addHenkilo((AddHenkiloDataType) addHenkiloData);
+            
             try {
                 addOrganisaatioHenkilos(credential, henkilo, addHenkiloData);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.warn("Creating org.henkilo failed.", e);
             }
-
         }
         return getServiceProviderService().generateAuthTokenForHenkilo(henkilo, getIDPUniqueKey(),
                 getUniqueIdentifier(credential));
