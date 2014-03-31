@@ -50,26 +50,28 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setEtunimet(nimi);
         henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
-        KayttajatiedotType kt = new KayttajatiedotType();
-        /* This username generator uses 5 first characters from lastname,
-         * followed by 3 first characters from firstname plus additional
-         * random number to prevent duplicates
-         */
-        int endIndex1st = USERNAME_1ST_PART;
-        int endIndex2nd = USERNAME_2ND_PART;
-        if (sukunimi.length() < USERNAME_1ST_PART) {
-            endIndex1st = sukunimi.length() - 1;
-        }
-        if (nimi.length() < USERNAME_2ND_PART) {
-            endIndex2nd = nimi.length() - 1;
-        }
-        Random intGen = new Random();
-        int randomInt = intGen.nextInt(900) + 100; // 100-999
-        // Generated username should be e.g "lastnfir123"
-        String username = sukunimi.substring(0, endIndex1st) + nimi.substring(0, endIndex2nd) + randomInt;
         
-        kt.setUsername(username);
-        henkilo.setKayttajatiedot(kt);
+//        NOTE! Haka-käyttäjät eivät saa saada automaattisesti käyttäjätunnusta!!
+//        KayttajatiedotType kt = new KayttajatiedotType();
+//        /* This username generator uses 5 first characters from lastname,
+//         * followed by 3 first characters from firstname plus additional
+//         * random number to prevent duplicates
+//         */
+//        int endIndex1st = USERNAME_1ST_PART;
+//        int endIndex2nd = USERNAME_2ND_PART;
+//        if (sukunimi.length() < USERNAME_1ST_PART) {
+//            endIndex1st = sukunimi.length() - 1;
+//        }
+//        if (nimi.length() < USERNAME_2ND_PART) {
+//            endIndex2nd = nimi.length() - 1;
+//        }
+//        Random intGen = new Random();
+//        int randomInt = intGen.nextInt(900) + 100; // 100-999
+//        // Generated username should be e.g "lastnfir123"
+//        String username = sukunimi.substring(0, endIndex1st) + nimi.substring(0, endIndex2nd) + randomInt;
+//        
+//        kt.setUsername(username);
+//        henkilo.setKayttajatiedot(kt);
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
