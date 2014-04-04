@@ -22,8 +22,6 @@ import fi.vm.sade.saml.userdetails.model.IdentityData;
 public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     public static final String HAKA_IDP_ID = "haka";
-    private final int USERNAME_1ST_PART = 5;
-    private final int USERNAME_2ND_PART = 3;
     private boolean registrationEnabled;
 
     @Override
@@ -51,27 +49,24 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
         
-//        NOTE! Haka-käyttäjät eivät saa saada automaattisesti käyttäjätunnusta!!
-//        KayttajatiedotType kt = new KayttajatiedotType();
-//        /* This username generator uses 5 first characters from lastname,
-//         * followed by 3 first characters from firstname plus additional
-//         * random number to prevent duplicates
-//         */
-//        int endIndex1st = USERNAME_1ST_PART;
-//        int endIndex2nd = USERNAME_2ND_PART;
-//        if (sukunimi.length() < USERNAME_1ST_PART) {
-//            endIndex1st = sukunimi.length() - 1;
-//        }
-//        if (nimi.length() < USERNAME_2ND_PART) {
-//            endIndex2nd = nimi.length() - 1;
-//        }
-//        Random intGen = new Random();
-//        int randomInt = intGen.nextInt(900) + 100; // 100-999
-//        // Generated username should be e.g "lastnfir123"
-//        String username = sukunimi.substring(0, endIndex1st) + nimi.substring(0, endIndex2nd) + randomInt;
-//        
-//        kt.setUsername(username);
-//        henkilo.setKayttajatiedot(kt);
+        KayttajatiedotType kt = new KayttajatiedotType();
+        
+        Random intGen = new Random();
+        int randomInt = intGen.nextInt(900) + 100; // 100-999
+        // Generated username should be ePPN without special characters + 3 random numbers
+        String ePPN = getUniqueIdentifier(credential);
+        StringBuffer strBuffer = new StringBuffer();
+        for (char c : ePPN.toCharArray()) {
+            // [0-9A-Za-z] are currently only allowed
+            if (c < 48 || (c > 57 && c < 65) || (c > 90 && c < 97) || c > 122) {
+                c = '-';
+            }
+            strBuffer.append(c);
+        }
+        String username = strBuffer.toString() + randomInt;
+        
+        kt.setUsername(username);
+        henkilo.setKayttajatiedot(kt);
 
         henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
