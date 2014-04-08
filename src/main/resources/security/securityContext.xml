@@ -181,7 +181,7 @@
                                 <value type="int">5000</value>
                             </constructor-arg>
                             <constructor-arg>
-                                <value type="java.lang.String">/data00/oph/authentication/haka_metadata.xml</value>
+                                <value type="java.lang.String">${user.home.conf}/haka_metadata.xml</value>
                             </constructor-arg>
                             <property name="parserPool" ref="parserPool"/>
                             <!-- min refresh delay 4h -->
