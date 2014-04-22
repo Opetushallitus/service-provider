@@ -32,10 +32,10 @@
         <!-- <security:custom-filter before="FIRST" ref="metadataGeneratorFilter" 
             /> -->
         <security:custom-filter after="BASIC_AUTH_FILTER"
-            ref="urlFilter" />
+            ref="samlFilter" />
     </security:http>
 
-    <bean id="urlFilter" class="org.springframework.security.web.FilterChainProxy">
+    <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
         <security:filter-chain-map path-type="ant">
             <security:filter-chain pattern="/saml/login/**"
                 filters="samlEntryPoint" />
@@ -51,10 +51,6 @@
                 filters="samlLogoutProcessingFilter" />
             <security:filter-chain pattern="/saml/discovery/**"
                 filters="samlIDPDiscovery" />
-
-            <!-- For email invitation login -->
-            <security:filter-chain pattern="/email/login/**"
-                filters="emailEntryPoint" />
         </security:filter-chain-map>
     </bean>
 
@@ -119,12 +115,6 @@
         <property name="returnUrl"
             value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true" />
     </bean>
-    
-    <!-- Entry point to email link registration -->
-    <bean id="emailEntryPoint" class="fi.vm.sade.email.entry.RequestEmailEntryPoint">
-        <property name="redirectUrl" value="https://${host.virkailija}/registration-ui/html/index.html#/emailregister/" />
-        <property name="henkiloServiceUrl" value="https://${host.virkailija}/authentication-service/resources" />
-    </bean>
 
     <!-- IDP Discovery Service -->
     <bean id="samlIDPDiscovery" class="org.springframework.security.saml.SAMLDiscovery">
@@ -156,8 +146,7 @@
                         <bean
                             class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                             <constructor-arg>
-                                <value type="java.io.File">${hakasp.metadatafile}
-                                </value>
+                                <value type="java.io.File">${hakasp.metadatafile}</value>
                             </constructor-arg>
                             <property name="parserPool" ref="parserPool" />
                         </bean>
@@ -195,8 +184,7 @@
                         <bean
                             class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
                             <constructor-arg>
-                                <value type="java.lang.String">${haka.metadata.url}
-                                </value>
+                                <value type="java.lang.String">${haka.metadata.url}</value>
                             </constructor-arg>
                             <constructor-arg>
                                 <!-- Timeout for metadata loading in ms -->
