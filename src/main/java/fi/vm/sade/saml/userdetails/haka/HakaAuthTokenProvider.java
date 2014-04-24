@@ -31,18 +31,22 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     @Override
     protected String getUniqueIdentifier(SAMLCredential credential) {
-        return getFirstAttributeValue(credential, "eduPersonPrincipalName");
+        // urn:oid:1.3.6.1.4.1.5923.1.1.1.6 = ePPN
+        return getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
     }
 
     @Override
     protected IdentityData createIdentity(SAMLCredential credential) {
         IdentityData henkilo = new IdentityData();
 
-        String nimi = getFirstAttributeValue(credential, "givenName");
-        String sukunimi = getFirstAttributeValue(credential, "sn");
+        // urn:oid:2.5.4.42 = givenName
+        String nimi = getFirstAttributeValue(credential, "urn:oid:2.5.4.42");
+        // urn:oid:2.5.4.4 = sn
+        String sukunimi = getFirstAttributeValue(credential, "urn:oid:2.5.4.4");
 
         if (nimi == null || "".equals(nimi)) {
-            nimi = getFirstAttributeValue(credential, "displayName");
+            // urn:oid:2.16.840.1.113730.3.1.241 = displayName
+            nimi = getFirstAttributeValue(credential, "urn:oid:2.16.840.1.113730.3.1.241");
         }
 
         henkilo.setEtunimet(nimi);
@@ -68,7 +72,8 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         kt.setUsername(username);
         henkilo.setKayttajatiedot(kt);
 
-        henkilo.setDomainNimi(getFirstAttributeValue(credential, "schacHomeOrganization"));
+        // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization
+        henkilo.setDomainNimi(getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9"));
         henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
 
         logger.info("Creating henkilo data: {}", henkilo);
@@ -90,7 +95,8 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
                 getUniqueIdentifier(credential));
         // Prevents from new users from registering through Haka
         if (henkilo == null && !isRegistrationEnabled()) {
-            String eppn = getFirstAttributeValue(credential, "eduPersonPrincipalName");
+            // urn:oid:1.3.6.1.4.1.5923.1.1.1.6 = ePPN
+            String eppn = getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
             throw new UnregisteredHakaUserException("Authentication denied for an unregistered Haka user: " + eppn);
         }
