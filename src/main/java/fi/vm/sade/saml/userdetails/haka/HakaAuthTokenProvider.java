@@ -31,7 +31,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     @Override
     protected String getUniqueIdentifier(SAMLCredential credential) {
-        return getFirstAttributeValue(credential, "eduPersonPrincipalName");
+        return getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
     }
 
     @Override
@@ -90,7 +90,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
                 getUniqueIdentifier(credential));
         // Prevents from new users from registering through Haka
         if (henkilo == null && !isRegistrationEnabled()) {
-            String eppn = getFirstAttributeValue(credential, "eduPersonPrincipalName");
+            String eppn = getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
             throw new UnregisteredHakaUserException("Authentication denied for an unregistered Haka user: " + eppn);
         }

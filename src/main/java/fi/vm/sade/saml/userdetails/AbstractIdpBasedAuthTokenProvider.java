@@ -109,7 +109,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
         Attribute attrib = null;
         for (Attribute attr : credential.getAttributes()) {
-            if (attr.getFriendlyName() != null && attr.getFriendlyName().equalsIgnoreCase(attributeName)) {
+            if (attr.getName() != null && attr.getName().equalsIgnoreCase(attributeName)) {
                 attrib = attr;
                 break;
             }
