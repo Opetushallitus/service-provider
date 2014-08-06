@@ -109,7 +109,7 @@
             <bean
                 class="org.springframework.security.saml.websso.WebSSOProfileOptions">
                 <property name="includeScoping" value="false" />
-                <property name="forceAuthN" value="true" />
+                <property name="forceAuthN" value="false" />
             </bean>
         </property>
         <property name="returnUrl"
