@@ -31,7 +31,12 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
         
         for(IdpBasedAuthTokenProvider provider : tokenProviders) {
             if(provider.providesToken(credential.getRemoteEntityID())) {
-                return provider.createAuthenticationToken(credential);
+                try {
+                    return provider.createAuthenticationToken(credential);
+                }
+                catch (Exception e) {
+                    return null;
+                }
             }
         }
         

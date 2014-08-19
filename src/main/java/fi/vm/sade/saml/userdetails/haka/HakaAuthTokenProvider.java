@@ -3,17 +3,17 @@
  */
 package fi.vm.sade.saml.userdetails.haka;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.springframework.security.saml.SAMLCredential;
 
+import fi.vm.sade.authentication.model.Henkilo;
+import fi.vm.sade.authentication.model.HenkiloTyyppi;
+import fi.vm.sade.authentication.model.Kayttajatiedot;
 import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
-import fi.vm.sade.authentication.service.types.dto.HenkiloType;
-import fi.vm.sade.authentication.service.types.dto.HenkiloTyyppiType;
-import fi.vm.sade.authentication.service.types.dto.KayttajatiedotType;
 import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
-import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
  * @author tommiha
@@ -36,8 +36,9 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     }
 
     @Override
-    protected IdentityData createIdentity(SAMLCredential credential) {
-        IdentityData henkilo = new IdentityData();
+    protected Henkilo createIdentity(SAMLCredential credential) {
+//        IdentityData henkilo = new IdentityData();
+        Henkilo henkilo = new Henkilo();
 
         // urn:oid:2.5.4.42 = givenName
         String nimi = getFirstAttributeValue(credential, "urn:oid:2.5.4.42");
@@ -53,7 +54,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
         
-        KayttajatiedotType kt = new KayttajatiedotType();
+        Kayttajatiedot kt = new Kayttajatiedot();
         
         Random intGen = new Random();
         int randomInt = intGen.nextInt(900) + 100; // 100-999
@@ -73,8 +74,8 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setKayttajatiedot(kt);
 
         // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization
-        henkilo.setDomainNimi(getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9"));
-        henkilo.setHenkiloTyyppi(HenkiloTyyppiType.VIRKAILIJA);
+//        henkilo.setDomainNimi(getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9"));
+        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA);
 
         logger.info("Creating henkilo data: {}", henkilo);
 
@@ -90,11 +91,23 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
 
     @Override
-    public String createAuthenticationToken(SAMLCredential credential) {
-        HenkiloType henkilo = getServiceProviderService().getHenkiloByIDPAndIdentifier(getIDPUniqueKey(),
-                getUniqueIdentifier(credential));
+    public String createAuthenticationToken(SAMLCredential credential) throws Exception {
+        StringBuffer sb = new StringBuffer();
+        sb.append(getHenkiloRestUrl());
+        sb.append("cas/auth/");
+        sb.append(getIDPUniqueKey());
+        sb.append("?idpid=");
+        sb.append(getUniqueIdentifier(credential));
+        
+        String henkiloOid = null;
+        try {
+            henkiloOid = getHenkiloRestClient().get(sb.toString(), String.class);
+        }
+        catch (IOException ioe) {
+            logger.error("REST client", ioe);
+        }
         // Prevents from new users from registering through Haka
-        if (henkilo == null && !isRegistrationEnabled()) {
+        if (henkiloOid == null && !isRegistrationEnabled()) {
             // urn:oid:1.3.6.1.4.1.5923.1.1.1.6 = ePPN
             String eppn = getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);

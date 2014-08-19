@@ -219,10 +219,13 @@
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
-        <property name="authenticationService" ref="authenticationService" />
-        <property name="userManagementService" ref="userManagementService" />
-        <property name="serviceProviderService" ref="serviceProviderService" />
         <property name="organisaatioService" ref="organisaatioService" />
+        <property name="organisaatioRestUrl" value="${organisaatio.api.rest.url}" />
+        <property name="henkiloWebCasUrl" value="${web.url.cas}" />
+        <property name="henkiloCasService" value="${cas.service.authentication-service}" />
+        <property name="henkiloUsername" value="${serviceprovider.app.username.to.usermanagement}" />
+        <property name="henkiloPassword" value="${serviceprovider.app.password.to.usermanagement}" />
+        <property name="henkiloRestUrl" value="${authentication-service.rest.url}" />
     </bean>
 
     <bean id="userDetailsService"

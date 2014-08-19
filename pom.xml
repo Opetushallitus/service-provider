@@ -119,6 +119,16 @@
 			<version>1.2</version>
 		</dependency>
 
+                <dependency>
+                        <groupId>javax.persistence</groupId>
+                        <artifactId>com.springsource.javax.persistence</artifactId>
+                </dependency>
+
+                <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-core</artifactId>
+                </dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -137,14 +147,27 @@
 		  <artifactId>authentication-api</artifactId>
 		  <version>9.0-SNAPSHOT</version>
 		</dependency>
+        
+        <dependency>
+          <groupId>fi.vm.sade.authentication</groupId>
+          <artifactId>authentication-domain</artifactId>
+          <version>1.0-SNAPSHOT</version>
+        </dependency>
 		
-		<dependency>
-			<groupId>fi.vm.sade.organisaatio</groupId>
-			<artifactId>organisaatio-api</artifactId>
-			<version>${organisaatio.version}</version>
-		</dependency>
-		
-		<dependency>
+	<dependency>
+	    <groupId>fi.vm.sade.organisaatio</groupId>
+	    <artifactId>organisaatio-api</artifactId>
+	    <version>${organisaatio.version}</version>
+	</dependency>
+	<dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient-cache</artifactId>
+        </dependency>
+        <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+        </dependency>	
+	<dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-core</artifactId>
         </dependency>
