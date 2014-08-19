@@ -81,7 +81,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         
         StringBuffer sb = new StringBuffer();
         sb.append(henkiloRestUrl);
-        sb.append("cas/auth");
+        sb.append("cas/auth/idp/");
         sb.append(getIDPUniqueKey());
         sb.append("?idpid=");
         sb.append(getUniqueIdentifier(credential));
@@ -116,7 +116,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb = null;
         sb = new StringBuffer();
         sb.append(henkiloRestUrl);
-        sb.append("cas/auth/");
+        sb.append("cas/auth/oid/");
         sb.append(henkiloOid);
         sb.append("?idpkey=");
         sb.append(getIDPUniqueKey());

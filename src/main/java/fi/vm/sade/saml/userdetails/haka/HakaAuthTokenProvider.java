@@ -94,7 +94,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     public String createAuthenticationToken(SAMLCredential credential) throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append(getHenkiloRestUrl());
-        sb.append("cas/auth/");
+        sb.append("cas/auth/idp/");
         sb.append(getIDPUniqueKey());
         sb.append("?idpid=");
         sb.append(getUniqueIdentifier(credential));
