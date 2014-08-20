@@ -53,8 +53,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setEtunimet(nimi);
         henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
-        
-        Kayttajatiedot kt = new Kayttajatiedot();
+        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA);
         
         Random intGen = new Random();
         int randomInt = intGen.nextInt(900) + 100; // 100-999
@@ -69,26 +68,14 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
             strBuffer.append(c);
         }
         String username = strBuffer.toString() + randomInt;
-        
+        Kayttajatiedot kt = new Kayttajatiedot();
         kt.setUsername(username);
         henkilo.setKayttajatiedot(kt);
-
-        // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization
-//        henkilo.setDomainNimi(getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9"));
-        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA);
 
         logger.info("Creating henkilo data: {}", henkilo);
 
         return henkilo;
     }
-
-    @Override
-    protected AddHenkiloToOrganisaatiosDataType fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosDataType henkiloData) {
-        // Fill extra fields
-        return henkiloData;
-    }
-
-
 
     @Override
     public String createAuthenticationToken(SAMLCredential credential) throws Exception {

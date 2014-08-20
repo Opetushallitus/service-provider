@@ -1,5 +1,6 @@
 package fi.vm.sade.saml.userdetails;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,8 @@ import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.model.Henkilo;
 import fi.vm.sade.authentication.model.OrganisaatioHenkilo;
 import fi.vm.sade.generic.rest.CachingRestClient;
-import fi.vm.sade.organisaatio.api.model.OrganisaatioService;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioDTO;
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioSearchCriteriaDTO;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
@@ -34,8 +34,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private OrganisaatioService organisaatioService;
-    
     private String henkiloWebCasUrl;
     private String henkiloUsername;
     private String henkiloPassword;
@@ -128,20 +126,29 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     private void addOrganisaatioHenkilos(SAMLCredential credential, String henkiloOid) {
         ObjectMapper mapper = new ObjectMapperProvider().getContext(OrganisaatioHenkilo.class);
-        List<AddHenkiloToOrganisaatiosDataType> ohdatas = new ArrayList<AddHenkiloToOrganisaatiosDataType>();
 
-        OrganisaatioSearchCriteriaDTO criteria = new OrganisaatioSearchCriteriaDTO();
-        // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization
-        criteria.setOrganisaatioDomainNimi(getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9"));
-        List<OrganisaatioDTO> list = organisaatioService.searchOrganisaatios(criteria);
+        // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization e.g. domain name: tut.fi
+        String domainName = getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9");
+        // TODO!! Domain nimelle pitää tehdä käsittely tähän!!!
+        
+        OrganisaatioHakutulos organisaatio = null;
+        /* TODO!! Kun domain nimi saadaan asetettua...
+        try {
+            organisaatio = organisaatioRestClient.get(organisaatioRestUrl, OrganisaatioHakutulos.class);
+        }
+        catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+        */
 
         // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
         // tulee, otetaan ensimmäinen..
-        if (list != null && list.size() > 0) {
+        if (organisaatio != null && organisaatio.getNumHits() > 0 &&
+                organisaatio.getOrganisaatiot() != null && !organisaatio.getOrganisaatiot().isEmpty()) {
             OrganisaatioHenkilo ohdata = new OrganisaatioHenkilo();
 
-            OrganisaatioDTO organisaatioDTO = list.get(0);
-            ohdata.setOrganisaatioOid(organisaatioDTO.getOid());
+            OrganisaatioPerustieto perusTieto = organisaatio.getOrganisaatiot().get(0);
+            ohdata.setOrganisaatioOid(perusTieto.getOid());
             
             StringBuffer sb = new StringBuffer();
             sb.append(henkiloRestUrl);
@@ -159,8 +166,8 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                     logger.warn("Creating org.henkilo failed.");
                 }
             }
-            catch (Exception e) {
-                throw new RuntimeException(e);
+            catch (IOException ioe) {
+                throw new RuntimeException(ioe);
             }
         }
     }
@@ -206,35 +213,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      * @return
      */
     protected abstract String getUniqueIdentifier(SAMLCredential credential);
-
-    /**
-     * This method can be used to fill extra data such as work title, phone numbers etc. to henkilo data.
-     * @param henkiloData
-     * @return
-     */
-    protected abstract AddHenkiloToOrganisaatiosDataType fillExtraPersonData(SAMLCredential credential, AddHenkiloToOrganisaatiosDataType henkiloData);
-
-//    public List<String> getSupportedProviders() {
-//        return supportedProviders;
-//    }
-
-    /**
-     * Entity IDs (from SAML provider metadata) supported by this token
-     * provider.
-     * 
-     * @param supportedProviders
-     */
-//    public void setSupportedProviders(List<String> supportedProviders) {
-//        this.supportedProviders = supportedProviders;
-//    }
-
-    public OrganisaatioService getOrganisaatioService() {
-        return organisaatioService;
-    }
-
-    public void setOrganisaatioService(OrganisaatioService organisaatioService) {
-        this.organisaatioService = organisaatioService;
-    }
 
     public String getHenkiloWebCasUrl() {
         return henkiloWebCasUrl;

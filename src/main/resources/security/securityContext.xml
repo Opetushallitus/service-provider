@@ -219,7 +219,6 @@
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
-        <property name="organisaatioService" ref="organisaatioService" />
         <property name="organisaatioRestUrl" value="${organisaatio.api.rest.url}" />
         <property name="henkiloWebCasUrl" value="${web.url.cas}" />
         <property name="henkiloCasService" value="${cas.service.authentication-service}" />
