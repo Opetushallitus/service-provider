@@ -24,5 +24,5 @@ public interface IdpBasedAuthTokenProvider {
      * @param credential
      * @return
      */
-    String createAuthenticationToken(SAMLCredential credential);
+    String createAuthenticationToken(SAMLCredential credential) throws Exception;
 }
