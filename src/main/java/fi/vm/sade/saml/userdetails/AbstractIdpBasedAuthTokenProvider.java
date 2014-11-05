@@ -87,7 +87,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         logger.error("DEBUG::trying to verify ePPN = " + getUniqueIdentifier(credential));
         
         // Checks if Henkilo with given IdP key and identifier exists
-        String henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+        String henkiloOid = null;
+        try {
+            henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+        }
+        catch (Exception e) {
+            logger.error("Error in REST-client", e);
+        }
         
         logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
