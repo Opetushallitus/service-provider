@@ -94,12 +94,10 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             logger.error("Error in REST-client", e);
         }
         
-        logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
         if (henkiloOid.equalsIgnoreCase("none")) {
             Henkilo addHenkilo = createIdentity(credential);
             
-            logger.error("DEBUG::new henkilo model created");
             sb = null;
             sb = new StringBuffer();
             sb.append(henkiloRestUrl);
@@ -114,21 +112,14 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                 throw new RuntimeException(e);
             }
             
-            logger.error("DEBUG::new henkilo model jsonified");
-            
             HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", henkiloJson);
             if (response.getStatusLine().getStatusCode() != 200) {
                 logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
             }
-            
             henkiloOid = EntityUtils.toString(response.getEntity());
             
-            logger.error("DEBUG::new henkilo entity created, OID: " + henkiloOid);
-            
             addOrganisaatioHenkilos(credential, henkiloOid);
-            
-            logger.error("DEBUG::henkilo's organizations handled");
         }
         
         sb = null;
@@ -140,8 +131,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getIDPUniqueKey());
         sb.append("&idpid=");
         sb.append(getUniqueIdentifier(credential));
-        
-        logger.error("DEBUG::trying to get auth token");
         
         // Generates and returns auth token to Henkilo by OID
         return henkiloRestClient.get(sb.toString(), String.class);
