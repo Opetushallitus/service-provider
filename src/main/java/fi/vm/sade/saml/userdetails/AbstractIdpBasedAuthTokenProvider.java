@@ -85,7 +85,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getUniqueIdentifier(credential));
         
         // Checks if Henkilo with given IdP key and identifier exists
-        String henkiloOid = null;
+        String henkiloOid = "";
         try {
             henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
         }
@@ -95,7 +95,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         
         logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
-        if (henkiloOid == "null") {
+        if (henkiloOid.equalsIgnoreCase("n/a")) {
             Henkilo addHenkilo = createIdentity(credential);
             
             logger.error("DEBUG::new henkilo model created");
