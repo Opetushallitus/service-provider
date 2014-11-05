@@ -85,9 +85,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getUniqueIdentifier(credential));
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+        
+        logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
         if (henkiloOid == null) {
             Henkilo addHenkilo = createIdentity(credential);
+            
+            logger.error("DEBUG::new henkilo model created");
             sb = null;
             sb = new StringBuffer();
             sb.append(henkiloRestUrl);
@@ -104,11 +108,16 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             
             HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", henkiloJson);
             if (response.getStatusLine().getStatusCode() != 200) {
+                logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
             }
+            logger.error("DEBUG::new henkilo entity created");
+            
             henkiloOid = response.getEntity().toString();
             
             addOrganisaatioHenkilos(credential, henkiloOid);
+            
+            logger.error("DEBUG::henkilo's organizations handled");
         }
         
         sb = null;
