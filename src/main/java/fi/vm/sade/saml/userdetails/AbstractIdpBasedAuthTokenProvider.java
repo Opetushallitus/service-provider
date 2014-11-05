@@ -84,8 +84,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append("?idpid=");
         sb.append(getUniqueIdentifier(credential));
         
-        logger.error("DEBUG::trying to verify ePPN = " + getUniqueIdentifier(credential));
-        
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid = null;
         try {
@@ -97,7 +95,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         
         logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
-        if (henkiloOid.equals("null")) {
+        if (henkiloOid == "null") {
             Henkilo addHenkilo = createIdentity(credential);
             
             logger.error("DEBUG::new henkilo model created");
@@ -138,6 +136,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getIDPUniqueKey());
         sb.append("&idpid=");
         sb.append(getUniqueIdentifier(credential));
+        
+        logger.error("DEBUG::trying to get auth token");
+        
         // Generates and returns auth token to Henkilo by OID
         return henkiloRestClient.get(sb.toString(), String.class);
     }
