@@ -83,6 +83,9 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getIDPUniqueKey());
         sb.append("?idpid=");
         sb.append(getUniqueIdentifier(credential));
+        
+        logger.error("DEBUG::trying to verify ePPN = " + getUniqueIdentifier(credential));
+        
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
         
