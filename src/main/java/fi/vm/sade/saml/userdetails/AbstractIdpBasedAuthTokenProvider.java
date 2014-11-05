@@ -95,7 +95,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         
         logger.error("DEBUG::henkiloOid = " + henkiloOid);
         // If user is not found, then one is created during login
-        if (henkiloOid.equalsIgnoreCase("n/a")) {
+        if (henkiloOid.equalsIgnoreCase("none")) {
             Henkilo addHenkilo = createIdentity(credential);
             
             logger.error("DEBUG::new henkilo model created");
