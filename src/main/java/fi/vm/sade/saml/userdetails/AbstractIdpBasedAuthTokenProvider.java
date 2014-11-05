@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.opensaml.saml2.core.Attribute;
@@ -83,11 +84,20 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getIDPUniqueKey());
         sb.append("?idpid=");
         sb.append(getUniqueIdentifier(credential));
+        
         // Checks if Henkilo with given IdP key and identifier exists
-        String henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+        String henkiloOid = "";
+        try {
+            henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+        }
+        catch (Exception e) {
+            logger.error("Error in REST-client", e);
+        }
+        
         // If user is not found, then one is created during login
-        if (henkiloOid == null) {
+        if (henkiloOid.equalsIgnoreCase("none")) {
             Henkilo addHenkilo = createIdentity(credential);
+            
             sb = null;
             sb = new StringBuffer();
             sb.append(henkiloRestUrl);
@@ -104,9 +114,10 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             
             HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", henkiloJson);
             if (response.getStatusLine().getStatusCode() != 200) {
+                logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
             }
-            henkiloOid = response.getEntity().toString();
+            henkiloOid = EntityUtils.toString(response.getEntity());
             
             addOrganisaatioHenkilos(credential, henkiloOid);
         }
@@ -120,6 +131,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         sb.append(getIDPUniqueKey());
         sb.append("&idpid=");
         sb.append(getUniqueIdentifier(credential));
+        
         // Generates and returns auth token to Henkilo by OID
         return henkiloRestClient.get(sb.toString(), String.class);
     }
