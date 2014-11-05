@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.opensaml.saml2.core.Attribute;
@@ -113,14 +114,17 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                 throw new RuntimeException(e);
             }
             
+            logger.error("DEBUG::new henkilo model jsonified");
+            
             HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", henkiloJson);
             if (response.getStatusLine().getStatusCode() != 200) {
                 logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
             }
-            logger.error("DEBUG::new henkilo entity created");
             
-            henkiloOid = response.getEntity().toString();
+            henkiloOid = EntityUtils.toString(response.getEntity());
+            
+            logger.error("DEBUG::new henkilo entity created, OID: " + henkiloOid);
             
             addOrganisaatioHenkilos(credential, henkiloOid);
             
