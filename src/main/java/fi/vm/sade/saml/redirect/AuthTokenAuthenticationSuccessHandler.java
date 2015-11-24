@@ -29,11 +29,9 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             Authentication authentication) throws IOException, ServletException {
         
         String targetUrl = getDefaultTargetUrl();
-        String sessionTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
+        String finalTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
         
-        if (sessionTargetUrl != null) {
-            targetUrl = sessionTargetUrl;
-        }
+        logger.info("Target url: " + targetUrl);
         
         if(authentication instanceof AbstractAuthenticationToken) {
             AbstractAuthenticationToken token = (AbstractAuthenticationToken) authentication;
@@ -44,6 +42,11 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                     delimiter = "&";
                 } else {
                     delimiter = "?";
+                }
+                
+                if (finalTargetUrl != null) {
+                    logger.debug("Got final target url from session, adding to redirect url.");
+                    targetUrl += URLEncoder.encode("/" + finalTargetUrl, "UTF-8");
                 }
                 targetUrl += delimiter + AUTH_TOKEN_PARAMETER + "=" + URLEncoder.encode(authToken, "UTF-8");
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);

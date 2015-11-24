@@ -36,7 +36,13 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 			throws IOException, ServletException {
 		super.commence(request, response, e);
 		
-		request.getSession().setAttribute(REDIRECT_KEY, request.getParameter(REDIRECT_KEY));
+                String redirectFromReq = (String) request.getParameter(REDIRECT_KEY);
+                
+                if (redirectFromReq != null) {
+                    // Only set to session if set in request
+                    logger.debug("Saving redirect url to session.");
+                    request.getSession().setAttribute(REDIRECT_KEY, redirectFromReq);
+                }
 	}
 
 
