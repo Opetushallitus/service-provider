@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-		<artifactId>service-provider</artifactId>
-		<groupId>fi.vm.sade.auth</groupId>
-		<version>9.3-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <artifactId>service-provider</artifactId>
+        <groupId>fi.vm.sade.auth</groupId>
+        <version>9.3-SNAPSHOT</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>service-provider-app</artifactId>
-	<packaging>war</packaging>
-	<name>Service provider web application</name>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>service-provider-app</artifactId>
+    <packaging>war</packaging>
+    <name>Service provider web application</name>
 
-	<build>
-		<finalName>service-provider-app</finalName>
+    <build>
+        <finalName>service-provider-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
@@ -62,9 +62,9 @@
                 </dependencies>
             </plugin>
         </plugins>
-	</build>
+    </build>
 
-	<dependencies>
+    <dependencies>
         <!--
 		<dependency>
 			<groupId>fi.vm.sade.auth</groupId>
@@ -78,73 +78,73 @@
             <version>1.0.0.RC2</version>
         </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-                        <version>${spring.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.6.1</version>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
 
-                <dependency>
-                        <groupId>javax.persistence</groupId>
-                        <artifactId>com.springsource.javax.persistence</artifactId>
-                </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>com.springsource.javax.persistence</artifactId>
+        </dependency>
 
-                <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-core</artifactId>
-                </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
 
-                <dependency>
-                        <groupId>com.google.code.gson</groupId>
-                        <artifactId>gson</artifactId>
-                </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
 
-		<dependency>
-		    <groupId>commons-io</groupId>
-		    <artifactId>commons-io</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-                        <version>${junit.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>${junit.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>fi.vm.sade.generic</groupId>
@@ -152,32 +152,32 @@
             <version>${generic.version}</version>
         </dependency>
 
-		<dependency>
-		  <groupId>fi.vm.sade.authentication</groupId>
-		  <artifactId>authentication-api</artifactId>
-		  <version>9.0-SNAPSHOT</version>
-		</dependency>
-        
         <dependency>
-          <groupId>fi.vm.sade.authentication</groupId>
-          <artifactId>authentication-domain</artifactId>
-          <version>1.0-SNAPSHOT</version>
+            <groupId>fi.vm.sade.authentication</groupId>
+            <artifactId>authentication-api</artifactId>
+            <version>9.0-SNAPSHOT</version>
         </dependency>
-		
-	<dependency>
-	    <groupId>fi.vm.sade.organisaatio</groupId>
-	    <artifactId>organisaatio-api</artifactId>
-	    <version>${organisaatio.version}</version>
-	</dependency>
-	<dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient-cache</artifactId>
+
+        <dependency>
+            <groupId>fi.vm.sade.authentication</groupId>
+            <artifactId>authentication-domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.vm.sade.organisaatio</groupId>
+            <artifactId>organisaatio-api</artifactId>
+            <version>${organisaatio.version}</version>
         </dependency>
         <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-        </dependency>	
-	<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-core</artifactId>
         </dependency>
