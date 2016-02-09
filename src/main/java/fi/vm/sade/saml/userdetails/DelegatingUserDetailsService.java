@@ -35,13 +35,14 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
                     return provider.createAuthenticationToken(credential);
                 }
                 catch (Exception e) {
-                    return null;
+                    logger.error("Exception while creating authentication token for provider {}", credential.getRemoteEntityID(), e);
+                    throw new UsernameNotFoundException("Exception while creating authentication token for provider " + credential.getRemoteEntityID(), e);
                 }
             }
         }
         
-        logger.warn("Could not find authentication token provider for IDP: " + credential.getRemoteEntityID());
-        return null;
+        logger.error("Could not find authentication token provider for IDP: {}", credential.getRemoteEntityID());
+        throw new UsernameNotFoundException("Could not find authentication token provider for IDP: " + credential.getRemoteEntityID());
     }
 
     public List<IdpBasedAuthTokenProvider> getTokenProviders() {
