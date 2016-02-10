@@ -202,7 +202,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             return ((XSAny) obj).getTextContent();
         }
 
-        logger.warn("Could not parse field {} of type {}.", obj.getElementQName(), obj.getSchemaType());
+        logger.error("Could not parse field {} of type {}.", obj.getElementQName(), obj.getSchemaType());
         throw new SAMLCredentialsParseException("Could not parse field " + obj.getElementQName() + " of type "+ obj.getSchemaType());
     }
 
