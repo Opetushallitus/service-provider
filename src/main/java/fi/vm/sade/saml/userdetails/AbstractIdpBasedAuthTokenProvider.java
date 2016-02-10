@@ -1,31 +1,27 @@
 package fi.vm.sade.saml.userdetails;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import fi.vm.sade.saml.exception.SAMLCredentialsParseException;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
+import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.XSString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.service.types.AddHenkiloDataType;
-import fi.vm.sade.authentication.service.types.AddHenkiloToOrganisaatiosDataType;
-import fi.vm.sade.authentication.service.types.dto.HenkiloType;
 import fi.vm.sade.authentication.model.Henkilo;
 import fi.vm.sade.authentication.model.OrganisaatioHenkilo;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.saml.userdetails.model.IdentityData;
 
 /**
  * @author tommiha
@@ -194,6 +190,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         }
 
         if (attrib == null) {
+            logger.debug("Could not find attribute {}" + attributeName);
             return null;
         }
 
@@ -201,7 +198,12 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         if (obj instanceof XSString) {
             return ((XSString) obj).getValue();
         }
-        return null;
+        if (obj instanceof XSAny) {
+            return ((XSAny) obj).getTextContent();
+        }
+
+        logger.warn("Could not parse field {} of type {}.", obj.getElementQName(), obj.getSchemaType());
+        throw new SAMLCredentialsParseException("Could not parse field " + obj.getElementQName() + " of type "+ obj.getSchemaType());
     }
 
     /**
