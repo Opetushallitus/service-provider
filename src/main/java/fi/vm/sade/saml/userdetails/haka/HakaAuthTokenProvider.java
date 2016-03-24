@@ -24,6 +24,10 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     public static final String HAKA_IDP_ID = "haka";
     private boolean registrationEnabled;
 
+    public HakaAuthTokenProvider() {
+        getHenkiloRestClient().setClientSubSystemCode("authentication.haka");
+    }
+
     @Override
     protected String getIDPUniqueKey() {
         return HAKA_IDP_ID;

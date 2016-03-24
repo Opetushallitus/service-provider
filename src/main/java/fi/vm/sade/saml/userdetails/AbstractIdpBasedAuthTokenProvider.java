@@ -39,8 +39,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     private CachingRestClient henkiloRestClient = new CachingRestClient();
     
     private String organisaatioRestUrl;
-    private CachingRestClient organisaatioRestClient = new CachingRestClient();
-    
+
     @PostConstruct
     public void init() {
         henkiloRestClient.setWebCasUrl(henkiloWebCasUrl);
