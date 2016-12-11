@@ -46,7 +46,8 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 
                 if (finalTargetUrl != null) {
                     logger.debug("Got final target url from session, adding to redirect url.");
-                    targetUrl += URLEncoder.encode("/" + finalTargetUrl, "UTF-8");
+                    // Double encode final url, otherwise final target urls part will be confused with the original url on flow: -> cas -> registration -> finaltarget
+                    targetUrl += URLEncoder.encode("/" + URLEncoder.encode(finalTargetUrl, "UTF-8") , "UTF-8");
                 }
                 targetUrl += delimiter + AUTH_TOKEN_PARAMETER + "=" + URLEncoder.encode(authToken, "UTF-8");
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
