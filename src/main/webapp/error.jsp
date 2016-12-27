@@ -70,7 +70,7 @@
             </div>
             <footer id="footer" class="offset-left-16-1 grid16-14">
                 <div class="offset-left-16-2 grid16-3 padding-vertical-5">
-                    <img src="<c:url value='/img/OPH_logo.png' />" />
+                    <img src="<c:url value='/img/OPH_logo.svg' />" />
                 </div>
                 <div class="grid16-3 padding-vertical-5">
                     <address class="address">
