@@ -189,7 +189,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         }
 
         if (attrib == null) {
-            logger.debug("Could not find attribute {}" + attributeName);
+            logger.debug("Could not find attribute {}", attributeName);
             return null;
         }
 

@@ -1,6 +1,5 @@
 package fi.vm.sade.saml.servlet;
 
-import fi.vm.sade.authentication.business.exception.IdentificationExpiredException;
 import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
