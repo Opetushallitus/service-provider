@@ -216,15 +216,16 @@
         <!-- <property name="refreshCheckInterval" value="14400000" /> -->
     </bean>
 
+    <bean id="ophProperties" class="fi.vm.sade.saml.configuration.ServiceProviderOphProperties">
+    </bean>
+
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
         <property name="organisaatioRestUrl" value="${organisaatio.api.rest.url}" />
-        <property name="henkiloWebCasUrl" value="${web.url.cas}" />
-        <property name="henkiloCasService" value="${cas.service.authentication-service}" />
         <property name="henkiloUsername" value="${serviceprovider.app.username.to.usermanagement}" />
         <property name="henkiloPassword" value="${serviceprovider.app.password.to.usermanagement}" />
-        <property name="henkiloRestUrl" value="${authentication-service.rest.url}" />
+        <property name="ophProperties" ref="ophProperties" />
     </bean>
 
     <bean id="userDetailsService"

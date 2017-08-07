@@ -11,13 +11,6 @@
 	   http://www.springframework.org/schema/context/spring-context.xsd
 	">
 
-    <bean id="casInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
-        <property name="webCasUrl" value="${web.url.cas}"/>
-        <property name="targetService" value="${cas.service.authentication-service}/j_spring_cas_security_check"/>
-        <property name="appClientUsername" value="${serviceprovider.app.username.to.usermanagement}"/>
-        <property name="appClientPassword" value="${serviceprovider.app.password.to.usermanagement}"/>
-    </bean>
-
     <bean id="organisaatioCasInterceptor" class="fi.vm.sade.authentication.cas.CasApplicationAsAUserInterceptor">
         <property name="webCasUrl" value="${web.url.cas}"/>
         <property name="targetService" value="${cas.service.organisaatio-service}/j_spring_cas_security_check"/>
@@ -30,30 +23,6 @@
             <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
         </cxf:outInterceptors>
     </cxf:bus>
-
-    <jaxws:client id="authenticationService"
-        serviceClass="fi.vm.sade.authentication.service.AuthenticationService" 
-        address="${authentication.webservice.url.backend}">
-        <jaxws:outInterceptors>
-            <ref bean="casInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
-
-    <jaxws:client id="userManagementService"
-        serviceClass="fi.vm.sade.authentication.service.UserManagementService"
-        address="${userManagement.webservice.url.backend}">
-        <jaxws:outInterceptors>
-            <ref bean="casInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
-
-    <jaxws:client id="serviceProviderService"
-            serviceClass="fi.vm.sade.authentication.service.ServiceProviderService"
-            address="${serviceProvider.webservice.url.backend}">
-        <jaxws:outInterceptors>
-            <ref bean="casInterceptor" />
-        </jaxws:outInterceptors>
-    </jaxws:client>
 
     <jaxws:client id="organisaatioService"
                   serviceClass="fi.vm.sade.organisaatio.api.model.OrganisaatioService"

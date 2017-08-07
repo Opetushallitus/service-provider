@@ -22,6 +22,7 @@ import fi.vm.sade.authentication.model.OrganisaatioHenkilo;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
+import fi.vm.sade.properties.OphProperties;
 
 /**
  * @author tommiha
@@ -31,21 +32,19 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String henkiloWebCasUrl;
     private String henkiloUsername;
     private String henkiloPassword;
-    private String henkiloCasService;
-    private String henkiloRestUrl;
+    private OphProperties ophProperties;
     private CachingRestClient henkiloRestClient = new CachingRestClient();
     
     private String organisaatioRestUrl;
 
     @PostConstruct
     public void init() {
-        henkiloRestClient.setWebCasUrl(henkiloWebCasUrl);
+        henkiloRestClient.setWebCasUrl(ophProperties.url("cas.base"));
         henkiloRestClient.setUsername(henkiloUsername);
         henkiloRestClient.setPassword(henkiloPassword);
-        henkiloRestClient.setCasService(henkiloCasService + "/j_spring_cas_security_check");
+        henkiloRestClient.setCasService(ophProperties.url("henkilo.security_check"));
     }
 
     /*
@@ -73,17 +72,10 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     public String createAuthenticationToken(SAMLCredential credential) throws Exception {
         ObjectMapper mapper = new ObjectMapperProvider().getContext(Henkilo.class);
         
-        StringBuffer sb = new StringBuffer();
-        sb.append(henkiloRestUrl);
-        sb.append("cas/auth/idp/");
-        sb.append(getIDPUniqueKey());
-        sb.append("?idpid=");
-        sb.append(getUniqueIdentifier(credential));
-        
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid = "";
         try {
-            henkiloOid = henkiloRestClient.get(sb.toString(), String.class);
+            henkiloOid = henkiloRestClient.get(ophProperties.url("henkilo.cas.auth.idp", getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
         }
         catch (Exception e) {
             logger.error("Error in REST-client", e);
@@ -92,11 +84,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         // If user is not found, then one is created during login
         if (henkiloOid.equalsIgnoreCase("none")) {
             Henkilo addHenkilo = createIdentity(credential);
-            
-            sb = null;
-            sb = new StringBuffer();
-            sb.append(henkiloRestUrl);
-            sb.append("cas/auth/henkilo");
             
             String henkiloJson = "";
             try {
@@ -107,7 +94,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
                 throw new RuntimeException(e);
             }
             
-            HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", henkiloJson);
+            HttpResponse response = henkiloRestClient.post(ophProperties.url("henkilo.cas.auth.henkilo"), "application/json", henkiloJson);
             if (response.getStatusLine().getStatusCode() != 200) {
                 logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
@@ -117,18 +104,8 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             addOrganisaatioHenkilos(credential, henkiloOid);
         }
         
-        sb = null;
-        sb = new StringBuffer();
-        sb.append(henkiloRestUrl);
-        sb.append("cas/auth/oid/");
-        sb.append(henkiloOid);
-        sb.append("?idpkey=");
-        sb.append(getIDPUniqueKey());
-        sb.append("&idpid=");
-        sb.append(getUniqueIdentifier(credential));
-        
         // Generates and returns auth token to Henkilo by OID
-        return henkiloRestClient.get(sb.toString(), String.class);
+        return henkiloRestClient.get(ophProperties.url("henkilo.cas.auth.oid", henkiloOid, getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
     }
 
     private void addOrganisaatioHenkilos(SAMLCredential credential, String henkiloOid) {
@@ -157,18 +134,12 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
             OrganisaatioPerustieto perusTieto = organisaatio.getOrganisaatiot().get(0);
             ohdata.setOrganisaatioOid(perusTieto.getOid());
             
-            StringBuffer sb = new StringBuffer();
-            sb.append(henkiloRestUrl);
-            sb.append("cas/auth/");
-            sb.append(henkiloOid);
-            sb.append("/orghenkilo");
-            
             String orgHenkiloJson = "";
             try {
                 mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
                 orgHenkiloJson = mapper.writeValueAsString(ohdata);
                 
-                HttpResponse response = henkiloRestClient.post(sb.toString(), "application/json", orgHenkiloJson);
+                HttpResponse response = henkiloRestClient.post(ophProperties.url("henkilo.cas.auth.orghenkilo", henkiloOid), "application/json", orgHenkiloJson);
                 if (response.getStatusLine().getStatusCode() != 200) {
                     logger.warn("Creating org.henkilo failed.");
                 }
@@ -227,14 +198,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     protected abstract String getUniqueIdentifier(SAMLCredential credential);
 
-    public String getHenkiloWebCasUrl() {
-        return henkiloWebCasUrl;
-    }
-
-    public void setHenkiloWebCasUrl(String henkiloWebCasUrl) {
-        this.henkiloWebCasUrl = henkiloWebCasUrl;
-    }
-
     public String getHenkiloUsername() {
         return henkiloUsername;
     }
@@ -251,12 +214,12 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
         this.henkiloPassword = henkiloPassword;
     }
 
-    public String getHenkiloCasService() {
-        return henkiloCasService;
+    public OphProperties getOphProperties() {
+        return ophProperties;
     }
 
-    public void setHenkiloCasService(String henkiloCasService) {
-        this.henkiloCasService = henkiloCasService;
+    public void setOphProperties(OphProperties ophProperties) {
+        this.ophProperties = ophProperties;
     }
 
     public String getOrganisaatioRestUrl() {
@@ -265,14 +228,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     public void setOrganisaatioRestUrl(String organisaatioRestUrl) {
         this.organisaatioRestUrl = organisaatioRestUrl;
-    }
-
-    public String getHenkiloRestUrl() {
-        return henkiloRestUrl;
-    }
-
-    public void setHenkiloRestUrl(String henkiloRestUrl) {
-        this.henkiloRestUrl = henkiloRestUrl;
     }
 
     public CachingRestClient getHenkiloRestClient() {

@@ -95,16 +95,9 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     @Override
     public String createAuthenticationToken(SAMLCredential credential) throws Exception {
-        StringBuffer sb = new StringBuffer();
-        sb.append(getHenkiloRestUrl());
-        sb.append("cas/auth/idp/");
-        sb.append(getIDPUniqueKey());
-        sb.append("?idpid=");
-        sb.append(getUniqueIdentifier(credential));
-        
         String henkiloOid = null;
         try {
-            henkiloOid = getHenkiloRestClient().get(sb.toString(), String.class);
+            henkiloOid = getHenkiloRestClient().get(getOphProperties().url("henkilo.cas.auth.idp", getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
         }
         catch (IOException ioe) {
             logger.error("REST client", ioe);
