@@ -222,7 +222,6 @@
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
-        <property name="organisaatioRestUrl" value="${organisaatio.api.rest.url}" />
         <property name="henkiloUsername" value="${serviceprovider.app.username.to.usermanagement}" />
         <property name="henkiloPassword" value="${serviceprovider.app.password.to.usermanagement}" />
         <property name="ophProperties" ref="ophProperties" />

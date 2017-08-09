@@ -1,6 +1,5 @@
 package fi.vm.sade.saml.userdetails;
 
-import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
@@ -17,12 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.model.Henkilo;
-import fi.vm.sade.authentication.model.OrganisaatioHenkilo;
 import fi.vm.sade.generic.rest.CachingRestClient;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
-import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.properties.OphProperties;
+import java.io.IOException;
+import javax.ws.rs.core.MediaType;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author tommiha
@@ -35,16 +33,24 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     private String henkiloUsername;
     private String henkiloPassword;
     private OphProperties ophProperties;
-    private CachingRestClient henkiloRestClient = new CachingRestClient();
-    
-    private String organisaatioRestUrl;
+    private final CachingRestClient oppijanumerorekisteriRestClient = new CachingRestClient();
+    private final CachingRestClient kayttooikeusRestClient = new CachingRestClient();
 
     @PostConstruct
     public void init() {
-        henkiloRestClient.setWebCasUrl(ophProperties.url("cas.base"));
-        henkiloRestClient.setUsername(henkiloUsername);
-        henkiloRestClient.setPassword(henkiloPassword);
-        henkiloRestClient.setCasService(ophProperties.url("henkilo.security_check"));
+        String clientSubSystemCode = getClientSubSystemCode();
+
+        oppijanumerorekisteriRestClient.setClientSubSystemCode(clientSubSystemCode);
+        oppijanumerorekisteriRestClient.setWebCasUrl(ophProperties.url("cas.base"));
+        oppijanumerorekisteriRestClient.setUsername(henkiloUsername);
+        oppijanumerorekisteriRestClient.setPassword(henkiloPassword);
+        oppijanumerorekisteriRestClient.setCasService(ophProperties.url("oppijanumerorekisteri-service.security_check"));
+
+        kayttooikeusRestClient.setClientSubSystemCode(clientSubSystemCode);
+        kayttooikeusRestClient.setWebCasUrl(ophProperties.url("cas.base"));
+        kayttooikeusRestClient.setUsername(henkiloUsername);
+        kayttooikeusRestClient.setPassword(henkiloPassword);
+        kayttooikeusRestClient.setCasService(ophProperties.url("kayttooikeus-service.security_check"));
     }
 
     /*
@@ -70,84 +76,72 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
      */
     @Override
     public String createAuthenticationToken(SAMLCredential credential) throws Exception {
-        ObjectMapper mapper = new ObjectMapperProvider().getContext(Henkilo.class);
-        
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid = "";
         try {
-            henkiloOid = henkiloRestClient.get(ophProperties.url("henkilo.cas.auth.idp", getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
+            henkiloOid = kayttooikeusRestClient.get(ophProperties.url("kayttooikeus-service.cas.oidByIdp", getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
         }
         catch (Exception e) {
-            logger.error("Error in REST-client", e);
+            // If user is not found, then one is created during login
+            if (isNotFound(e)) {
+                // Implementation may prevent new users from registering
+                validateRegistration(credential);
+                henkiloOid = createHenkilo(createIdentity(credential));
+                createKayttajatiedot(henkiloOid, createKayttajatiedot(credential));
+            } else {
+                logger.error("Error in REST-client", e);
+                throw e;
+            }
         }
-        
-        // If user is not found, then one is created during login
-        if (henkiloOid.equalsIgnoreCase("none")) {
-            Henkilo addHenkilo = createIdentity(credential);
-            
-            String henkiloJson = "";
-            try {
-                mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
-                henkiloJson = mapper.writeValueAsString(addHenkilo);
-            }
-            catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            
-            HttpResponse response = henkiloRestClient.post(ophProperties.url("henkilo.cas.auth.henkilo"), "application/json", henkiloJson);
-            if (response.getStatusLine().getStatusCode() != 200) {
-                logger.error("Error in creating new henkilo, status: " + response.getStatusLine().getStatusCode());
-                throw new RuntimeException("Creating henkilo '" + addHenkilo.getKayttajatiedot().getUsername() + "' failed.");
-            }
-            henkiloOid = EntityUtils.toString(response.getEntity());
-            
-            addOrganisaatioHenkilos(credential, henkiloOid);
-        }
-        
+
         // Generates and returns auth token to Henkilo by OID
-        return henkiloRestClient.get(ophProperties.url("henkilo.cas.auth.oid", henkiloOid, getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
+        return kayttooikeusRestClient.get(ophProperties.url("kayttooikeus-service.cas.authTokenForOidAndIdp", henkiloOid, getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
     }
 
-    private void addOrganisaatioHenkilos(SAMLCredential credential, String henkiloOid) {
-        ObjectMapper mapper = new ObjectMapperProvider().getContext(OrganisaatioHenkilo.class);
+    private static boolean isNotFound(Exception exception) {
+        if (exception instanceof CachingRestClient.HttpException) {
+            CachingRestClient.HttpException httpException = (CachingRestClient.HttpException) exception;
+            return httpException.getStatusCode() == HttpStatus.NOT_FOUND.value();
+        }
+        return false;
+    }
 
-        // urn:oid:1.3.6.1.4.1.25178.1.2.9 = schacHomeOrganization e.g. domain name: tut.fi
-        String domainName = getFirstAttributeValue(credential, "urn:oid:1.3.6.1.4.1.25178.1.2.9");
-        // TODO!! Domain nimelle pitää tehdä käsittely tähän!!!
-        
-        OrganisaatioHakutulos organisaatio = null;
-        /* TODO!! Kun domain nimi saadaan asetettua...
+    private String createHenkilo(HenkiloCreateDto henkilo) throws IOException {
+        String json = toJson(henkilo, HenkiloCreateDto.class);
+        String url = ophProperties.url("oppijanumerorekisteri.henkilo");
+        HttpResponse response = oppijanumerorekisteriRestClient.post(url, MediaType.APPLICATION_JSON, json);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (!isSuccessful(statusCode)) {
+            logger.error("Error in creating new henkilo, status: {}", statusCode);
+            throw new RuntimeException("Creating henkilo '" + henkilo.getSukunimi() + "' failed.");
+        }
+        return EntityUtils.toString(response.getEntity());
+    }
+
+    private void createKayttajatiedot(String oid, KayttajatiedotCreateDto kayttajatiedot) throws IOException {
+        String json = toJson(kayttajatiedot, KayttajatiedotCreateDto.class);
+        String url = ophProperties.url("kayttooikeus-service.henkilo.kayttajatiedot", oid);
+        HttpResponse response = kayttooikeusRestClient.post(url, MediaType.APPLICATION_JSON, json);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (!isSuccessful(statusCode)) {
+            logger.error("Error in creating new kayttajatiedot, status: {}", statusCode);
+            throw new RuntimeException("Creating kayttajatiedot '" + kayttajatiedot.getUsername() + "' failed.");
+        }
+    }
+
+    private static <T> String toJson(T value, Class<T> type) {
+        ObjectMapper mapper = new ObjectMapperProvider().getContext(type);
         try {
-            organisaatio = organisaatioRestClient.get(organisaatioRestUrl, OrganisaatioHakutulos.class);
+            mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
+            return mapper.writeValueAsString(value);
         }
-        catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        */
+    }
 
-        // Ei pitäisi koskaan tulla yli yhtä kappaletta. Jos kumminkin
-        // tulee, otetaan ensimmäinen..
-        if (organisaatio != null && organisaatio.getNumHits() > 0 &&
-                organisaatio.getOrganisaatiot() != null && !organisaatio.getOrganisaatiot().isEmpty()) {
-            OrganisaatioHenkilo ohdata = new OrganisaatioHenkilo();
-
-            OrganisaatioPerustieto perusTieto = organisaatio.getOrganisaatiot().get(0);
-            ohdata.setOrganisaatioOid(perusTieto.getOid());
-            
-            String orgHenkiloJson = "";
-            try {
-                mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
-                orgHenkiloJson = mapper.writeValueAsString(ohdata);
-                
-                HttpResponse response = henkiloRestClient.post(ophProperties.url("henkilo.cas.auth.orghenkilo", henkiloOid), "application/json", orgHenkiloJson);
-                if (response.getStatusLine().getStatusCode() != 200) {
-                    logger.warn("Creating org.henkilo failed.");
-                }
-            }
-            catch (IOException ioe) {
-                throw new RuntimeException(ioe);
-            }
-        }
+    private static boolean isSuccessful(int statusCode) {
+        return HttpStatus.Series.SUCCESSFUL.equals(HttpStatus.valueOf(statusCode).series());
     }
 
     protected String getFirstAttributeValue(SAMLCredential credential, String attributeName) {
@@ -177,12 +171,34 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
     }
 
     /**
+     * Code to be used with {@link CachingRestClient#clientSubSystemCode}.
+     *
+     * @return
+     */
+    protected abstract String getClientSubSystemCode();
+
+    /**
+     * Implementation may prevent new users from registering.
+     *
+     * @param credential
+     */
+    protected abstract void validateRegistration(SAMLCredential credential);
+
+    /**
      * Creates Henkilo from SAMLCredentials.
      * 
      * @param credential
      * @return
      */
-    protected abstract Henkilo createIdentity(SAMLCredential credential);
+    protected abstract HenkiloCreateDto createIdentity(SAMLCredential credential);
+
+    /**
+     * Creates Kayttajatiedot from SAMLCredentials.
+     *
+     * @param credential
+     * @return
+     */
+    protected abstract KayttajatiedotCreateDto createKayttajatiedot(SAMLCredential credential);
 
     /**
      * Returns IDP unique key.
@@ -220,17 +236,5 @@ public abstract class AbstractIdpBasedAuthTokenProvider implements IdpBasedAuthT
 
     public void setOphProperties(OphProperties ophProperties) {
         this.ophProperties = ophProperties;
-    }
-
-    public String getOrganisaatioRestUrl() {
-        return organisaatioRestUrl;
-    }
-
-    public void setOrganisaatioRestUrl(String organisaatioRestUrl) {
-        this.organisaatioRestUrl = organisaatioRestUrl;
-    }
-
-    public CachingRestClient getHenkiloRestClient() {
-        return henkiloRestClient;
     }
 }

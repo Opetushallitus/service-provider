@@ -3,7 +3,6 @@
  */
 package fi.vm.sade.saml.userdetails.haka;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -12,11 +11,10 @@ import org.apache.commons.lang.StringUtils;
 import org.opensaml.saml2.core.Attribute;
 import org.springframework.security.saml.SAMLCredential;
 
-import fi.vm.sade.authentication.model.Henkilo;
-import fi.vm.sade.authentication.model.HenkiloTyyppi;
-import fi.vm.sade.authentication.model.Kayttajatiedot;
 import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
+import fi.vm.sade.saml.userdetails.HenkiloCreateDto;
+import fi.vm.sade.saml.userdetails.KayttajatiedotCreateDto;
 
 /**
  * @author tommiha
@@ -27,10 +25,7 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     public static final String HAKA_IDP_ID = "haka";
     private boolean registrationEnabled;
     private static final String E_PNN = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
-
-    public HakaAuthTokenProvider() {
-        getHenkiloRestClient().setClientSubSystemCode("authentication.haka");
-    }
+    private static final String CLIENT_SUB_SYSTEM_CODE = "authentication.haka";
 
     @Override
     protected String getIDPUniqueKey() {
@@ -52,9 +47,13 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
     }
 
     @Override
-    protected Henkilo createIdentity(SAMLCredential credential) {
-//        IdentityData henkilo = new IdentityData();
-        Henkilo henkilo = new Henkilo();
+    protected String getClientSubSystemCode() {
+        return CLIENT_SUB_SYSTEM_CODE;
+    }
+
+    @Override
+    protected HenkiloCreateDto createIdentity(SAMLCredential credential) {
+        HenkiloCreateDto henkilo = new HenkiloCreateDto();
 
         // urn:oid:2.5.4.42 = givenName
         String nimi = getFirstAttributeValue(credential, "urn:oid:2.5.4.42");
@@ -69,8 +68,15 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
         henkilo.setEtunimet(nimi);
         henkilo.setSukunimi(sukunimi);
         henkilo.setKutsumanimi(nimi);
-        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA);
-        
+        henkilo.setHenkiloTyyppi("VIRKAILIJA");
+
+        logger.info("Creating henkilo data: {}", henkilo);
+
+        return henkilo;
+    }
+
+    @Override
+    protected KayttajatiedotCreateDto createKayttajatiedot(SAMLCredential credential) {
         Random intGen = new Random();
         int randomInt = intGen.nextInt(900) + 100; // 100-999
         // Generated username should be ePPN without special characters + 3 random numbers
@@ -84,31 +90,21 @@ public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
             strBuffer.append(c);
         }
         String username = strBuffer.toString() + randomInt;
-        Kayttajatiedot kt = new Kayttajatiedot();
+        KayttajatiedotCreateDto kt = new KayttajatiedotCreateDto();
         kt.setUsername(username);
-        henkilo.setKayttajatiedot(kt);
 
-        logger.info("Creating henkilo data: {}", henkilo);
+        logger.info("Creating kayttajatiedot data: {}", kt);
 
-        return henkilo;
+        return kt;
     }
 
     @Override
-    public String createAuthenticationToken(SAMLCredential credential) throws Exception {
-        String henkiloOid = null;
-        try {
-            henkiloOid = getHenkiloRestClient().get(getOphProperties().url("henkilo.cas.auth.idp", getIDPUniqueKey(), getUniqueIdentifier(credential)), String.class);
-        }
-        catch (IOException ioe) {
-            logger.error("REST client", ioe);
-        }
-        // Prevents from new users from registering through Haka
-        if (henkiloOid == null && !isRegistrationEnabled()) {
+    protected void validateRegistration(SAMLCredential credential) {
+        if (!isRegistrationEnabled()) {
             String eppn = getFirstAttributeValue(credential, E_PNN);
             logger.info("Authentication denied for an unregistered Haka user: {}", eppn);
             throw new UnregisteredHakaUserException("Authentication denied for an unregistered Haka user: " + eppn);
         }
-        return super.createAuthenticationToken(credential);
     }
 
     public boolean isRegistrationEnabled() {
