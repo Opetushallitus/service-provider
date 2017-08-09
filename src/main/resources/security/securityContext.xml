@@ -56,8 +56,9 @@
 
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
-        class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="${authentication.redirect}" />
+        class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler"
+        init-method="initialize">
+        <constructor-arg ref="ophProperties" />
     </bean>
     <!-- <bean id="successRedirectHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"> 
         <property name="defaultTargetUrl" value="http://localhost:8081/web/guest/home" 

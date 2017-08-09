@@ -3,6 +3,7 @@
  */
 package fi.vm.sade.saml.redirect;
 
+import fi.vm.sade.properties.OphProperties;
 import java.io.IOException;
 import java.net.URLEncoder;
 
@@ -23,7 +24,19 @@ import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public static final String AUTH_TOKEN_PARAMETER = "authToken";
-    
+
+    private final OphProperties ophProperties;
+
+    public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties) {
+        this.ophProperties = ophProperties;
+    }
+
+    public void initialize() {
+        String registerUiUrl = ophProperties.url("registration-ui.register");
+        String loginUrl = ophProperties.url("cas.login", registerUiUrl);
+        setDefaultTargetUrl(loginUrl);
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
