@@ -13,7 +13,7 @@ var options = {
         key: fs.readFileSync('cert/privatekey.pem'),
         cert: fs.readFileSync('cert/certificate.pem')
     }
-}
+};
 
 var proxy = httpProxy.createProxyServer({
     target: 'https://localhost:8443',

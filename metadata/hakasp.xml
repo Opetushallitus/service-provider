@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                  xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd"
+                  entityID="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/metadata/alias/hakasp">
+  <SPSSODescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIID4jCCAsqgAwIBAgIJANwO4yw8YSd8MA0GCSqGSIb3DQEBBQUAMIGIMQswCQYD
+VQQGEwJGSTEQMA4GA1UECAwHVVVTSU1BQTERMA8GA1UEBwwISEVMU0lOS0kxFzAV
+BgNVBAoMDk9wZXR1c2hhbGxpdHVzMRQwEgYDVQQLDAtPcGludG9wb2xrdTElMCMG
+A1UEAwwcaXRlc3Qtdmlya2FpbGlqYS5vcGgud2FyZS5maTAeFw0xMzEyMDkxMDA5
+NTFaFw0xODEyMDkxMDA5NTFaMIGIMQswCQYDVQQGEwJGSTEQMA4GA1UECAwHVVVT
+SU1BQTERMA8GA1UEBwwISEVMU0lOS0kxFzAVBgNVBAoMDk9wZXR1c2hhbGxpdHVz
+MRQwEgYDVQQLDAtPcGludG9wb2xrdTElMCMGA1UEAwwcaXRlc3Qtdmlya2FpbGlq
+YS5vcGgud2FyZS5maTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMcc
+SZVxb8f12t6cvoIjsR2EzGHVEM/x2iaiE/GgXnVAsm51q9vF+tl53npnx3142Zgf
+ELBCOnMoiudUMws0huW0P8WUdOPmkIt5QJAxu0LoczaQDYPpLrRuaivw1pIGd7aw
+AVuTaa+lAb5+CTTiLcgi0MJLE2jfzHNphY3Uo4pmhfm6NuoXvELyjcy6QVVf51nv
+GL1Qabkhlm985Mwqf03tHRA4QSEdszDbOL8xcUNrZggtTqNwrsErpbaxZFMfsite
+zaTfsa8i6b416ofZicBDTnO6aMiZEPYq7xQy7pX+puetfHHOb2OHfz3iYxGEADWM
++4OORK7tIfJUWBrVOQMCAwEAAaNNMEswHQYDVR0OBBYEFFsUQ6Oe+tnLkyQXy049
+1CQxL9TGMB8GA1UdIwQYMBaAFFsUQ6Oe+tnLkyQXy0491CQxL9TGMAkGA1UdEwQC
+MAAwDQYJKoZIhvcNAQEFBQADggEBAFJaw1kLcK3G0htE57X4rLEMS4DtzwCLAI/S
+MUZHhzrpsEnjFAFV6DTZbMb9JZe2bzo6eCSal1gnxeOtE2rgjXsrqELs5gDx/TiC
+hv3G5EXqoXdEjR2Z4MaSTCjcXpBK+GbWjOWNNzFjy+f88wgfQrSDrnZ2wqi5rsch
+zptL0GpwCs7a8/NrfX7IsiUJmC5Hshvn4X1gLAqUlofLfjYfnVxGZTh4dbr6onv9
+XVvgA+p7u72xYHlN4BGedX0LXgEm2JD43UTJQ6BccC/xjplpPU/SrBNqzF5HwnE+
+ecp7ZaPjYwqsdJwzFfuKvcI885CEUoyciWYQWrVNrEbmltZVicU=
+</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SingleLogout/alias/hakasp"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SingleLogout/alias/hakasp"/>
+    <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://itest-virkailija.oph.ware.fi/service-provider-app/saml/SSO/alias/hakasp" index="1" isDefault="true"/>
+    <AttributeConsumingService index="1" isDefault="true">
+      <ServiceName xml:lang="fi">Opintopolku LUOKKA</ServiceName>
+      <ServiceName xml:lang="sv">Studieinfo LUOKKA</ServiceName>
+      <ServiceName xml:lang="en">Studyguide LUOKKA</ServiceName>
+      <ServiceDescription xml:lang="fi">Opintopolku sis�lt�� s�hk�isi� palveluita koulutuksen tarjoajille ja oppijoille.</ServiceDescription>
+      <ServiceDescription xml:lang="sv">Studieinfo, de elektroniska tj�nsterna f�r utbildningsanordnare och l�rande.</ServiceDescription>
+      <ServiceDescription xml:lang="en">Studyguide, electronic services for learning opportunity providers and learners.</ServiceDescription>
+      <RequestedAttribute FriendlyName="cn" Name="urn:oid:2.5.4.3" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="displayName" Name="urn:oid:2.16.840.1.113730.3.1.241" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="eduPersonPrincipalName" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="eduPersonAffiliation" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.1 " NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" />
+      <RequestedAttribute FriendlyName="givenName" Name="urn:oid:2.5.4.42" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="mail" Name="urn:oid:0.9.2342.19200300.100.1.3" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="mobile" Name="urn:oid:0.9.2342.19200300.100.1.41" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="schacHomeOrganization" Name="urn:oid:1.3.6.1.4.1.25178.1.2.9" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="sn" Name="urn:oid:2.5.4.4" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="street" Name="urn:oid:2.5.4.9" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="telephoneNumber" Name="urn:oid:2.5.4.20" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+        <OrganizationName xml:lang="fi">Opetushallitus</OrganizationName>
+        <OrganizationName xml:lang="en">Finnish national board of education</OrganizationName>
+        <OrganizationName xml:lang="sv">Utbildningsstyrelsen</OrganizationName>
+        <OrganizationDisplayName xml:lang="fi">Opetushallitus</OrganizationDisplayName>
+        <OrganizationDisplayName xml:lang="en">Finnish national board of education</OrganizationDisplayName>
+        <OrganizationDisplayName xml:lang="sv">Utbildningsstyrelsen</OrganizationDisplayName>
+        <OrganizationURL xml:lang="fi">http://www.oph.fi/</OrganizationURL>
+    <OrganizationURL xml:lang="en">http://www.oph.fi/</OrganizationURL>
+    <OrganizationURL xml:lang="sv">http://www.oph.fi/</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+        <GivenName>Erja</GivenName>
+        <SurName>Nokkanen</SurName>
+        <EmailAddress>mailto:Erja.Nokkanen@oph.fi</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+        <GivenName>Juha</GivenName>
+        <SurName>Tretjakov</SurName>
+        <EmailAddress>mailto:Juha.Tretjakov@oph.fi</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="support">
+        <GivenName>Service</GivenName>
+        <SurName>Desk</SurName>
+        <EmailAddress>mailto:sd@cybercom.com</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
