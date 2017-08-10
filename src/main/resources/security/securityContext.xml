@@ -114,7 +114,7 @@
             </bean>
         </property>
         <property name="returnUrl"
-            value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true" />
+            value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true" />
     </bean>
 
     <!-- IDP Discovery Service -->
@@ -174,7 +174,7 @@
                             <property name="idpDiscoveryURL"
                                 value="${haka.wayf.url}" />
                             <!-- <property name="idpDiscoveryResponseURL" 
-                                value="https://${host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/> -->
+                                value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/> -->
                         </bean>
                     </constructor-arg>
                     <property name="metadataTrustCheck" value="false" />
@@ -256,7 +256,7 @@
     <bean id="contextProvider"
         class="org.springframework.security.saml.context.SAMLContextProviderLB">
         <property name="scheme" value="https" />
-        <property name="serverName" value="${host.virkailija}" />
+        <property name="serverName" value="${sp.host.virkailija}" />
         <property name="serverPort" value="443" />
         <property name="includeServerPortInRequestURL" value="false" />
         <property name="contextPath" value="/service-provider-app" />
