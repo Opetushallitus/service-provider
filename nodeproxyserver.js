@@ -15,12 +15,9 @@ var options = {
     }
 }
 
-var proxy = new httpProxy.HttpProxy({
-    target: {
-        host: 'itest-virkailija.oph.ware.fi',
-        port: 8443,
-        https: true
-    }
+var proxy = httpProxy.createProxyServer({
+    target: 'https://localhost:8443',
+    secure: false
 });
 
 https.createServer(options.https, function (req, res) {
