@@ -9,7 +9,6 @@
         location="classpath:service-provider-app.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/service-provider-app.properties, file:///${user.home:''}/oph-configuration/override.properties"
         ignore-resource-not-found="true"/>
 
-    <import resource="application-context-ws.xml"/>
     <import resource="security/securityContext.xml"/>
 
 </beans>
