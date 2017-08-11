@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:security="http://www.springframework.org/schema/security"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- Enable autowiring -->
     <context:annotation-config />
@@ -35,6 +39,7 @@
             ref="samlFilter" />
     </security:http>
 
+
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
         <security:filter-chain-map path-type="ant">
             <security:filter-chain pattern="/saml/login/**"
@@ -54,11 +59,36 @@
         </security:filter-chain-map>
     </bean>
 
+    <bean id="kayttooikeusRestClient" class="fi.vm.sade.saml.clients.KayttooikeusRestClient">
+        <constructor-arg ref="ophProperties" />
+        <property name="clientSubSystemCode" >
+            <util:constant static-field="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.CLIENT_SUB_SYSTEM_CODE" />
+        </property>
+        <property name="username" value="${serviceprovider.app.username.to.usermanagement}" />
+        <property name="password" value="${serviceprovider.app.password.to.usermanagement}" />
+    </bean>
+
+    <bean id="oppijanumeroRekisteriRestClient" class="fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient">
+        <constructor-arg ref="ophProperties" />
+        <property name="clientSubSystemCode" >
+            <util:constant static-field="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.CLIENT_SUB_SYSTEM_CODE" />
+        </property>
+        <property name="username" value="${serviceprovider.app.username.to.usermanagement}" />
+        <property name="password" value="${serviceprovider.app.password.to.usermanagement}" />
+    </bean>
+
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
-        class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler"
-        init-method="initialize">
+          class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler"
+          init-method="initialize">
         <constructor-arg ref="ophProperties" />
+        <constructor-arg ref="kayttooikeusRestClient" />
+        <property name="tokenProviders">
+            <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
+                  parent="idpBasedTokenProviderParent">
+                <property name="registrationEnabled" value="${hakasp.self-registration.enabled:false}" />
+            </bean>
+        </property>
     </bean>
     <!-- <bean id="successRedirectHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"> 
         <property name="defaultTargetUrl" value="http://localhost:8081/web/guest/home" 
@@ -222,23 +252,13 @@
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
-        <property name="henkiloUsername" value="${serviceprovider.app.username.to.usermanagement}" />
-        <property name="henkiloPassword" value="${serviceprovider.app.password.to.usermanagement}" />
         <property name="ophProperties" ref="ophProperties" />
+        <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
+        <property name="oppijanumerorekisteriRestClient" ref="oppijanumeroRekisteriRestClient" />
     </bean>
 
     <bean id="userDetailsService"
         class="fi.vm.sade.saml.userdetails.DelegatingUserDetailsService">
-        <property name="tokenProviders">
-            <list>
-                <bean
-                    class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
-                    parent="idpBasedTokenProviderParent">
-                    <property name="registrationEnabled"
-                        value="${hakasp.self-registration.enabled:false}"></property>
-                </bean>
-            </list>
-        </property>
     </bean>
 
     <!-- SAML Authentication Provider responsible for validating of received 

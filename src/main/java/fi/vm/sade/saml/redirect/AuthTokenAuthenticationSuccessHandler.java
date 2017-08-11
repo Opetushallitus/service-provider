@@ -1,18 +1,26 @@
-/**
- * 
- */
 package fi.vm.sade.saml.redirect;
 
 import fi.vm.sade.properties.OphProperties;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider;
+import fi.vm.sade.saml.userdetails.UserDetailsDto;
+import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
@@ -26,9 +34,16 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     public static final String AUTH_TOKEN_PARAMETER = "authToken";
 
     private final OphProperties ophProperties;
+    private CachingRestClient kayttooikeusRestClient;
 
-    public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties) {
+    private HakaAuthTokenProvider tokenProviders;
+
+
+    public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties, CachingRestClient kayttooikeusRestClient) {
         this.ophProperties = ophProperties;
+        kayttooikeusRestClient.setCasService(ophProperties.url("kayttooikeus-service.security_check"));
+        kayttooikeusRestClient.setWebCasUrl(ophProperties.url("cas.base"));
+        this.kayttooikeusRestClient = kayttooikeusRestClient;
     }
 
     public void initialize() {
@@ -40,20 +55,29 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
+        // TODO kutsu provideria
         
         String targetUrl = getDefaultTargetUrl();
         String finalTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
+        final String temporaryToken = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.KUTSU_TEMP_TOKEN_KEY);
         
         logger.info("Target url: " + targetUrl);
         
-        if(authentication instanceof AbstractAuthenticationToken) {
+        if (authentication instanceof AbstractAuthenticationToken) {
             AbstractAuthenticationToken token = (AbstractAuthenticationToken) authentication;
-            if(token.getDetails() != null && token.getDetails() instanceof String) {
-                String authToken = (String) token.getDetails();
-                String delimiter = "";
-                if(targetUrl.contains("?")) {
+            if (StringUtils.isEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
+                String authToken;
+                try {
+                    authToken = this.tokenProviders
+                            .createAuthenticationToken((SAMLCredential) authentication.getCredentials(), (UserDetailsDto) token.getDetails());
+                } catch (Exception e) {
+                    throw new RuntimeException();
+                }
+                String delimiter;
+                if (targetUrl.contains("?")) {
                     delimiter = "&";
-                } else {
+                }
+                else {
                     delimiter = "?";
                 }
                 
@@ -66,8 +90,30 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
                 return;
             }
+            else if (StringUtils.isNotEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
+                // Add userdetails to kayttooikeus-service.
+                try {
+                    String url = this.ophProperties.url("kayttooikeus-service.kutsu.update-identifier", temporaryToken);
+                    this.kayttooikeusRestClient.put(url, MediaType.TEXT_PLAIN_VALUE, (String)token.getDetails()).getEntity().getContent();
+                } catch (IOException e) {
+                    throw new RuntimeException("Could not update kutsu identifier", e);
+                }
+                Map<String, String> queryParams = new HashMap<String, String>(){{
+                    put("hakaAuth", "TRUE");
+                    put("temporaryKutsuToken", temporaryToken);
+                }};
+                String noAuthUrl = ophProperties.url("henkilo-ui.register", queryParams);
+                getRedirectStrategy().sendRedirect(request, response, noAuthUrl);
+            }
         }
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
+    public void setTokenProviders(HakaAuthTokenProvider tokenProviders) {
+        this.tokenProviders = tokenProviders;
+    }
+
+    public HakaAuthTokenProvider getTokenProviders() {
+        return tokenProviders;
+    }
 }

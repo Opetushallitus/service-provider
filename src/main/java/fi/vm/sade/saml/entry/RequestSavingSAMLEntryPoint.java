@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.util.URLBuilder;
 import org.opensaml.ws.transport.http.HTTPOutTransport;
@@ -27,6 +28,7 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 
 	public static final String REDIRECT_KEY = "redirect";
+	public static final String KUTSU_TEMP_TOKEN_KEY = "temporaryToken";
 
     private String returnUrl;
 	
@@ -35,14 +37,17 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 			HttpServletResponse response, AuthenticationException e)
 			throws IOException, ServletException {
 		super.commence(request, response, e);
-		
-                String redirectFromReq = (String) request.getParameter(REDIRECT_KEY);
-                
-                if (redirectFromReq != null) {
-                    // Only set to session if set in request
-                    logger.debug("Saving redirect url to session.");
-                    request.getSession().setAttribute(REDIRECT_KEY, redirectFromReq);
-                }
+
+        String redirectFromReq = request.getParameter(REDIRECT_KEY);
+
+        if (redirectFromReq != null) {
+            // Only set to session if set in request
+            logger.debug("Saving redirect url to session.");
+            request.getSession().setAttribute(REDIRECT_KEY, redirectFromReq);
+        }
+        if (request.getParameter(KUTSU_TEMP_TOKEN_KEY) != null) {
+            request.getSession().setAttribute(KUTSU_TEMP_TOKEN_KEY, request.getParameter(KUTSU_TEMP_TOKEN_KEY));
+        }
 	}
 
 
