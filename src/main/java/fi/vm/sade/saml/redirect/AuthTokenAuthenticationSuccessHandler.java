@@ -93,7 +93,6 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                     throw new RuntimeException("Could not update kutsu identifier", e);
                 }
                 Map<String, String> queryParams = new HashMap<String, String>(){{
-                    put("hakaAuth", "TRUE");
                     put("temporaryKutsuToken", temporaryToken);
                 }};
                 String noAuthUrl = ophProperties.url("henkilo-ui.register", queryParams);
