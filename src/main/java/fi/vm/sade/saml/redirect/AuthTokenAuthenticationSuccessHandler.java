@@ -1,21 +1,10 @@
 package fi.vm.sade.saml.redirect;
 
-import fi.vm.sade.properties.OphProperties;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import fi.vm.sade.generic.rest.CachingRestClient;
-import fi.vm.sade.saml.userdetails.IdpBasedAuthTokenProvider;
+import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -23,7 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
-import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author tommiha
@@ -55,7 +50,6 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        // TODO kutsu provideria
 
         String targetUrl = getDefaultTargetUrl();
         String finalTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);

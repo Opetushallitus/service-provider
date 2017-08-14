@@ -53,7 +53,7 @@
             <td>
                 <c:forEach var="attributeValue"
                            items="${attribute.attributeValues}">
-                    <c:out value="${attributeValue.value}"/>&nbsp;
+                    <c:out value="${attributeValue}"/>&nbsp;
                 </c:forEach>
             </td>
         </tr>

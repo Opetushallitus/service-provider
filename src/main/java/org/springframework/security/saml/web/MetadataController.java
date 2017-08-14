@@ -130,14 +130,14 @@ public class MetadataController {
         generator.setKeyManager(keyManager);
 
         generator.setEntityId(metadata.getEntityId());
-        generator.setEntityAlias(metadata.getAlias());
+//        generator.setEntityAlias(metadata.getAlias());
         generator.setEntityBaseURL(metadata.getBaseURL());
-        generator.setSignMetadata(metadata.isSignMetadata());
+//        generator.setSignMetadata(metadata.isSignMetadata());
         generator.setRequestSigned(metadata.isRequestSigned());
         generator.setWantAssertionSigned(metadata.isWantAssertionSigned());
-        generator.setSigningKey(metadata.getSigningKey());
-        generator.setEncryptionKey(metadata.getEncryptionKey());
-        generator.setTlsKey(metadata.getTlsKey());
+//        generator.setSigningKey(metadata.getSigningKey());
+//        generator.setEncryptionKey(metadata.getEncryptionKey());
+//        generator.setTlsKey(metadata.getTlsKey());
         generator.setAssertionConsumerIndex(metadata.getAssertionConsumerIndex());
 
         if (!metadata.isIncludeSSO()) {
@@ -148,8 +148,8 @@ public class MetadataController {
             generator.setBindingsHoKSSO(null);      // TODO
         }
 
-        generator.setIncludeDiscovery(metadata.isIncludeDiscovery());
-        generator.setCustomDiscoveryURL(metadata.getCustomDiscoveryURL());
+//        generator.setIncludeDiscovery(metadata.isIncludeDiscovery());
+//        generator.setCustomDiscoveryURL(metadata.getCustomDiscoveryURL());
         generator.setNameID(Arrays.asList(metadata.getNameID()));
 
         EntityDescriptor descriptor = generator.generateMetadata();
