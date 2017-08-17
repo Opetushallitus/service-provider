@@ -82,7 +82,8 @@
           class="fi.vm.sade.saml.redirect.AuthTokenAuthenticationSuccessHandler"
           init-method="initialize">
         <constructor-arg ref="ophProperties" />
-        <constructor-arg ref="kayttooikeusRestClient" />
+        <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
+        <property name="oppijanumeroRekisteriRestClient" ref="oppijanumeroRekisteriRestClient" />
         <property name="tokenProviders">
             <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
                   parent="idpBasedTokenProviderParent">

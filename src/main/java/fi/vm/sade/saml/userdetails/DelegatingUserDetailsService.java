@@ -21,10 +21,6 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 
 import static fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.E_PNN;
 
-/**
- * @author tommiha
- *
- */
 public class DelegatingUserDetailsService implements SAMLUserDetailsService {
 
     private final static Logger logger = LoggerFactory.getLogger(DelegatingUserDetailsService.class);

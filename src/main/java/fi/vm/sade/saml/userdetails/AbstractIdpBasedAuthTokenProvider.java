@@ -1,6 +1,5 @@
 package fi.vm.sade.saml.userdetails;
 
-
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.KayttooikeusRestClient;
@@ -19,10 +18,6 @@ import org.springframework.security.saml.SAMLCredential;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
-/**
- * @author tommiha
- * 
- */
 public abstract class AbstractIdpBasedAuthTokenProvider {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -53,7 +48,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
         String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
         Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
-        if(BooleanUtils.isFalse(vahvastiTunnistettu)) {
+        if (BooleanUtils.isFalse(vahvastiTunnistettu)) {
             throw new NoStrongIdentificationException(henkiloOid);
         }
 

@@ -2,6 +2,7 @@ package fi.vm.sade.saml.redirect;
 
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
@@ -31,15 +32,13 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     private final OphProperties ophProperties;
     private CachingRestClient kayttooikeusRestClient;
+    private OppijanumeroRekisteriRestClient oppijanumeroRekisteriRestClient;
 
     private HakaAuthTokenProvider tokenProviders;
 
 
-    public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties, CachingRestClient kayttooikeusRestClient) {
+    public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties) {
         this.ophProperties = ophProperties;
-        kayttooikeusRestClient.setCasService(ophProperties.url("kayttooikeus-service.security_check"));
-        kayttooikeusRestClient.setWebCasUrl(ophProperties.url("cas.base"));
-        this.kayttooikeusRestClient = kayttooikeusRestClient;
     }
 
     public void initialize() {
@@ -67,9 +66,12 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                             .createAuthenticationToken((SAMLCredential) authentication.getCredentials(), (UserDetailsDto) token.getDetails());
                 } catch (NoStrongIdentificationException e) {
                     String henkiloOid = e.getMessage();
+                    String languageCodeUrl = this.ophProperties.url("oppijanumerorekisteri.henkilo.kieliKoodi", henkiloOid);
+                    String languageCode = this.oppijanumeroRekisteriRestClient.get(languageCodeUrl, String.class);
                     String createLoginTokenUrl = this.ophProperties.url("kayttooikeus-service.cas.create-login-token", henkiloOid);
                     String loginToken = this.kayttooikeusRestClient.get(createLoginTokenUrl, String.class);
-                    String strongIdentificationInfoRedirectUrl = this.ophProperties.url("henkilo-ui.strong-identification", loginToken);
+                    String strongIdentificationInfoRedirectUrl = this.ophProperties
+                            .url("henkilo-ui.strong-identification", languageCode, loginToken);
                     getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
                     return;
                 } catch (Exception e) {
@@ -117,5 +119,17 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     public HakaAuthTokenProvider getTokenProviders() {
         return tokenProviders;
+    }
+
+    public OppijanumeroRekisteriRestClient getOppijanumeroRekisteriRestClient() {
+        return oppijanumeroRekisteriRestClient;
+    }
+
+    public void setOppijanumeroRekisteriRestClient(OppijanumeroRekisteriRestClient oppijanumeroRekisteriRestClient) {
+        this.oppijanumeroRekisteriRestClient = oppijanumeroRekisteriRestClient;
+    }
+
+    public void setKayttooikeusRestClient(CachingRestClient kayttooikeusRestClient) {
+        this.kayttooikeusRestClient = kayttooikeusRestClient;
     }
 }
