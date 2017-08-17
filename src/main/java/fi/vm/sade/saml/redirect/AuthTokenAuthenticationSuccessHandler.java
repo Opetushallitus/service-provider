@@ -3,6 +3,7 @@ package fi.vm.sade.saml.redirect;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
+import fi.vm.sade.saml.exception.NoStrongIdentificationException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import org.apache.commons.lang.StringUtils;
@@ -64,8 +65,15 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 try {
                     authToken = this.tokenProviders
                             .createAuthenticationToken((SAMLCredential) authentication.getCredentials(), (UserDetailsDto) token.getDetails());
+                } catch (NoStrongIdentificationException e) {
+                    String henkiloOid = e.getMessage();
+                    String createLoginTokenUrl = this.ophProperties.url("kayttooikeus-service.cas.create-login-token", henkiloOid);
+                    String loginToken = this.kayttooikeusRestClient.get(createLoginTokenUrl, String.class);
+                    String strongIdentificationInfoRedirectUrl = this.ophProperties.url("henkilo-ui.strong-identification", loginToken);
+                    getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
+                    return;
                 } catch (Exception e) {
-                    throw new RuntimeException();
+                    throw new RuntimeException(e);
                 }
                 String delimiter;
                 if (targetUrl.contains("?")) {

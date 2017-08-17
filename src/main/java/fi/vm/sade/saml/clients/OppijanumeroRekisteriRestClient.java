@@ -5,7 +5,7 @@ import fi.vm.sade.properties.OphProperties;
 
 public class OppijanumeroRekisteriRestClient extends CachingRestClient {
     public OppijanumeroRekisteriRestClient(OphProperties ophProperties) {
-        this.setCasService(ophProperties.url("kayttooikeus-service.security_check"));
+        this.setCasService(ophProperties.url("oppijanumerorekisteri-service.security_check"));
         this.setWebCasUrl(ophProperties.url("cas.base"));
     }
 

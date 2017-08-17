@@ -33,16 +33,12 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
      * @see org.springframework.security.saml.userdetails.SAMLUserDetailsService#loadUserBySAML(org.springframework.security.saml.SAMLCredential)
      */
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-        // TODO UsernameNotFoundException
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         userDetailsDto.setHenkiloCreateDto(createIdentity(credential));
         userDetailsDto.setKayttajatiedotCreateDto(createKayttajatiedot(credential));
         userDetailsDto.setIdentifier(getUniqueIdentifier(credential));
 
         return userDetailsDto;
-
-//        logger.error("Could not find authentication token provider for IDP: {}", credential.getRemoteEntityID());
-//        throw new UsernameNotFoundException("Could not find authentication token provider for IDP: " + credential.getRemoteEntityID());
     }
 
     private static HenkiloCreateDto createIdentity(SAMLCredential credential) {

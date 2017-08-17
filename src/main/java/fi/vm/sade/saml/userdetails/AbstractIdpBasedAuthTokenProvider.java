@@ -5,6 +5,8 @@ import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.KayttooikeusRestClient;
 import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
+import fi.vm.sade.saml.exception.NoStrongIdentificationException;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -31,7 +33,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
     public String createAuthenticationToken(SAMLCredential credential, UserDetailsDto userDetailsDto) throws Exception {
         // Checks if Henkilo with given IdP key and identifier exists
-        String henkiloOid = "";
+        String henkiloOid;
         try {
             henkiloOid = kayttooikeusRestClient.get(ophProperties.url("kayttooikeus-service.cas.oidByIdp",
                     getIDPUniqueKey(), userDetailsDto.getIdentifier()), String.class);
@@ -47,6 +49,12 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
                 logger.error("Error in REST-client", e);
                 throw e;
             }
+        }
+
+        String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
+        Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
+        if(BooleanUtils.isFalse(vahvastiTunnistettu)) {
+            throw new NoStrongIdentificationException(henkiloOid);
         }
 
         // Generates and returns auth token to Henkilo by OID
