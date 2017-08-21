@@ -26,6 +26,8 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
     private OppijanumeroRekisteriRestClient oppijanumerorekisteriRestClient;
     private KayttooikeusRestClient kayttooikeusRestClient;
 
+    private boolean requireStrongIdentification;
+
     public String createAuthenticationToken(SAMLCredential credential, UserDetailsDto userDetailsDto) throws Exception {
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid;
@@ -46,10 +48,12 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
             }
         }
 
-        String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
-        Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
-        if (BooleanUtils.isFalse(vahvastiTunnistettu)) {
-            throw new NoStrongIdentificationException(henkiloOid);
+        if(this.requireStrongIdentification) {
+            String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
+            Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
+            if (BooleanUtils.isFalse(vahvastiTunnistettu)) {
+                throw new NoStrongIdentificationException(henkiloOid);
+            }
         }
 
         // Generates and returns auth token to Henkilo by OID
@@ -147,5 +151,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
     public OppijanumeroRekisteriRestClient getOppijanumerorekisteriRestClient() {
         return oppijanumerorekisteriRestClient;
+    }
+
+    public boolean isRequireStrongIdentification() {
+        return requireStrongIdentification;
+    }
+
+    public void setRequireStrongIdentification(boolean requireStrongIdentification) {
+        this.requireStrongIdentification = requireStrongIdentification;
     }
 }

@@ -256,6 +256,7 @@
         <property name="ophProperties" ref="ophProperties" />
         <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
         <property name="oppijanumerorekisteriRestClient" ref="oppijanumeroRekisteriRestClient" />
+        <property name="requireStrongIdentification" value="${haka.require-strong-identification}" />
     </bean>
 
     <bean id="userDetailsService"
