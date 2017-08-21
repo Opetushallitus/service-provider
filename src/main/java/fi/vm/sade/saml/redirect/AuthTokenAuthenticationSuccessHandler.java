@@ -29,6 +29,7 @@ import java.util.Map;
 public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public static final String AUTH_TOKEN_PARAMETER = "authToken";
+    public static final String HENKILO_UI_TOKEN_PARAMETER = "temporaryKutsuToken";
 
     private final OphProperties ophProperties;
     private CachingRestClient kayttooikeusRestClient;
@@ -103,7 +104,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                     throw new RuntimeException("Could not update kutsu identifier", e);
                 }
                 Map<String, String> queryParams = new HashMap<String, String>(){{
-                    put("temporaryKutsuToken", temporaryToken);
+                    put(HENKILO_UI_TOKEN_PARAMETER, temporaryToken);
                 }};
                 String noAuthUrl = ophProperties.url("henkilo-ui.register", queryParams);
                 getRedirectStrategy().sendRedirect(request, response, noAuthUrl);
