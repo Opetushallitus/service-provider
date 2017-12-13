@@ -43,8 +43,8 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     }
 
     public void initialize() {
-        String registerUiUrl = ophProperties.url("registration-ui.register");
-        String loginUrl = ophProperties.url("cas.login", registerUiUrl);
+        String rootUrl = ophProperties.url("url-virkailija");
+        String loginUrl = ophProperties.url("cas.login", rootUrl);
         setDefaultTargetUrl(loginUrl);
     }
 
