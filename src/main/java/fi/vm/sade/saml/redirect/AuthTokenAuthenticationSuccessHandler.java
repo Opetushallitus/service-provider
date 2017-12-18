@@ -54,6 +54,10 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
         String targetUrl = getDefaultTargetUrl();
         String finalTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
+        if (finalTargetUrl != null) {
+            String redirectUrl = ophProperties.url("cas.redirect", finalTargetUrl);
+            targetUrl = ophProperties.url("cas.login", redirectUrl);
+        }
         final String temporaryToken = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.KUTSU_TEMP_TOKEN_KEY);
         
         logger.info("Target url: " + targetUrl);
@@ -85,12 +89,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 else {
                     delimiter = "?";
                 }
-                
-                if (finalTargetUrl != null) {
-                    logger.debug("Got final target url from session, adding to redirect url.");
-                    // Double encode final url, otherwise final target urls part will be confused with the original url on flow: -> cas -> registration -> finaltarget
-                    targetUrl += URLEncoder.encode("/" + URLEncoder.encode(finalTargetUrl, "UTF-8") , "UTF-8");
-                }
+
                 targetUrl += delimiter + AUTH_TOKEN_PARAMETER + "=" + URLEncoder.encode(authToken, "UTF-8");
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
                 return;
