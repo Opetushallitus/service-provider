@@ -39,10 +39,9 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         authentication.setDetails(new UserDetailsDto());
         when(httpRequestMock.getSession()).thenReturn(httpSessionMock);
 
-        OphProperties ophProperties = new OphProperties();
-        ophProperties.addDefault("url-virkailija", "https://virkailija.opintopolku.fi");
-        ophProperties.addDefault("cas.login", "https://virkailija.opintopolku.fi/cas/login?service=$1");
-        ophProperties.addDefault("cas.redirect", "https://virkailija.opintopolku.fi/cas/redirect?to=$1");
+        OphProperties ophProperties = new OphProperties("/service-provider-oph.properties");
+        ophProperties.addDefault("host.cas", "virkailija.opintopolku.fi");
+        ophProperties.addDefault("host.virkailija", "virkailija.opintopolku.fi");
 
         handler = new AuthTokenAuthenticationSuccessHandler(ophProperties);
         handler.setRedirectStrategy(redirectStrategyMock);
