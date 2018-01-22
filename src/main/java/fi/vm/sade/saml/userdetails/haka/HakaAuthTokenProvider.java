@@ -9,10 +9,6 @@ import org.springframework.security.saml.SAMLCredential;
 
 import fi.vm.sade.saml.userdetails.DelegatingUserDetailsService;
 
-/**
- * @author tommiha
- * 
- */
 public class HakaAuthTokenProvider extends AbstractIdpBasedAuthTokenProvider {
 
     public static final String HAKA_IDP_ID = "haka";

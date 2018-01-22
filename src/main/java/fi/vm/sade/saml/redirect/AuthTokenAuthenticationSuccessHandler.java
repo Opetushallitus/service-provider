@@ -22,10 +22,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author tommiha
- *
- */
 public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public static final String AUTH_TOKEN_PARAMETER = "authToken";

@@ -17,6 +17,9 @@ import org.springframework.security.saml.SAMLCredential;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractIdpBasedAuthTokenProvider {
 
@@ -27,13 +30,16 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
     private KayttooikeusRestClient kayttooikeusRestClient;
 
     private boolean requireStrongIdentification;
+    private String hakaRequireStrongIdentificationListAsString;
+
+    private List<String> hakaRequireStrongIdentificationList;
 
     public String createAuthenticationToken(SAMLCredential credential, UserDetailsDto userDetailsDto) throws Exception {
         // Checks if Henkilo with given IdP key and identifier exists
         String henkiloOid;
         try {
-            henkiloOid = kayttooikeusRestClient.get(ophProperties.url("kayttooikeus-service.cas.oidByIdp",
-                    getIDPUniqueKey(), userDetailsDto.getIdentifier()), String.class);
+            String url = ophProperties.url("kayttooikeus-service.cas.oidByIdp", getIDPUniqueKey(), userDetailsDto.getIdentifier());
+            henkiloOid = kayttooikeusRestClient.get(url, String.class);
         }
         catch (Exception e) {
             // If user is not found, then one is created during login
@@ -42,13 +48,15 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
                 validateRegistration(credential);
                 henkiloOid = createHenkilo(userDetailsDto.getHenkiloCreateDto());
                 createKayttajatiedot(henkiloOid, userDetailsDto.getKayttajatiedotCreateDto());
-            } else {
+            }
+            else {
                 logger.error("Error in REST-client", e);
                 throw e;
             }
         }
 
-        if(this.requireStrongIdentification) {
+        if (this.requireStrongIdentification
+                && (this.hakaRequireStrongIdentificationList.isEmpty() || this.hakaRequireStrongIdentificationList.contains(henkiloOid))) {
             String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
             Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
             if (BooleanUtils.isFalse(vahvastiTunnistettu)) {
@@ -159,5 +167,16 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
     public void setRequireStrongIdentification(boolean requireStrongIdentification) {
         this.requireStrongIdentification = requireStrongIdentification;
+    }
+
+    public String getHakaRequireStrongIdentificationListAsString() {
+        return hakaRequireStrongIdentificationListAsString;
+    }
+
+    public void setHakaRequireStrongIdentificationListAsString(String hakaRequireStrongIdentificationListAsString) {
+        this.hakaRequireStrongIdentificationListAsString = hakaRequireStrongIdentificationListAsString;
+        this.hakaRequireStrongIdentificationList = !"".equals(hakaRequireStrongIdentificationListAsString)
+                ? Arrays.asList(hakaRequireStrongIdentificationListAsString.split(","))
+                : new ArrayList<String>();
     }
 }
