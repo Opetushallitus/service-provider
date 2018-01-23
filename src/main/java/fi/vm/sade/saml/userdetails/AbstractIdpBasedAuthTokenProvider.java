@@ -56,7 +56,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
         }
 
         if (this.requireStrongIdentification
-                && (this.hakaRequireStrongIdentificationList.isEmpty() || this.hakaRequireStrongIdentificationList.contains(henkiloOid))) {
+                || this.hakaRequireStrongIdentificationList.contains(henkiloOid)) {
             String vahvaTunnistusUrl = this.ophProperties.url("kayttooikeus-service.cas.vahva-tunnistus", henkiloOid);
             Boolean vahvastiTunnistettu = this.kayttooikeusRestClient.get(vahvaTunnistusUrl, Boolean.class);
             if (BooleanUtils.isFalse(vahvastiTunnistettu)) {
