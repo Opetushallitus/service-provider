@@ -5,6 +5,7 @@ import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
+import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import org.apache.commons.lang.StringUtils;
@@ -75,6 +76,9 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                             .url("henkilo-ui.strong-identification", languageCode, loginToken);
                     getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
                     return;
+                } catch (UnregisteredHakaUserException e) {
+                    // poikkeusta käytetään virheilmoituksen näyttämiseen (kts. AuthenticationErrorHandlerServlet)
+                    throw e;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
