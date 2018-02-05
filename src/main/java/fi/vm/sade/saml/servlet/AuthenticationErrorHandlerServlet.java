@@ -44,7 +44,7 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
             error.put(ERROR_TITLE, "Haka-tunnistautumista ei aktivoitu");
             error.put(ERROR_DESC, "Suoritit onnistuneen Haka-tunnistautumisen, mutta Haka-tunnuksiisi ei ole " +
                     "liitetty Opintopolku.fi-k&auml;ytt&auml;j&auml;tunnusta. Mik&auml;li haluat tunnistautua " +
-                    "Haka-tunnuksilla, ole hyv&auml; ja ota yhteytt&auml; Opintopolku.fi-yhteyshenkil&ouml;&ouml;si.");
+                    "Haka-tunnuksilla, ole hyv&auml; ja ota yhteytt&auml; organisaatiosi p&auml;&auml;k&auml;ytt&auml;j&auml;&auml;n.");
         }
         // this is bit fragile, but SoapFault stack trace is rather lacking
         else if(errorMsg.contains("IdentificationExpiredException")) {
