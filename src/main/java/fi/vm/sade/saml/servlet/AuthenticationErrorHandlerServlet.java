@@ -62,6 +62,7 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
 
         logger.debug("Got a {}, sending following error page to user: {}: {}",
                 new String[] { e.toString(), error.get(ERROR_TITLE), error.get(ERROR_DESC) });
+        resp.setStatus(HttpServletResponse.SC_CONFLICT);
         req.getRequestDispatcher("/error.jsp").forward(req, resp);
         //resp.sendRedirect("/error.jsp");
 
