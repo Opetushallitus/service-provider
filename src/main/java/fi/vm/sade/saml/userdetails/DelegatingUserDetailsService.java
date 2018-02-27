@@ -3,7 +3,6 @@
  */
 package fi.vm.sade.saml.userdetails;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +19,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 
 import static fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.E_PNN;
+import java.util.ArrayList;
 
 public class DelegatingUserDetailsService implements SAMLUserDetailsService {
 
@@ -111,7 +111,7 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
     private static String getUniqueIdentifier(SAMLCredential credential) {
         String firstAttrValue = getFirstAttributeValue(credential, E_PNN);
         if(firstAttrValue == null) {
-            List<String> attrNames = Collections.emptyList();
+            List<String> attrNames = new ArrayList<String>();
             for(Attribute attr : credential.getAttributes()) {
                 attrNames.add(attr.getFriendlyName());
             }
