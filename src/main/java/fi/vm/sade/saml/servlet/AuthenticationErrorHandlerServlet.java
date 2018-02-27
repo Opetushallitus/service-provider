@@ -49,7 +49,7 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
                     "Om du vill identifiera dig med ditt HAKA-användarnamn, bör du ta kontakt med den ansvariga användaren i din egen organisation.</p>");
         }
         // this is bit fragile, but SoapFault stack trace is rather lacking
-        else if(errorMsg.contains("IdentificationExpiredException")) {
+        else if(errorMsg != null && errorMsg.contains("IdentificationExpiredException")) {
             error.put(ERROR_TITLE, "Haka-tunnukset vanhentuneet");
             error.put(ERROR_DESC, "Haka tunnuksilla ei ole kirjauduttu Opintopolku.fi:hin yli 24 kuukauteen. " +
                     "Ole hyv&auml; ja ota yhteytt&auml; Opintopolku.fi-yhteyshenkil&ouml;&ouml;si.");
