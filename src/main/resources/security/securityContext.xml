@@ -87,7 +87,6 @@
         <property name="tokenProviders">
             <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
                   parent="idpBasedTokenProviderParent">
-                <property name="registrationEnabled" value="${hakasp.self-registration.enabled:false}" />
                 <property name="hakaRequireStrongIdentificationListAsString" value="${haka.require-strong-identification.oidlist}" />
             </bean>
         </property>
@@ -256,7 +255,6 @@
         abstract="true">
         <property name="ophProperties" ref="ophProperties" />
         <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
-        <property name="oppijanumerorekisteriRestClient" ref="oppijanumeroRekisteriRestClient" />
         <property name="requireStrongIdentification" value="${haka.require-strong-identification}" />
     </bean>
 

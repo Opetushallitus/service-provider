@@ -2,10 +2,7 @@ package fi.vm.sade.saml.userdetails.haka;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.KayttooikeusRestClient;
-import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
-import fi.vm.sade.saml.userdetails.HenkiloCreateDto;
-import fi.vm.sade.saml.userdetails.KayttajatiedotCreateDto;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +21,6 @@ public class HakaAuthTokenProviderTest {
     @Autowired
     private HakaAuthTokenProvider hakaAuthTokenProvider;
 
-    private OppijanumeroRekisteriRestClient oppijanumeroRekisteriRestClient;
     private KayttooikeusRestClient kayttooikeusRestClient;
     private OphProperties ophProperties;
 
@@ -32,21 +28,16 @@ public class HakaAuthTokenProviderTest {
 
     @Before
     public void setup() {
-        this.oppijanumeroRekisteriRestClient = mock(OppijanumeroRekisteriRestClient.class);
         this.kayttooikeusRestClient = mock(KayttooikeusRestClient.class);
         this.ophProperties = mock(OphProperties.class);
 
-        this.hakaAuthTokenProvider.setOppijanumerorekisteriRestClient(this.oppijanumeroRekisteriRestClient);
         this.hakaAuthTokenProvider.setKayttooikeusRestClient(this.kayttooikeusRestClient);
         this.hakaAuthTokenProvider.setOphProperties(this.ophProperties);
 
         this.hakaAuthTokenProvider.setHakaRequireStrongIdentificationListAsString("");
-        this.hakaAuthTokenProvider.setRegistrationEnabled(true);
 
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         userDetailsDto.setIdentifier("identifier");
-        userDetailsDto.setHenkiloCreateDto(new HenkiloCreateDto());
-        userDetailsDto.setKayttajatiedotCreateDto(new KayttajatiedotCreateDto());
         this.defaultUserDetailsDto = userDetailsDto;
     }
 

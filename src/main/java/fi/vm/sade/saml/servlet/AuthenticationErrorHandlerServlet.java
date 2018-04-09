@@ -1,6 +1,6 @@
 package fi.vm.sade.saml.servlet;
 
-import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
+import fi.vm.sade.saml.exception.UnregisteredUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
         Map<String, String> error = new HashMap<String, String>();
         req.setAttribute(ERROR_ATTR, error);
 
-        if(e instanceof UnregisteredHakaUserException) {
+        if(e instanceof UnregisteredUserException) {
             error.put(ERROR_TITLE, "Haka-tunnistautumista ei aktivoitu");
             error.put(ERROR_DESC, "<p>Suoritit onnistuneen Haka-tunnistautumisen, mutta Haka-tunnuksiisi ei ole " +
                     "liitetty Opintopolku.fi-k&auml;ytt&auml;j&auml;tunnusta. Mik&auml;li haluat tunnistautua " +

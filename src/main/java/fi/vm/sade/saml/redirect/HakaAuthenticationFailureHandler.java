@@ -1,6 +1,6 @@
 package fi.vm.sade.saml.redirect;
 
-import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
+import fi.vm.sade.saml.exception.UnregisteredUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -19,7 +19,7 @@ public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        if(exception instanceof UnregisteredHakaUserException) {
+        if(exception instanceof UnregisteredUserException) {
             throw exception;
         }
         else {

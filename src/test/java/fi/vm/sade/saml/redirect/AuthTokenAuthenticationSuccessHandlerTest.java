@@ -2,7 +2,7 @@ package fi.vm.sade.saml.redirect;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
-import fi.vm.sade.saml.exception.UnregisteredHakaUserException;
+import fi.vm.sade.saml.exception.UnregisteredUserException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import javax.servlet.http.HttpServletRequest;
@@ -76,12 +76,12 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
                 eq("https://virkailija.opintopolku.fi/cas/login?service=https%3A%2F%2Fvirkailija.opintopolku.fi&authToken=authtoken123"));
     }
 
-    @Test(expected = UnregisteredHakaUserException.class)
+    @Test(expected = UnregisteredUserException.class)
     public void onAuthenticationSuccessShouldNotCatchUnregisteredHakaUserException() throws Exception {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
         when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
-                .thenThrow(new UnregisteredHakaUserException("exception from mock"));
+                .thenThrow(new UnregisteredUserException("exception from mock"));
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
     }
