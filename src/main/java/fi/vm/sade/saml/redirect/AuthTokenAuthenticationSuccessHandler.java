@@ -5,6 +5,7 @@ import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
+import fi.vm.sade.saml.exception.RequiredSamlAttributeNotProvidedException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;

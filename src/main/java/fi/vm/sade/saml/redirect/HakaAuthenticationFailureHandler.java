@@ -1,5 +1,6 @@
 package fi.vm.sade.saml.redirect;
 
+import fi.vm.sade.saml.exception.RequiredSamlAttributeNotProvidedException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        if(exception instanceof UnregisteredUserException) {
+        if (exception instanceof UnregisteredUserException || exception instanceof RequiredSamlAttributeNotProvidedException) {
             throw exception;
         }
         else {

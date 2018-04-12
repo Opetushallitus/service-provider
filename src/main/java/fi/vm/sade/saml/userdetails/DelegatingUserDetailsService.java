@@ -1,10 +1,8 @@
-/**
- * 
- */
 package fi.vm.sade.saml.userdetails;
 
 import java.util.List;
 
+import fi.vm.sade.saml.exception.RequiredSamlAttributeNotProvidedException;
 import fi.vm.sade.saml.exception.SAMLCredentialsParseException;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.saml2.core.Attribute;
@@ -22,11 +20,12 @@ import java.util.ArrayList;
 public class DelegatingUserDetailsService implements SAMLUserDetailsService {
 
     private final static Logger logger = LoggerFactory.getLogger(DelegatingUserDetailsService.class);
-    private static final String E_PNN = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
+    static final String E_PNN = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
     
     /* (non-Javadoc)
      * @see org.springframework.security.saml.userdetails.SAMLUserDetailsService#loadUserBySAML(org.springframework.security.saml.SAMLCredential)
      */
+    @Override
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         userDetailsDto.setIdentifier(getUniqueIdentifier(credential));
@@ -62,13 +61,14 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
 
     private static String getUniqueIdentifier(SAMLCredential credential) {
         String firstAttrValue = getFirstAttributeValue(credential, E_PNN);
-        if(firstAttrValue == null) {
+        if (firstAttrValue == null) {
             List<String> attrNames = new ArrayList<String>();
-            for(Attribute attr : credential.getAttributes()) {
+            for (Attribute attr : credential.getAttributes()) {
                 attrNames.add(attr.getFriendlyName());
             }
             String attrsString = StringUtils.join(attrNames, ",");
             logger.warn("Could not find matching attribute for name {}, \nall attributes [{}]", E_PNN, attrsString);
+            throw new RequiredSamlAttributeNotProvidedException(E_PNN);
         }
         return firstAttrValue;
     }
