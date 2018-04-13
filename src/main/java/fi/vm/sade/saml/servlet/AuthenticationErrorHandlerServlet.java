@@ -38,7 +38,7 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
         Throwable e = (Throwable) req.getAttribute("javax.servlet.error.exception");
         String errorMsg = e.getMessage();
 
-        Map<String, String> error = new HashMap<String, String>();
+        Map<String, String> error = new HashMap<>();
         req.setAttribute(ERROR_ATTR, error);
 
         if (e instanceof UnregisteredUserException) {
@@ -55,7 +55,8 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
             error.put(ERROR_DESC, "Haka tunnuksilla ei ole kirjauduttu Opintopolku.fi:hin yli 24 kuukauteen. " +
                     "Ole hyv&auml; ja ota yhteytt&auml; Opintopolku.fi-yhteyshenkil&ouml;&ouml;si.");
         }
-        else if (e instanceof RequiredSamlAttributeNotProvidedException) {
+        else if (e instanceof RequiredSamlAttributeNotProvidedException
+                || (errorMsg != null && errorMsg.contains("RequiredSamlAttributeNotProvidedException"))) {
             error.put(ERROR_TITLE, "Haka ei toimittanut vaadittuja tietoja");
             error.put(ERROR_DESC, "<p>Palvelun k&auml;ytt&auml;minen vaatii, ett&auml; sallit HAKA:sta vaadittujen tietojen toimittamisen</p>");
         }
