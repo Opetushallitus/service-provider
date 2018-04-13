@@ -20,6 +20,7 @@ public class HakaAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
+        // These are caught by AuthenticationErrorHandlerServlet
         if (exception instanceof UnregisteredUserException || exception instanceof RequiredSamlAttributeNotProvidedException) {
             throw exception;
         }
