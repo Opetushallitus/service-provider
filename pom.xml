@@ -211,12 +211,6 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bundle</artifactId>
             <version>${cxf.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-asm</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- TODO: bamboolla ongelmia dependencyjen kanssa, lokaalissa buildattu wari toimii, bamboolla buildattu ja luokalle deployattu wari ei sisällä tätä?-->
         <dependency>
