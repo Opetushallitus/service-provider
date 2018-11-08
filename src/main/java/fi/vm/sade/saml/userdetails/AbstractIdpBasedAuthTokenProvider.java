@@ -49,8 +49,11 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
             }
         }
 
-        // Where to redirect. null for no redirect
-        if( userMayBeRedirectedToStrongIdentification(henkiloOid) || userMayBeRedirectedToEmailVerification(henkiloOid) ) {
+        boolean isStrongIdentificationRedirectAllowed = strongIdentificationRedirectAllowed(henkiloOid);
+        boolean isEmailVerificationRedirectAllowed = emailVerificationRedirectAllowed(henkiloOid);
+
+        // Move to redirect
+        if( isStrongIdentificationRedirectAllowed || isEmailVerificationRedirectAllowed ) {
             String redirectCode;
             try {
                 String loginRedirectUrl = this.ophProperties.url("kayttooikeus-service.cas.login.redirect.oidHenkilo", henkiloOid);
@@ -63,10 +66,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
                     throw e;
                 }
             }
-
-            if(STRONG_IDENTIFICATION.equals(redirectCode)) {
+            
+            // isStrongIdentificationRedirectAllowed needs to be double checked here.
+            // This block may be run if isEmailVerificationRedirectAllowed is true and strong identification redirect is not wanted
+            // Same goes for email verification redirect
+            if(STRONG_IDENTIFICATION.equals(redirectCode) && isStrongIdentificationRedirectAllowed) {
                 throw new NoStrongIdentificationException(henkiloOid);
-            } else if(EMAIL_VERIFICATION.equals(redirectCode)) {
+            } else if(EMAIL_VERIFICATION.equals(redirectCode) && isEmailVerificationRedirectAllowed) {
                 throw new EmailVerificationException(henkiloOid);
             }
         }
@@ -84,11 +90,11 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
         return false;
     }
 
-    private boolean userMayBeRedirectedToStrongIdentification(String henkiloOid) {
+    private boolean strongIdentificationRedirectAllowed(String henkiloOid) {
         return this.requireStrongIdentification || this.hakaRequireStrongIdentificationList.contains(henkiloOid);
     }
 
-    private boolean userMayBeRedirectedToEmailVerification(String henkiloOid) {
+    private boolean emailVerificationRedirectAllowed(String henkiloOid) {
         return this.emailVerificationEnabled || this.hakaEmailVerificationList.contains(henkiloOid);
     }
 
