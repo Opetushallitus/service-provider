@@ -4,6 +4,7 @@ import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
+import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
 import fi.vm.sade.saml.exception.RequiredSamlAttributeNotProvidedException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
@@ -76,6 +77,15 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                     String strongIdentificationInfoRedirectUrl = this.ophProperties
                             .url("henkilo-ui.strong-identification", languageCode, loginToken);
                     getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
+                    return;
+                } catch (EmailVerificationException e) {
+                    String henkiloOid = e.getMessage();
+                    String languageCodeUrl = this.ophProperties.url("oppijanumerorekisteri.henkilo.kieliKoodi", henkiloOid);
+                    String languageCode = this.oppijanumeroRekisteriRestClient.get(languageCodeUrl, String.class);
+                    String createLoginTokenUrl = this.ophProperties.url("kayttooikeus-service.cas.create-login-token", henkiloOid);
+                    String loginToken = this.kayttooikeusRestClient.get(createLoginTokenUrl, String.class);
+                    String emailVerificationUrl = this.ophProperties.url("henkilo-ui.email-verification", languageCode, loginToken);
+                    getRedirectStrategy().sendRedirect(request, response, emailVerificationUrl);
                     return;
                 } catch (UnregisteredUserException e) {
                     // poikkeusta käytetään virheilmoituksen näyttämiseen (kts. AuthenticationErrorHandlerServlet)

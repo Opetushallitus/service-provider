@@ -88,6 +88,7 @@
             <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
                   parent="idpBasedTokenProviderParent">
                 <property name="hakaRequireStrongIdentificationListAsString" value="${haka.require-strong-identification.oidlist}" />
+                <property name="hakaEmailVerificationListAsString" value="${haka.email-verification-enabled.oidlist}"></property>
             </bean>
         </property>
     </bean>
@@ -256,6 +257,7 @@
         <property name="ophProperties" ref="ophProperties" />
         <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
         <property name="requireStrongIdentification" value="${haka.require-strong-identification}" />
+        <property name="emailVerificationEnabled" value="${haka.email-verification-enabled}"></property>
     </bean>
 
     <bean id="userDetailsService"
