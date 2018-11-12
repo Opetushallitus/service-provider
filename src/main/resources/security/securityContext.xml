@@ -88,7 +88,7 @@
             <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
                   parent="idpBasedTokenProviderParent">
                 <property name="hakaRequireStrongIdentificationListAsString" value="${haka.require-strong-identification.oidlist}" />
-                <property name="hakaEmailVerificationListAsString" value="${haka.email-verification-enabled.oidlist}"></property>
+                <property name="hakaEmailVerificationListAsString" value="${haka.email-verification-enabled.oidlist}" />
             </bean>
         </property>
     </bean>

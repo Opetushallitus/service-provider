@@ -6,7 +6,7 @@
              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
       <context:property-placeholder
-        location="classpath:service-provider-app.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/service-provider-app.properties, file:///${user.home:''}/oph-configuration/override.properties, file:///${user.home:''}/oph-configuration/cas-strong-identifiables.properties"
+        location="classpath:service-provider-app.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/service-provider-app.properties, file:///${user.home:''}/oph-configuration/override.properties, file:///${user.home:''}/oph-configuration/cas-strong-identifiables.properties, file:///${user.home:''}/oph-configuration/email-verification.properties"
         ignore-resource-not-found="true"/>
 
     <import resource="security/securityContext.xml"/>
