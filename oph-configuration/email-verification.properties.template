@@ -1,0 +1,4 @@
+# To all users
+haka.email-verification-enabled={{haka_email_verification_enabled | default(false)}}
+# To specified users even if haka.email-verification-enabled is false
+haka.email-verification-enabled.oidlist={{haka_email_verification_enabled_oidlist | default("") }}

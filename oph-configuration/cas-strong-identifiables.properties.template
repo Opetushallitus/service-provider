@@ -1,0 +1,4 @@
+# To all users
+haka.require-strong-identification={{haka_require_strong_identification | default(false)}}
+# To specified users even if haka.require-strong-identification is false
+haka.require-strong-identification.oidlist={{haka_require_strong_identification_oidlist | default("") }}

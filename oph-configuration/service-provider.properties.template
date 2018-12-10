@@ -1,0 +1,25 @@
+#
+# TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
+# 
+# Tämä tiedosto toimii pohjana oph-configuration/common.properties tiedostolle,
+# joka asettaa tomcatin ympäristökohtaiset arvot.
+#
+
+# Aseta vähintään nämä ympäristökohtaiset arvot
+haka.metadata.url={{haka_metadata_url}}
+haka.wayf.url={{haka_wayf_url}}
+host.cas={{host_cas}}
+host.virkailija={{host_virkailija}}
+sp.host.virkailija={{host_virkailija}}
+keystore.password={{keystore_password}}
+serviceprovider.app.username.to.usermanagement={{serviceprovider_app_username_to_usermanagement}}
+serviceprovider.app.password.to.usermanagement={{serviceprovider_app_password_to_usermanagement}}
+sp.keyalias={{sp_keyalias}}
+sp.keypassword={{sp_keypassword}}
+
+# Oletusarvoja
+authentication.hostedsp=https\://{{host_authentication | default("${host.virkailija}") }}/service-provider-app/saml/metadata/alias/hakasp
+authentication.logout.redirect=https\://${host.cas}/cas/logout?service\=https%3A%2F%2F${host.virkailija}
+hakasp.metadatafile=file\://${user.home.conf}/hakasp.xml
+keystore.url={{ keystore_url | default("file:///home/tomcat/haka/keystore.jks") }}
+user.home.conf=${user.home}/oph-configuration
