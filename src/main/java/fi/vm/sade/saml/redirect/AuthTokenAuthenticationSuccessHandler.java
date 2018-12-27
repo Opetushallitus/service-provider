@@ -1,17 +1,15 @@
 package fi.vm.sade.saml.redirect;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.saml.clients.KayttooikeusRestClient;
 import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
-import fi.vm.sade.saml.exception.RequiredSamlAttributeNotProvidedException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.saml.SAMLCredential;
@@ -31,7 +29,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     public static final String HENKILO_UI_TOKEN_PARAMETER = "temporaryKutsuToken";
 
     private final OphProperties ophProperties;
-    private CachingRestClient kayttooikeusRestClient;
+    private KayttooikeusRestClient kayttooikeusRestClient;
     private OppijanumeroRekisteriRestClient oppijanumeroRekisteriRestClient;
 
     private HakaAuthTokenProvider tokenProviders;
@@ -70,20 +68,16 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                             .createAuthenticationToken((SAMLCredential) authentication.getCredentials(), (UserDetailsDto) token.getDetails());
                 } catch (NoStrongIdentificationException e) {
                     String henkiloOid = e.getMessage();
-                    String languageCodeUrl = this.ophProperties.url("oppijanumerorekisteri.henkilo.kieliKoodi", henkiloOid);
-                    String languageCode = this.oppijanumeroRekisteriRestClient.get(languageCodeUrl, String.class);
-                    String createLoginTokenUrl = this.ophProperties.url("kayttooikeus-service.cas.create-login-token", henkiloOid);
-                    String loginToken = this.kayttooikeusRestClient.get(createLoginTokenUrl, String.class);
+                    String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
+                    String loginToken = this.kayttooikeusRestClient.createLoginToken(henkiloOid);
                     String strongIdentificationInfoRedirectUrl = this.ophProperties
                             .url("henkilo-ui.strong-identification", languageCode, loginToken);
                     getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
                     return;
                 } catch (EmailVerificationException e) {
                     String henkiloOid = e.getMessage();
-                    String languageCodeUrl = this.ophProperties.url("oppijanumerorekisteri.henkilo.kieliKoodi", henkiloOid);
-                    String languageCode = this.oppijanumeroRekisteriRestClient.get(languageCodeUrl, String.class);
-                    String createLoginTokenUrl = this.ophProperties.url("kayttooikeus-service.cas.create-login-token", henkiloOid);
-                    String loginToken = this.kayttooikeusRestClient.get(createLoginTokenUrl, String.class);
+                    String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
+                    String loginToken = this.kayttooikeusRestClient.createLoginToken(henkiloOid);
                     String emailVerificationUrl = this.ophProperties.url("henkilo-ui.email-verification", languageCode, loginToken);
                     getRedirectStrategy().sendRedirect(request, response, emailVerificationUrl);
                     return;
@@ -107,12 +101,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             }
             else if (StringUtils.isNotEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
                 // Add userdetails to kayttooikeus-service.
-                try {
-                    String url = this.ophProperties.url("kayttooikeus-service.kutsu.update-identifier", temporaryToken);
-                    this.kayttooikeusRestClient.put(url, MediaType.APPLICATION_JSON_VALUE, "{\"hakaIdentifier\": \"" + ((UserDetailsDto) token.getDetails()).getIdentifier() + "\"}");
-                } catch (CachingRestClient.HttpException e) {
-                    throw new RuntimeException("Could not update kutsu identifier", e);
-                }
+                kayttooikeusRestClient.updateKutsuHakaIdentifier(temporaryToken, ((UserDetailsDto) token.getDetails()).getIdentifier());
                 Map<String, String> queryParams = new HashMap<String, String>(){{
                     put(HENKILO_UI_TOKEN_PARAMETER, temporaryToken);
                 }};
@@ -140,7 +129,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         this.oppijanumeroRekisteriRestClient = oppijanumeroRekisteriRestClient;
     }
 
-    public void setKayttooikeusRestClient(CachingRestClient kayttooikeusRestClient) {
+    public void setKayttooikeusRestClient(KayttooikeusRestClient kayttooikeusRestClient) {
         this.kayttooikeusRestClient = kayttooikeusRestClient;
     }
 }

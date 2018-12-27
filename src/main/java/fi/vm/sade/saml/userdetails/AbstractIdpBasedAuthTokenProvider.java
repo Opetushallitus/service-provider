@@ -1,25 +1,22 @@
 package fi.vm.sade.saml.userdetails;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.saml.clients.KayttooikeusRestClient;
 import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.saml.SAMLCredential;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class AbstractIdpBasedAuthTokenProvider {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private OphProperties ophProperties;
     private KayttooikeusRestClient kayttooikeusRestClient;
 
     private boolean requireStrongIdentification;
@@ -35,37 +32,20 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
     public String createAuthenticationToken(SAMLCredential credential, UserDetailsDto userDetailsDto) throws Exception {
         // Checks if Henkilo with given IdP key and identifier exists
-        String henkiloOid;
-        try {
-            String url = ophProperties.url("kayttooikeus-service.cas.oidByIdp", getIDPUniqueKey(), userDetailsDto.getIdentifier());
-            henkiloOid = kayttooikeusRestClient.get(url, String.class);
-        }
-        catch (Exception e) {
-            if (isNotFound(e)) {
-                throw new UnregisteredUserException("Authentication denied for an unregistered user: " + userDetailsDto.getIdentifier());
-            } else {
-                logger.error("Error in REST-client while fetching henkiloOid", e);
-                throw e;
-            }
-        }
+        String henkiloOid = kayttooikeusRestClient.getUserOidByIdentifier(getIDPUniqueKey(), userDetailsDto.getIdentifier())
+                .orElseThrow(new Supplier<UnregisteredUserException>() {
+                    @Override
+                    public UnregisteredUserException get() {
+                        return new UnregisteredUserException("Authentication denied for an unregistered user: " + userDetailsDto.getIdentifier());
+                    }
+                });
 
         boolean isStrongIdentificationRedirectAllowed = strongIdentificationRedirectAllowed(henkiloOid);
         boolean isEmailVerificationRedirectAllowed = emailVerificationRedirectAllowed(henkiloOid);
 
         // Move to redirect
         if( isStrongIdentificationRedirectAllowed || isEmailVerificationRedirectAllowed ) {
-            String redirectCode;
-            try {
-                String loginRedirectUrl = this.ophProperties.url("kayttooikeus-service.cas.login.redirect.oidHenkilo", henkiloOid);
-                redirectCode = this.kayttooikeusRestClient.get(loginRedirectUrl, String.class);
-            } catch (Exception e) {
-                if (isNotFound(e)) {
-                    throw new UnregisteredUserException("Authentication denied for an unregistered user: " + userDetailsDto.getIdentifier());
-                } else {
-                    logger.error("Error in REST-client while fetching loginRedirectType", e);
-                    throw e;
-                }
-            }
+            String redirectCode = kayttooikeusRestClient.getRedirectCodeByOid(henkiloOid);
             
             // isStrongIdentificationRedirectAllowed needs to be double checked here.
             // This block may be run if isEmailVerificationRedirectAllowed is true and strong identification redirect is not wanted
@@ -78,16 +58,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
         }
 
         // Generates and returns auth token to Henkilo by OID
-        return kayttooikeusRestClient.get(ophProperties.url("kayttooikeus-service.cas.authTokenForOidAndIdp",
-                henkiloOid, getIDPUniqueKey(), userDetailsDto.getIdentifier()), String.class);
-    }
-
-    private static boolean isNotFound(Exception exception) {
-        if (exception instanceof CachingRestClient.HttpException) {
-            CachingRestClient.HttpException httpException = (CachingRestClient.HttpException) exception;
-            return httpException.getStatusCode() == HttpStatus.NOT_FOUND.value();
-        }
-        return false;
+        return kayttooikeusRestClient.createAuthToken(henkiloOid, getIDPUniqueKey(), userDetailsDto.getIdentifier());
     }
 
     private boolean strongIdentificationRedirectAllowed(String henkiloOid) {
@@ -104,15 +75,6 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
      * @return
      */
     protected abstract String getIDPUniqueKey();
-
-
-    public OphProperties getOphProperties() {
-        return ophProperties;
-    }
-
-    public void setOphProperties(OphProperties ophProperties) {
-        this.ophProperties = ophProperties;
-    }
 
     public void setKayttooikeusRestClient(KayttooikeusRestClient kayttooikeusRestClient) {
         this.kayttooikeusRestClient = kayttooikeusRestClient;

@@ -1,12 +1,51 @@
 package fi.vm.sade.saml.clients;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
+import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import fi.vm.sade.properties.OphProperties;
 
-public class OppijanumeroRekisteriRestClient extends CachingRestClient {
-    public OppijanumeroRekisteriRestClient(OphProperties ophProperties) {
-        this.setCasService(ophProperties.url("oppijanumerorekisteri-service.security_check"));
-        this.setWebCasUrl(ophProperties.url("cas.base"));
+import java.util.function.Supplier;
+
+import static fi.vm.sade.saml.clients.HttpClientUtil.CLIENT_SUBSYSTEM_CODE;
+import static fi.vm.sade.saml.clients.HttpClientUtil.noContentOrNotFoundException;
+import static java.util.function.Function.identity;
+
+public class OppijanumeroRekisteriRestClient {
+
+    private final OphHttpClient httpClient;
+    private final OphProperties properties;
+
+    public OppijanumeroRekisteriRestClient(OphProperties properties) {
+        this(newHttpClient(properties), properties);
+    }
+
+    public OppijanumeroRekisteriRestClient(OphHttpClient httpClient, OphProperties properties) {
+        this.httpClient = httpClient;
+        this.properties = properties;
+    }
+
+    private static OphHttpClient newHttpClient(OphProperties properties) {
+        CasAuthenticator authenticator = new CasAuthenticator.Builder()
+                .username(properties.require("serviceprovider.app.username.to.usermanagement"))
+                .password(properties.require("serviceprovider.app.password.to.usermanagement"))
+                .webCasUrl(properties.url("cas.base"))
+                .casServiceUrl(properties.url("oppijanumerorekisteri-service.security_check"))
+                .build();
+        return new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE).authenticator(authenticator).build();
+    }
+
+    public String getAsiointikieli(String oid) {
+        String url = properties.url("oppijanumerorekisteri.henkilo.kieliKoodi", oid);
+        return httpClient.<String>execute(OphHttpRequest.Builder.get(url).build())
+                .expectedStatus(200)
+                .mapWith(identity())
+                .orElseThrow(new Supplier<RuntimeException>() {
+                    @Override
+                    public RuntimeException get() {
+                        return noContentOrNotFoundException(url);
+                    }
+                });
     }
 
 }

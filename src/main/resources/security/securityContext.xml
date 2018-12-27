@@ -61,20 +61,10 @@
 
     <bean id="kayttooikeusRestClient" class="fi.vm.sade.saml.clients.KayttooikeusRestClient">
         <constructor-arg ref="ophProperties" />
-        <property name="clientSubSystemCode" >
-            <util:constant static-field="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.CLIENT_SUB_SYSTEM_CODE" />
-        </property>
-        <property name="username" value="${serviceprovider.app.username.to.usermanagement}" />
-        <property name="password" value="${serviceprovider.app.password.to.usermanagement}" />
     </bean>
 
     <bean id="oppijanumeroRekisteriRestClient" class="fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient">
         <constructor-arg ref="ophProperties" />
-        <property name="clientSubSystemCode" >
-            <util:constant static-field="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider.CLIENT_SUB_SYSTEM_CODE" />
-        </property>
-        <property name="username" value="${serviceprovider.app.username.to.usermanagement}" />
-        <property name="password" value="${serviceprovider.app.password.to.usermanagement}" />
     </bean>
 
     <!-- Handler deciding where to redirect user after successful login -->
@@ -254,7 +244,6 @@
     <bean id="idpBasedTokenProviderParent"
         class="fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider"
         abstract="true">
-        <property name="ophProperties" ref="ophProperties" />
         <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
         <property name="requireStrongIdentification" value="${haka.require-strong-identification}" />
         <property name="emailVerificationEnabled" value="${haka.email-verification-enabled}"></property>
