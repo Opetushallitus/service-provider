@@ -1,5 +1,6 @@
 package fi.vm.sade.saml.clients;
 
+import com.google.gson.Gson;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -8,24 +9,26 @@ import fi.vm.sade.properties.OphProperties;
 import org.apache.http.entity.ContentType;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static fi.vm.sade.saml.clients.HttpClientUtil.CLIENT_SUBSYSTEM_CODE;
 import static fi.vm.sade.saml.clients.HttpClientUtil.noContentOrNotFoundException;
-import static java.util.function.Function.identity;
 
 public class KayttooikeusRestClient {
 
     private final OphHttpClient httpClient;
     private final OphProperties properties;
+    private final Gson gson;
 
     public KayttooikeusRestClient(OphProperties properties) {
-        this(newHttpClient(properties), properties);
+        this(newHttpClient(properties), properties, new Gson());
     }
 
-    public KayttooikeusRestClient(OphHttpClient httpClient, OphProperties properties) {
+    public KayttooikeusRestClient(OphHttpClient httpClient, OphProperties properties, Gson gson) {
         this.httpClient = httpClient;
         this.properties = properties;
+        this.gson = gson;
     }
 
     private static OphHttpClient newHttpClient(OphProperties properties) {
@@ -38,11 +41,20 @@ public class KayttooikeusRestClient {
         return new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE).authenticator(authenticator).build();
     }
 
+    private String jsonString(String json) {
+        return gson.fromJson(json, String.class);
+    }
+
     public String createLoginToken(String oid) {
         String url = properties.url("kayttooikeus-service.cas.create-login-token", oid);
         return httpClient.<String>execute(OphHttpRequest.Builder.get(url).build())
                 .expectedStatus(200)
-                .mapWith(identity())
+                .mapWith(new Function<String, String>() {
+                    @Override
+                    public String apply(String json) {
+                        return jsonString(json);
+                    }
+                })
                 .orElseThrow(new Supplier<RuntimeException>() {
                     @Override
                     public RuntimeException get() {
@@ -62,7 +74,12 @@ public class KayttooikeusRestClient {
                 .build();
         httpClient.<String>execute(request)
                 .expectedStatus(200)
-                .mapWith(identity())
+                .mapWith(new Function<String, String>() {
+                    @Override
+                    public String apply(String json) {
+                        return jsonString(json);
+                    }
+                })
                 .orElseThrow(new Supplier<RuntimeException>() {
                     @Override
                     public RuntimeException get() {
@@ -75,14 +92,24 @@ public class KayttooikeusRestClient {
         String url = properties.url("kayttooikeus-service.cas.oidByIdp", idpEntityId, identifier);
         return httpClient.<String>execute(OphHttpRequest.Builder.get(url).build())
                 .expectedStatus(200)
-                .mapWith(identity());
+                .mapWith(new Function<String, String>() {
+                    @Override
+                    public String apply(String json) {
+                        return jsonString(json);
+                    }
+                });
     }
 
     public String getRedirectCodeByOid(String oid) {
         String url = properties.url("kayttooikeus-service.cas.login.redirect.oidHenkilo", oid);
         return httpClient.<String>execute(OphHttpRequest.Builder.get(url).build())
                 .expectedStatus(200)
-                .mapWith(identity())
+                .mapWith(new Function<String, String>() {
+                    @Override
+                    public String apply(String json) {
+                        return jsonString(json);
+                    }
+                })
                 .orElseThrow(new Supplier<RuntimeException>() {
                     @Override
                     public RuntimeException get() {
@@ -95,7 +122,12 @@ public class KayttooikeusRestClient {
         String url = properties.url("kayttooikeus-service.cas.authTokenForOidAndIdp", oid, idpEntityId, identifier);
         return httpClient.<String>execute(OphHttpRequest.Builder.get(url).build())
                 .expectedStatus(200)
-                .mapWith(identity())
+                .mapWith(new Function<String, String>() {
+                    @Override
+                    public String apply(String json) {
+                        return jsonString(json);
+                    }
+                })
                 .orElseThrow(new Supplier<RuntimeException>() {
                     @Override
                     public RuntimeException get() {
