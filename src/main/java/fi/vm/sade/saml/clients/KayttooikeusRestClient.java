@@ -1,6 +1,5 @@
 package fi.vm.sade.saml.clients;
 
-import com.google.gson.Gson;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -19,16 +18,14 @@ public class KayttooikeusRestClient {
 
     private final OphHttpClient httpClient;
     private final OphProperties properties;
-    private final Gson gson;
 
     public KayttooikeusRestClient(OphProperties properties) {
-        this(newHttpClient(properties), properties, new Gson());
+        this(newHttpClient(properties), properties);
     }
 
-    public KayttooikeusRestClient(OphHttpClient httpClient, OphProperties properties, Gson gson) {
+    public KayttooikeusRestClient(OphHttpClient httpClient, OphProperties properties) {
         this.httpClient = httpClient;
         this.properties = properties;
-        this.gson = gson;
     }
 
     private static OphHttpClient newHttpClient(OphProperties properties) {
@@ -42,7 +39,10 @@ public class KayttooikeusRestClient {
     }
 
     private String jsonString(String json) {
-        return gson.fromJson(json, String.class);
+        if (json == null) {
+            return "";
+        }
+        return json.replaceAll("\"", "");
     }
 
     public String createLoginToken(String oid) {
