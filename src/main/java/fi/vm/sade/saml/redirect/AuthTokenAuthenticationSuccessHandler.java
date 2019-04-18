@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -40,9 +41,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     }
 
     public void initialize() {
-        String rootUrl = ophProperties.url("url-virkailija");
-        String loginUrl = ophProperties.url("cas.login", rootUrl);
-        setDefaultTargetUrl(loginUrl);
+        setDefaultTargetUrl(ophProperties.url("cas.login"));
     }
 
     @Override
@@ -52,8 +51,9 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         String targetUrl = getDefaultTargetUrl();
         String finalTargetUrl = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.REDIRECT_KEY);
         if (finalTargetUrl != null) {
-            String redirectUrl = ophProperties.url("cas.redirect", finalTargetUrl);
-            targetUrl = ophProperties.url("cas.login", redirectUrl);
+            Map<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("service", finalTargetUrl);
+            targetUrl = ophProperties.url("cas.login", parameters);
         }
         final String temporaryToken = (String) request.getSession().getAttribute(RequestSavingSAMLEntryPoint.KUTSU_TEMP_TOKEN_KEY);
         
