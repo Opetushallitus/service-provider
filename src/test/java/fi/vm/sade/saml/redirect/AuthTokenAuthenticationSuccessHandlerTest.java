@@ -60,7 +60,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
 
         verify(redirectStrategyMock).sendRedirect(eq(httpRequestMock), eq(httpResponseMock),
-                eq("https://virkailija.opintopolku.fi/cas/login?service=https%3A%2F%2Fvirkailija.opintopolku.fi%2Fcas%2Fredirect%3Fto%3Dhttps%253A%252F%252Fvirkailija.opintopolku.fi%252Fvirkailijan-tyopoyta%252Fauthenticate&authToken=authtoken123"));
+                eq("https://virkailija.opintopolku.fi/cas/login?service=https%3A%2F%2Fvirkailija.opintopolku.fi%2Fvirkailijan-tyopoyta%2Fauthenticate&authToken=authtoken123"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
 
         verify(redirectStrategyMock).sendRedirect(eq(httpRequestMock), eq(httpResponseMock),
-                eq("https://virkailija.opintopolku.fi/cas/login?service=https%3A%2F%2Fvirkailija.opintopolku.fi&authToken=authtoken123"));
+                eq("https://virkailija.opintopolku.fi/cas/login?authToken=authtoken123"));
     }
 
     @Test(expected = UnregisteredUserException.class)
