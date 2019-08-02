@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static fi.vm.sade.saml.clients.HttpClientUtil.CLIENT_SUBSYSTEM_CODE;
+import static fi.vm.sade.saml.clients.HttpClientUtil.CALLER_ID;
 import static fi.vm.sade.saml.clients.HttpClientUtil.noContentOrNotFoundException;
 
 public class KayttooikeusRestClient {
@@ -35,7 +35,7 @@ public class KayttooikeusRestClient {
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("kayttooikeus-service.security_check"))
                 .build();
-        return new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE).authenticator(authenticator).build();
+        return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
 
     private String jsonString(String json) {
