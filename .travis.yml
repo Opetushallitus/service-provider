@@ -25,7 +25,7 @@ script:
   - mv target/service-provider-app.war $DOCKER_BUILD_DIR/artifact/service-provider-app.war
   - cp -vr oph-configuration $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-war:master"
+  - export BASE_IMAGE="baseimage-war-openjdk8:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
 
