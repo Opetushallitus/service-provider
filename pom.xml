@@ -278,6 +278,10 @@ buildTtime=${maven.build.timestamp}
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-asm</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>xmltooling</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
