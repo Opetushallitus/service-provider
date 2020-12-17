@@ -273,6 +273,12 @@ buildTtime=${maven.build.timestamp}
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bundle</artifactId>
             <version>${cxf.version}</version>
+            <exclusions>
+                <exclusion><!-- sisältyy nykyisin spring-coreen, tämä tuo epäyhteensopivan -->
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
