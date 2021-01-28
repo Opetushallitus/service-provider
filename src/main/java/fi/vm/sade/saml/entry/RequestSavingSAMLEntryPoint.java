@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fi.vm.sade.saml.entry;
 
 import java.io.IOException;
@@ -10,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.util.URLBuilder;
 import org.opensaml.ws.transport.http.HTTPOutTransport;
@@ -68,9 +64,9 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 
             URLBuilder urlBuilder = new URLBuilder(discoveryURL);
             List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
-            queryParams.add(new Pair<String, String>(SAMLDiscovery.ENTITY_ID_PARAM, context.getLocalEntityId()));
-            queryParams.add(new Pair<String, String>(SAMLDiscovery.RETURN_ID_PARAM, IDP_PARAMETER));
-            queryParams.add(new Pair<String, String>(SAMLDiscovery.RETURN_URL_PARAM, returnUrl));
+            queryParams.add(new Pair<>(SAMLDiscovery.ENTITY_ID_PARAM, context.getLocalEntityId()));
+            queryParams.add(new Pair<>(SAMLDiscovery.RETURN_ID_PARAM, IDP_PARAMETER));
+            queryParams.add(new Pair<>(SAMLDiscovery.RETURN_URL_PARAM, returnUrl));
             discoveryURL = urlBuilder.buildURL();
 
             logger.debug("Using discovery URL from extended metadata");
@@ -89,7 +85,7 @@ public class RequestSavingSAMLEntryPoint extends SAMLEntryPoint {
 
         }
 
-        logger.debug("Redirecting to discovery URL {}", discoveryURL);
+        logger.debug("Redirecting to discovery URL " + discoveryURL);
         HTTPOutTransport response = (HTTPOutTransport) context.getOutboundMessageTransport();
         response.sendRedirect(discoveryURL);
     }
