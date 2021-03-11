@@ -1,7 +1,7 @@
 sudo: required
 language: java
 jdk:
-  - openjdk8
+  - openjdk11
 services:
   - docker
 cache:
@@ -25,7 +25,7 @@ script:
   - mv target/service-provider-app.war $DOCKER_BUILD_DIR/artifact/service-provider-app.war
   - cp -vr oph-configuration $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-war-openjdk8:master"
+  - export BASE_IMAGE="baseimage-war-openjdk11:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
 
