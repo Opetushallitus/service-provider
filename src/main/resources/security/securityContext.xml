@@ -97,6 +97,7 @@
 
     <bean id="hakaAuthenticationFailureHandler"
         class="fi.vm.sade.saml.redirect.HakaAuthenticationFailureHandler">
+        <property name="defaultFailureUrl" value="https://${host.cas}/cas/login" />
         <property name="hakaAuthFailureUrl" value="/registration_disabled.jsp" />
     </bean>
 
