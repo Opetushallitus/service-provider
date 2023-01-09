@@ -4,6 +4,10 @@ Toimii service providerina HAKA kirjautumisessa. Lisää infoa kirjautumisproses
 
 Lokaali ajaminen tapahtuu QA-ympäristöä vasten käyttäen luokalle konfiguroitua testihakaa. Tämä joudutaan tekemään näin koska haka palautuu itest-virkailija.oph.ware.fi osoitteeseen ja jotta tämä saadaan ohjattua localhostiin pitää se varata hosts-tiedostoon jolloin luokan käyttö dns-nimellä ei onnistu. 
 
+Toistuvat ylläpidolliset toimet
+-
+* [HAKA varmenteen uusiminen](haka-varmenteen-uusiminen.md)
+
 Lokaali ajamisen valmistelu
 -
 1) Lisää seuraavat projektin mukana tuleva tiedostot `oph-configuration`-kansioosi
