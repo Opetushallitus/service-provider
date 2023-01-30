@@ -74,7 +74,7 @@ Odota kunnes resurssirekisteri on päivittynyt ([tukee](https://wiki.eduuni.fi/d
 Päivitä salaisuuksienhallinta
 --
 
-**services/service-provider/haka-cert-x50** konfiguraatioparametri tulee muuttaa vastaamaan keystoressa olevaa
+**services/service-provider/haka-cert-x509** konfiguraatioparametri tulee muuttaa vastaamaan keystoressa olevaa
 varmennetta. *Huom: ilman `-----BEGIN/END CERTIFICATE-----` rivejä!*
 
 Koska varmenteessa on useita rivejä lienee se helponta päivittää aws consolen kautta.
@@ -85,3 +85,10 @@ Päivitä applikaation konfiguraatio
 * Tallenna tehdyt muutokset ympäristökohtaiseen CodeCommit repositoryyn. 
 * Julkaise muuttunut konfiguraatio: `cloud-base/aws/config.py ${ympäristö} publish`
 * Uudelleenkäynnistä applikaatio: `cloud-base/aws/cloudformation.py ${ympäristö} services update -s service-provider`
+
+Informoi tunnistuspalveluita
+--
+
+Uusi varmenne ei päivity automaattisesti kaikkiin tunnistuspalveluhin vaan se tulee tehdä niihin manuaalisesti.
+Ainakin Valtorin ylläpitämä Valtti on tällainen.
+Ko. tunnistuspalveluita pitää siis informoida ajoissa ja kooridinoida varmenteen vaihdon ajankohta.
