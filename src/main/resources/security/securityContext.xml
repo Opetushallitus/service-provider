@@ -136,7 +136,7 @@
             </bean>
         </property>
         <property name="returnUrl"
-            value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true" />
+            value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/${haka.metadata.alias}?disco=true" />
     </bean>
 
     <!-- IDP Discovery Service -->
@@ -178,7 +178,7 @@
                         <bean
                             class="org.springframework.security.saml.metadata.ExtendedMetadata">
                             <property name="local" value="true" />
-                            <property name="alias" value="hakasp" />
+                            <property name="alias" value="${haka.metadata.alias}" />
                             <property name="securityProfile"
                                 value="null" />
                             <property name="signingKey" value="${sp.keyalias}" />
@@ -196,7 +196,7 @@
                             <property name="idpDiscoveryURL"
                                 value="${haka.wayf.url}" />
                             <!-- <property name="idpDiscoveryResponseURL" 
-                                value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/hakasp?disco=true"/> -->
+                                value="https://${sp.host.virkailija}/service-provider-app/saml/login/alias/${haka.metadata.alias}?disco=true"/> -->
                         </bean>
                     </constructor-arg>
                     <property name="metadataTrustCheck" value="false" />

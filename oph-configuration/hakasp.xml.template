@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd" entityID="https://{{host_virkailija}}/service-provider-app/saml/metadata/alias/hakasp">
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xsi:schemaLocation="urn:oasis:names:tc:SAML:2.0:metadata saml-schema-metadata-2.0.xsd urn:mace:shibboleth:metadata:1.0 shibboleth-metadata-1.0.xsd http://www.w3.org/2000/09/xmldsig# xmldsig-core-schema.xsd" entityID="https://{{host_virkailija}}/service-provider-app/saml/metadata/alias/{{ haka_metadata_alias | default('hakasp') }}">
   <SPSSODescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol" AuthnRequestsSigned="true">
     <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -8,10 +8,10 @@
         </ds:X509Data>
       </ds:KeyInfo>
     </KeyDescriptor>
-    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/hakasp"/>
-    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/hakasp"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/{{ haka_metadata_alias | default('hakasp') }}"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/{{ haka_metadata_alias | default('hakasp') }}"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://{{host_virkailija}}/service-provider-app/saml/SSO/alias/hakasp" index="1" isDefault="true"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://{{host_virkailija}}/service-provider-app/saml/SSO/alias/{{ haka_metadata_alias | default('hakasp') }}" index="1" isDefault="true"/>
     <AttributeConsumingService index="1" isDefault="true">
       <ServiceName xml:lang="fi">Opintopolku LUOKKA</ServiceName>
       <ServiceName xml:lang="sv">Studieinfo LUOKKA</ServiceName>

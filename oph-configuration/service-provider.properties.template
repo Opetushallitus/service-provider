@@ -7,6 +7,7 @@
 
 # Aseta vähintään nämä ympäristökohtaiset arvot
 haka.metadata.url={{haka_metadata_url}}
+haka.metadata.alias={{ haka_metadata_alias | default('hakasp') }}
 haka.wayf.url={{haka_wayf_url}}
 host.cas={{host_cas}}
 host.virkailija={{host_virkailija}}
@@ -19,7 +20,7 @@ sp.keypassword={{sp_keypassword}}
 serviceprovider.max-authentication-age-in-seconds={{serviceprovider_max_authentication_age_in_seconds | default('28800')}}
 
 # Oletusarvoja
-authentication.hostedsp=https\://{{host_authentication | default("${host.virkailija}") }}/service-provider-app/saml/metadata/alias/hakasp
+authentication.hostedsp=https\://{{host_authentication | default("${host.virkailija}") }}/service-provider-app/saml/metadata/alias/{{ haka_metadata_alias | default('hakasp') }}
 authentication.logout.redirect=https\://${host.cas}/cas/logout?service\=https%3A%2F%2F${host.virkailija}
 hakasp.metadatafile=file\://${user.home.conf}/hakasp.xml
 keystore.url={{ keystore_url | default("file:///home/tomcat/haka/keystore.jks") }}
