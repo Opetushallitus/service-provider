@@ -33,8 +33,6 @@
             access="permitAll" />
         <security:intercept-url pattern="/favicon.ico"
             access="permitAll" />
-        <!-- <security:custom-filter before="FIRST" ref="metadataGeneratorFilter" 
-            /> -->
         <security:custom-filter after="BASIC_AUTH_FILTER"
             ref="samlFilter" />
     </security:http>
@@ -120,6 +118,7 @@
         <constructor-arg>
             <map>
                 <entry key="${sp.keyalias}" value="${sp.keypassword}" />
+                <entry key="${sp.keyalias_secondary}" value="${sp.keypassword_secondary}" />
             </map>
         </constructor-arg>
         <constructor-arg type="java.lang.String" value="${sp.keyalias}" />
@@ -144,12 +143,7 @@
         <property name="idpSelectionPath" value="/WEB-INF/security/idpSelection.jsp" />
     </bean>
 
-    <!-- Filter automatically generates default SP metadata -->
-    <!-- <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter"> 
-        <constructor-arg> <bean class="org.springframework.security.saml.metadata.MetadaforceAuthntaGenerator" 
-        /> </constructor-arg> </bean> -->
-
-    <!-- The filter is waiting for connections on URL suffixed with filterSuffix 
+    <!-- The filter is waiting for connections on URL suffixed with filterSuffix
         and presents SP metadata there -->
     <!-- <bean id="metadataDisplayFilter" class="org.springframework.security.saml.metadata.MetadataDisplayFilter" 
         /> -->
@@ -265,12 +259,13 @@
 
     <!-- SAML Context for environments with load balancer -->
     <bean id="contextProvider"
-        class="org.springframework.security.saml.context.SAMLContextProviderLB">
+        class="fi.vm.sade.saml.SAMLContextProvider">
         <property name="scheme" value="https" />
         <property name="serverName" value="${sp.host.virkailija}" />
         <property name="serverPort" value="443" />
         <property name="includeServerPortInRequestURL" value="false" />
         <property name="contextPath" value="/service-provider-app" />
+        <property name="secondaryKeyAlias" value="${sp.keyalias_secondary}" />
     </bean>
 
     <!-- Processing filter for WebSSO profile messages -->
