@@ -8,6 +8,13 @@
         </ds:X509Data>
       </ds:KeyInfo>
     </KeyDescriptor>
+    <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>{{haka_cert_x509_secondary}}</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
     <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/{{ haka_metadata_alias | default('hakasp') }}"/>
     <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{host_virkailija}}/service-provider-app/saml/SingleLogout/alias/{{ haka_metadata_alias | default('hakasp') }}"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>

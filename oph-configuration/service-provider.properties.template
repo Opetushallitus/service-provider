@@ -16,7 +16,9 @@ keystore.password={{keystore_password}}
 serviceprovider.app.username.to.usermanagement={{serviceprovider_app_username_to_usermanagement}}
 serviceprovider.app.password.to.usermanagement={{serviceprovider_app_password_to_usermanagement}}
 sp.keyalias={{sp_keyalias}}
+sp.keyalias_secondary={{sp_keyalias_secondary}}
 sp.keypassword={{sp_keypassword}}
+sp.keypassword_secondary={{sp_keypassword}}
 serviceprovider.max-authentication-age-in-seconds={{serviceprovider_max_authentication_age_in_seconds | default('28800')}}
 
 # Oletusarvoja
