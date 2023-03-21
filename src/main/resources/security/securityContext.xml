@@ -119,6 +119,7 @@
             <map>
                 <entry key="${sp.keyalias}" value="${sp.keypassword}" />
                 <entry key="${sp.keyalias_secondary}" value="${sp.keypassword_secondary}" />
+                <entry key="${mpassid.keyalias}" value="${sp.keypassword}" />
             </map>
         </constructor-arg>
         <constructor-arg type="java.lang.String" value="${sp.keyalias}" />
@@ -155,7 +156,42 @@
         class="org.springframework.security.saml.metadata.CachingMetadataManager">
         <constructor-arg>
             <list>
-                <!-- HUOM! Tämän pitää olla ensimmäisenä, muuten sp:n metadata 
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+                            <constructor-arg>
+                                <value type="java.io.File">${mpassid.metadatafile}</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool" />
+                        </bean>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                            <property name="local" value="true" />
+                            <property name="alias" value="${mpassid.metadata.alias}" />
+                            <property name="signingKey" value="${mpassid.keyalias}" />
+                        </bean>
+                    </constructor-arg>
+                </bean>
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
+                            <constructor-arg>
+                                <value type="java.lang.String">${mpassid.metadata.url}</value>
+                            </constructor-arg>
+                            <constructor-arg>
+                                <value type="int">5000</value>
+                            </constructor-arg>
+                            <constructor-arg>
+                                <value type="java.lang.String">${user.home.conf}/mpassid_metadata.xml</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool" />
+                            <property name="minRefreshDelay" value="600000" />
+                            <property name="maxRefreshDelay" value="600000" />
+                        </bean>
+                    </constructor-arg>
+                </bean>
+                <!-- HUOM! Tämän pitää olla ensimmäisenä, muuten sp:n metadata
                     ladataan hakalta eikä paikallisesti -->
                 <bean
                     class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
@@ -265,7 +301,12 @@
         <property name="serverPort" value="443" />
         <property name="includeServerPortInRequestURL" value="false" />
         <property name="contextPath" value="/service-provider-app" />
-        <property name="secondaryKeyAlias" value="${sp.keyalias_secondary}" />
+        <property name="certificates">
+            <list>
+                <value>${sp.keyalias_secondary}</value>
+                <value>${mpassid.keyalias}</value>
+            </list>
+        </property>
     </bean>
 
     <!-- Processing filter for WebSSO profile messages -->

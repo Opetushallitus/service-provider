@@ -21,6 +21,12 @@ sp.keypassword={{sp_keypassword}}
 sp.keypassword_secondary={{sp_keypassword}}
 serviceprovider.max-authentication-age-in-seconds={{serviceprovider_max_authentication_age_in_seconds | default('28800')}}
 
+# MPASSid
+mpassid.metadata.alias={{ mpassid_metadata_alias }}
+mpassid.metadata.url={{ mpassid_metadata_url }}
+mpassid.keyalias={{ mpassid_keyalias }}
+mpassid.metadatafile={{ mpassid_metadatafile }}
+
 # Oletusarvoja
 authentication.hostedsp=https\://{{host_authentication | default("${host.virkailija}") }}/service-provider-app/saml/metadata/alias/{{ haka_metadata_alias | default('hakasp') }}
 authentication.logout.redirect=https\://${host.cas}/cas/logout?service\=https%3A%2F%2F${host.virkailija}

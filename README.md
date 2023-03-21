@@ -29,6 +29,11 @@ haka.metadata.url=https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
 haka.wayf.url=https://testsp.funet.fi/shibboleth/WAYF
 authentication.hostedsp=https://itest-virkailija.oph.ware.fi/service-provider-app/saml/metadata/alias/hakasp
 hakasp.metadatafile=file\://${user.home.conf}/hakasp.xml
+
+mpassid.metadata.alias=mpassidtestsp
+mpassid.metadata.url=https://mpass-proxy-test.csc.fi/idp/shibboleth
+mpassid.keyalias=local_mpassidtestsp_selfsigned_2023
+mpassid.metadatafile=classpath:/local-mpassidtestsp.xml
 ```
 3) Lisää hosts-tiedostoosi rivi `127.0.0.1 itest-virkailija.oph.ware.fi` 
    * Löytyy windowsista `%SystemRoot%\System32\drivers\etc\hosts`
