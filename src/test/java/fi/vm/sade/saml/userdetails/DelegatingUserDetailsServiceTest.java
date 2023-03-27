@@ -16,7 +16,7 @@ import org.springframework.security.saml.SAMLCredential;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fi.vm.sade.saml.userdetails.DelegatingUserDetailsService.E_PNN;
+import static fi.vm.sade.saml.userdetails.DelegatingUserDetailsService.IDENTIFIER_ATTRIBUTE_HAKA;
 import static org.junit.Assert.assertEquals;
 
 public class DelegatingUserDetailsServiceTest {
@@ -37,7 +37,7 @@ public class DelegatingUserDetailsServiceTest {
     @Test
     public void ePnnAttributeReadSuccessfully() {
         Attribute attribute = new AttributeBuilder().buildObject();
-        attribute.setName(E_PNN);
+        attribute.setName(IDENTIFIER_ATTRIBUTE_HAKA);
         XSString xmlObject = new XSStringBuilder().buildObject(null, "localname", null);
         xmlObject.setValue("value");
         attribute.getAttributeValues().add(xmlObject);

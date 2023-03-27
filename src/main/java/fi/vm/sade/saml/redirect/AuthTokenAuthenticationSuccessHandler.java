@@ -7,6 +7,7 @@ import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
+import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +34,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     private KayttooikeusRestClient kayttooikeusRestClient;
     private OppijanumeroRekisteriRestClient oppijanumeroRekisteriRestClient;
 
-    private HakaAuthTokenProvider tokenProviders;
+    private Map<String, AbstractIdpBasedAuthTokenProvider> tokenProviders;
 
 
     public AuthTokenAuthenticationSuccessHandler(OphProperties ophProperties) {
@@ -64,8 +65,9 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             if (StringUtils.isEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
                 String authToken;
                 try {
-                    authToken = this.tokenProviders
-                            .createAuthenticationToken((SAMLCredential) authentication.getCredentials(), (UserDetailsDto) token.getDetails());
+                    UserDetailsDto userDetails = (UserDetailsDto) token.getDetails();
+                    AbstractIdpBasedAuthTokenProvider tokenProvider = tokenProviders.get(userDetails.getAuthenticationMethod());
+                    authToken = tokenProvider.createAuthenticationToken((SAMLCredential) authentication.getCredentials(), userDetails);
                 } catch (NoStrongIdentificationException e) {
                     String henkiloOid = e.getMessage();
                     String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
@@ -113,11 +115,11 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    public void setTokenProviders(HakaAuthTokenProvider tokenProviders) {
+    public void setTokenProviders(Map<String, AbstractIdpBasedAuthTokenProvider> tokenProviders) {
         this.tokenProviders = tokenProviders;
     }
 
-    public HakaAuthTokenProvider getTokenProviders() {
+    public Map<String, AbstractIdpBasedAuthTokenProvider> getTokenProviders() {
         return tokenProviders;
     }
 

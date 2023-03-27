@@ -19,6 +19,8 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.RedirectStrategy;
 
+import java.util.Map;
+
 public class AuthTokenAuthenticationSuccessHandlerTest {
 
     private AuthTokenAuthenticationSuccessHandler handler;
@@ -37,7 +39,9 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         httpSessionMock = mock(HttpSession.class);
         redirectStrategyMock = mock(RedirectStrategy.class);
         hakaAuthTokenProviderMock = mock(HakaAuthTokenProvider.class);
-        authentication.setDetails(new UserDetailsDto());
+        UserDetailsDto userDetails = new UserDetailsDto();
+        userDetails.setAuthenticationMethod("haka");
+        authentication.setDetails(userDetails);
         when(httpRequestMock.getSession()).thenReturn(httpSessionMock);
 
         OphProperties ophProperties = new OphProperties("/service-provider-oph.properties");
@@ -46,7 +50,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
 
         handler = new AuthTokenAuthenticationSuccessHandler(ophProperties);
         handler.setRedirectStrategy(redirectStrategyMock);
-        handler.setTokenProviders(hakaAuthTokenProviderMock);
+        handler.setTokenProviders(Map.of("haka", hakaAuthTokenProviderMock));
         handler.initialize();
     }
 

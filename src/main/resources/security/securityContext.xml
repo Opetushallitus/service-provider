@@ -73,11 +73,18 @@
         <property name="kayttooikeusRestClient" ref="kayttooikeusRestClient" />
         <property name="oppijanumeroRekisteriRestClient" ref="oppijanumeroRekisteriRestClient" />
         <property name="tokenProviders">
-            <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
-                  parent="idpBasedTokenProviderParent">
-                <property name="hakaRequireStrongIdentificationListAsString" value="${haka.require-strong-identification.oidlist}" />
-                <property name="hakaEmailVerificationListAsString" value="${haka.email-verification-enabled.oidlist}" />
-            </bean>
+            <map>
+                <entry key="haka">
+                    <bean class="fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider"
+                          parent="idpBasedTokenProviderParent">
+                        <property name="hakaRequireStrongIdentificationListAsString" value="${haka.require-strong-identification.oidlist}" />
+                        <property name="hakaEmailVerificationListAsString" value="${haka.email-verification-enabled.oidlist}" />
+                    </bean>
+                </entry>
+                <entry key="mpassid">
+                    <bean class="fi.vm.sade.saml.userdetails.mpassid.MpassidAuthTokenProvider" parent="idpBasedTokenProviderParent" />
+                </entry>
+            </map>
         </property>
     </bean>
     <!-- <bean id="successRedirectHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"> 
