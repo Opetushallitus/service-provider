@@ -50,6 +50,7 @@ public class DelegatingUserDetailsServiceTest {
         SAMLCredential samlCredential = new SAMLCredential(nameID, assertion, null, attributes, null);
         UserDetailsDto userDetailsDto = (UserDetailsDto) this.delegatingUserDetailsService.loadUserBySAML(samlCredential);
 
+        assertEquals("haka", userDetailsDto.getAuthenticationMethod());
         assertEquals("value", userDetailsDto.getIdentifier());
     }
 }

@@ -29,15 +29,11 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
      */
     @Override
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
         if (ENTITYID_MPASSID.equals(credential.getLocalEntityID())) {
-            userDetailsDto.setAuthenticationMethod("mpassid");
-            userDetailsDto.setIdentifier(getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID));
+            return new UserDetailsDto("mpassid", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID));
         } else {
-            userDetailsDto.setAuthenticationMethod("haka");
-            userDetailsDto.setIdentifier(getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_HAKA));
+            return new UserDetailsDto("haka", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_HAKA));
         }
-        return userDetailsDto;
     }
 
     public static String getFirstAttributeValue(SAMLCredential credential, String attributeName) {

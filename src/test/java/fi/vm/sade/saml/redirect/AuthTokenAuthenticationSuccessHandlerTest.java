@@ -39,9 +39,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         httpSessionMock = mock(HttpSession.class);
         redirectStrategyMock = mock(RedirectStrategy.class);
         hakaAuthTokenProviderMock = mock(HakaAuthTokenProvider.class);
-        UserDetailsDto userDetails = new UserDetailsDto();
-        userDetails.setAuthenticationMethod("haka");
-        authentication.setDetails(userDetails);
+        authentication.setDetails(new UserDetailsDto("haka", null));
         when(httpRequestMock.getSession()).thenReturn(httpSessionMock);
 
         OphProperties ophProperties = new OphProperties("/service-provider-oph.properties");

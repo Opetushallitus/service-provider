@@ -36,9 +36,7 @@ public class HakaAuthTokenProviderTest {
         this.hakaAuthTokenProvider.setHakaRequireStrongIdentificationListAsString("");
         this.hakaAuthTokenProvider.setHakaEmailVerificationListAsString("");
 
-        UserDetailsDto userDetailsDto = new UserDetailsDto();
-        userDetailsDto.setIdentifier("identifier");
-        this.defaultUserDetailsDto = userDetailsDto;
+        this.defaultUserDetailsDto = new UserDetailsDto("haka", "identifier");
     }
 
     @Test(expected = NoStrongIdentificationException.class)
