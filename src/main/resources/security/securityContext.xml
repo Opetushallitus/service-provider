@@ -82,7 +82,10 @@
                     </bean>
                 </entry>
                 <entry key="mpassid">
-                    <bean class="fi.vm.sade.saml.userdetails.mpassid.MpassidAuthTokenProvider" parent="idpBasedTokenProviderParent" />
+                    <bean class="fi.vm.sade.saml.userdetails.mpassid.MpassidAuthTokenProvider" parent="idpBasedTokenProviderParent">
+                        <property name="hakaRequireStrongIdentificationListAsString" value="" />
+                        <property name="hakaEmailVerificationListAsString" value="" />
+                    </bean>
                 </entry>
             </map>
         </property>
