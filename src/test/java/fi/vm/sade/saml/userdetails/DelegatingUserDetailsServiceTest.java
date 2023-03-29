@@ -25,6 +25,7 @@ public class DelegatingUserDetailsServiceTest {
     @Before
     public void setup() {
         this.delegatingUserDetailsService = new DelegatingUserDetailsService();
+        delegatingUserDetailsService.setMpassidEntityId("https://virkailija.localopintopolku.fi/service-provider-app/saml/metadata/alias/mpassidtestsp");
     }
 
     @Test(expected = RequiredSamlAttributeNotProvidedException.class)

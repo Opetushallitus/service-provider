@@ -291,6 +291,7 @@
 
     <bean id="userDetailsService"
         class="fi.vm.sade.saml.userdetails.DelegatingUserDetailsService">
+        <property name="mpassidEntityId" value="${mpassid.metadata.entityid}" />
     </bean>
 
     <!-- SAML Authentication Provider responsible for validating of received 

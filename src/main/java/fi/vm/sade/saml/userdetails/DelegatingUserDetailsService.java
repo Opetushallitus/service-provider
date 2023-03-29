@@ -22,14 +22,14 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
     static final String IDENTIFIER_ATTRIBUTE_HAKA = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
     static final String IDENTIFIER_ATTRIBUTE_MPASSID = "urn:oid:1.3.6.1.4.1.16161.1.1.27"; // oppijanumero
 
-    private final String ENTITYID_MPASSID = "https://virkailija.hahtuvaopintopolku.fi/service-provider-app/saml/metadata/alias/mpassidtestsp";
+    private String mpassidEntityId;
 
     /* (non-Javadoc)
      * @see org.springframework.security.saml.userdetails.SAMLUserDetailsService#loadUserBySAML(org.springframework.security.saml.SAMLCredential)
      */
     @Override
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-        if (ENTITYID_MPASSID.equals(credential.getLocalEntityID())) {
+        if (mpassidEntityId.equals(credential.getLocalEntityID())) {
             return new UserDetailsDto("mpassid", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID));
         } else {
             return new UserDetailsDto("haka", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_HAKA));
@@ -77,4 +77,7 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
         return firstAttrValue;
     }
 
+    public void setMpassidEntityId(String mpassidEntityId) {
+        this.mpassidEntityId = mpassidEntityId;
+    }
 }

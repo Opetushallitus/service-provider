@@ -30,6 +30,7 @@ haka.wayf.url=https://testsp.funet.fi/shibboleth/WAYF
 authentication.hostedsp=https://itest-virkailija.oph.ware.fi/service-provider-app/saml/metadata/alias/hakasp
 hakasp.metadatafile=file\://${user.home.conf}/hakasp.xml
 
+mpassid.metadata.entityid=https://virkailija.localopintopolku.fi/service-provider-app/saml/metadata/alias/mpassidtestsp
 mpassid.metadata.alias=mpassidtestsp
 mpassid.metadata.url=https://mpass-proxy-test.csc.fi/idp/shibboleth
 mpassid.keyalias=local_mpassidtestsp_selfsigned_2023
