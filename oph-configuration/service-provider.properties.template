@@ -22,9 +22,9 @@ sp.keypassword_secondary={{sp_keypassword}}
 serviceprovider.max-authentication-age-in-seconds={{serviceprovider_max_authentication_age_in_seconds | default('28800')}}
 
 # MPASSid
-mpassid.metadata.entityid=https://{{ host_virkailija }}/service-provider-app/saml/metadata/alias/{{ mpassid_metadata_alias }}
-mpassid.metadata.alias={{ mpassid_metadata_alias }}
-mpassid.metadata.url={{ mpassid_metadata_url }}
+mpassid.metadata.entityid=https://{{ host_virkailija }}/service-provider-app/saml/metadata/alias/{{ mpassid_metadata_alias | default('mpassidsp') }}
+mpassid.metadata.alias={{ mpassid_metadata_alias | default('mpassidsp') }}
+mpassid.metadata.url={{ mpassid_metadata_url | default('https://mpass-proxy.csc.fi/idp/shibboleth') }}
 mpassid.keyalias={{ mpassid_keyalias }}
 mpassid.metadatafile={{ mpassid_metadatafile }}
 
