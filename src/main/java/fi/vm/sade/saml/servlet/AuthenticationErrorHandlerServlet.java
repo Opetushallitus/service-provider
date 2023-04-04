@@ -49,12 +49,6 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
                     "<p>Du har loggat in med HAKA-identiering, men i ditt HAKA-användarnamn ingår inte ett användarnamn till Studieinfo.fi. " +
                     "Om du vill identifiera dig med ditt HAKA-användarnamn, bör du ta kontakt med den ansvariga användaren i din egen organisation.</p>");
         }
-        // this is bit fragile, but SoapFault stack trace is rather lacking
-        else if (errorMsg != null && errorMsg.contains("IdentificationExpiredException")) {
-            error.put(ERROR_TITLE, "Haka-tunnukset vanhentuneet");
-            error.put(ERROR_DESC, "Haka tunnuksilla ei ole kirjauduttu Opintopolku.fi:hin yli 24 kuukauteen. " +
-                    "Ole hyv&auml; ja ota yhteytt&auml; Opintopolku.fi-yhteyshenkil&ouml;&ouml;si.");
-        }
         else if (e instanceof RequiredSamlAttributeNotProvidedException
                 || (errorMsg != null && errorMsg.contains("RequiredSamlAttributeNotProvidedException"))) {
             error.put(ERROR_TITLE, "Haka ei toimittanut vaadittuja tietoja");
