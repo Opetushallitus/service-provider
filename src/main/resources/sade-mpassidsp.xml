@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+                  entityID="https://virkailija.opintopolku.fi/service-provider-app/saml/metadata/alias/mpassidsp">
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"
+                     AuthnRequestsSigned="true">
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="https://virkailija.opintopolku.fi/service-provider-app/saml/SSO/alias/mpassidsp"
+                                  index="1"
+                                  isDefault="true" />
+    </SPSSODescriptor>
+</EntityDescriptor>

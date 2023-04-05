@@ -19,6 +19,8 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.RedirectStrategy;
 
+import java.util.Map;
+
 public class AuthTokenAuthenticationSuccessHandlerTest {
 
     private AuthTokenAuthenticationSuccessHandler handler;
@@ -37,7 +39,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         httpSessionMock = mock(HttpSession.class);
         redirectStrategyMock = mock(RedirectStrategy.class);
         hakaAuthTokenProviderMock = mock(HakaAuthTokenProvider.class);
-        authentication.setDetails(new UserDetailsDto());
+        authentication.setDetails(new UserDetailsDto("haka", null));
         when(httpRequestMock.getSession()).thenReturn(httpSessionMock);
 
         OphProperties ophProperties = new OphProperties("/service-provider-oph.properties");
@@ -46,7 +48,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
 
         handler = new AuthTokenAuthenticationSuccessHandler(ophProperties);
         handler.setRedirectStrategy(redirectStrategyMock);
-        handler.setTokenProviders(hakaAuthTokenProviderMock);
+        handler.setTokenProviders(Map.of("haka", hakaAuthTokenProviderMock));
         handler.initialize();
     }
 
@@ -81,7 +83,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
         when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
-                .thenThrow(new UnregisteredUserException("exception from mock"));
+                .thenThrow(new UnregisteredUserException("exception from mock", "haka"));
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
     }

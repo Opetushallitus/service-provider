@@ -36,7 +36,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
                 .orElseThrow(new Supplier<UnregisteredUserException>() {
                     @Override
                     public UnregisteredUserException get() {
-                        return new UnregisteredUserException("Authentication denied for an unregistered user: " + userDetailsDto.getIdentifier());
+                        return new UnregisteredUserException("Authentication denied for an unregistered user: " + userDetailsDto.getIdentifier(), getIDPUniqueKey());
                     }
                 });
 

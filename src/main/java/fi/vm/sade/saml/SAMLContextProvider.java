@@ -13,11 +13,11 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SAMLContextProvider extends SAMLContextProviderLB {
-    private String secondaryKeyAlias;
-    public String getSecondaryKeyAlias() { return secondaryKeyAlias; }
-    public void setSecondaryKeyAlias(String secondaryKeyAlias) { this.secondaryKeyAlias = secondaryKeyAlias; }
+    private List<String> certificates;
+    public void setCertificates(List<String> certificates) { this.certificates = certificates; }
 
     private static final ChainingEncryptedKeyResolver encryptedKeyResolver = new ChainingEncryptedKeyResolver();
     static {
@@ -28,8 +28,9 @@ public class SAMLContextProvider extends SAMLContextProviderLB {
     protected void populateDecrypter(SAMLMessageContext samlContext) {
         // Instead of single credentials we also add the secondary key for the StaticKeyInfoCredentialResolver
         // This is the only difference from SAMLContextProviderLB and SAMLContextProviderImpl
-        List<Credential> encryptionCredentials = new ArrayList<>();
-        encryptionCredentials.add(this.keyManager.getCredential(this.secondaryKeyAlias));
+        List<Credential> encryptionCredentials = this.certificates.stream()
+                .map(this.keyManager::getCredential)
+                .collect(Collectors.toList());
 
         // Locate encryption key for this entity
         if (samlContext.getLocalExtendedMetadata().getEncryptionKey() != null) {

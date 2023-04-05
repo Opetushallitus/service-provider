@@ -16,7 +16,7 @@ import org.springframework.security.saml.SAMLCredential;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fi.vm.sade.saml.userdetails.DelegatingUserDetailsService.E_PNN;
+import static fi.vm.sade.saml.userdetails.DelegatingUserDetailsService.IDENTIFIER_ATTRIBUTE_HAKA;
 import static org.junit.Assert.assertEquals;
 
 public class DelegatingUserDetailsServiceTest {
@@ -25,6 +25,7 @@ public class DelegatingUserDetailsServiceTest {
     @Before
     public void setup() {
         this.delegatingUserDetailsService = new DelegatingUserDetailsService();
+        delegatingUserDetailsService.setMpassidEntityId("https://virkailija.localopintopolku.fi/service-provider-app/saml/metadata/alias/mpassidtestsp");
     }
 
     @Test(expected = RequiredSamlAttributeNotProvidedException.class)
@@ -37,7 +38,7 @@ public class DelegatingUserDetailsServiceTest {
     @Test
     public void ePnnAttributeReadSuccessfully() {
         Attribute attribute = new AttributeBuilder().buildObject();
-        attribute.setName(E_PNN);
+        attribute.setName(IDENTIFIER_ATTRIBUTE_HAKA);
         XSString xmlObject = new XSStringBuilder().buildObject(null, "localname", null);
         xmlObject.setValue("value");
         attribute.getAttributeValues().add(xmlObject);
@@ -50,6 +51,7 @@ public class DelegatingUserDetailsServiceTest {
         SAMLCredential samlCredential = new SAMLCredential(nameID, assertion, null, attributes, null);
         UserDetailsDto userDetailsDto = (UserDetailsDto) this.delegatingUserDetailsService.loadUserBySAML(samlCredential);
 
+        assertEquals("haka", userDetailsDto.getAuthenticationMethod());
         assertEquals("value", userDetailsDto.getIdentifier());
     }
 }

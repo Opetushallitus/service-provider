@@ -3,12 +3,14 @@ package fi.vm.sade.saml.exception;
 import org.springframework.security.authentication.AuthenticationServiceException;
 
 public class UnregisteredUserException extends AuthenticationServiceException {
+    private final String idpType;
 
-    public UnregisteredUserException(String msg, Throwable t) {
-        super(msg, t);
+    public UnregisteredUserException(String msg, String idpType) {
+        super(msg);
+        this.idpType = idpType;
     }
 
-    public UnregisteredUserException(String msg) {
-        super(msg);
+    public String getIdpType() {
+        return idpType;
     }
 }
