@@ -166,6 +166,10 @@
         class="org.springframework.security.saml.metadata.CachingMetadataManager">
         <constructor-arg>
             <list>
+                <!--
+                HUOM! FilesystemMetadataProvider pitää olla ennen FileBackedHTTPMetadataProvideria,
+                muuten sp:n metadata ladataan Hakalta/MPASSid:ltä eikä paikallisesti
+                -->
                 <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
                     <constructor-arg>
                         <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
@@ -201,8 +205,6 @@
                         </bean>
                     </constructor-arg>
                 </bean>
-                <!-- HUOM! Tämän pitää olla ensimmäisenä, muuten sp:n metadata
-                    ladataan hakalta eikä paikallisesti -->
                 <bean
                     class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
                     <constructor-arg>
