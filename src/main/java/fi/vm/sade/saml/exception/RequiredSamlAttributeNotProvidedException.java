@@ -8,12 +8,14 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
  * authentication manager
  */
 public class RequiredSamlAttributeNotProvidedException extends AuthenticationServiceException {
+    private final String idpType;
 
-    public RequiredSamlAttributeNotProvidedException(String msg, Throwable t) {
-        super(msg, t);
+    public RequiredSamlAttributeNotProvidedException(String msg, String idpType) {
+        super(msg);
+        this.idpType = idpType;
     }
 
-    public RequiredSamlAttributeNotProvidedException(String msg) {
-        super(msg);
+    public String getIdpType() {
+        return idpType;
     }
 }

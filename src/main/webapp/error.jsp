@@ -60,6 +60,8 @@
 <div class="offset-left-16-4 grid16-8">
     <h1 class="margin-bottom-3 margin-top-0">${error.title}</h1>
     <p>${error.description}</p>
+    <h1 class="margin-bottom-3 margin-top-0">${error.title_sv}</h1>
+    <p>${error.description_sv}</p>
     <p><a href="<c:url value="/saml/logout?local=true"/>">Palaa alkuun</a></p>
 </div>
 

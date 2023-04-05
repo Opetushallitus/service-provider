@@ -29,10 +29,18 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
      */
     @Override
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-        if (mpassidEntityId.equals(credential.getLocalEntityID())) {
+        if ("mpassid".equals(getIdpType(credential))) {
             return new UserDetailsDto("mpassid", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID));
         } else {
             return new UserDetailsDto("haka", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_HAKA));
+        }
+    }
+
+    private String getIdpType(SAMLCredential credential) {
+        if (mpassidEntityId.equals(credential.getLocalEntityID())) {
+            return "mpassid";
+        } else {
+            return "haka";
         }
     }
 
@@ -71,7 +79,7 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
             }
             String attrsString = StringUtils.join(attrNames, ",");
             logger.warn("Could not find matching attribute for name {}, \nall attributes [{}]", attributeName, attrsString);
-            throw new RequiredSamlAttributeNotProvidedException(attributeName);
+            throw new RequiredSamlAttributeNotProvidedException(attributeName, getIdpType(credential));
         }
         logger.info("Found attribute {} with value '{}'", attributeName, firstAttrValue);
         return firstAttrValue;

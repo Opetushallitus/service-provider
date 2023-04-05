@@ -22,7 +22,9 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
 
     private static final String ERROR_ATTR = "error";
     private static final String ERROR_TITLE = "title";
+    private static final String ERROR_TITLE_SV = "title_sv";
     private static final String ERROR_DESC = "description";
+    private static final String ERROR_DESC_SV = "description_sv";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,22 +44,39 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
         req.setAttribute(ERROR_ATTR, error);
 
         if (e instanceof UnregisteredUserException) {
-            error.put(ERROR_TITLE, "Haka-tunnistautumista ei aktivoitu");
-            error.put(ERROR_DESC, "<p>Suoritit onnistuneen Haka-tunnistautumisen, mutta Haka-tunnuksiisi ei ole " +
-                    "liitetty Opintopolku.fi-k&auml;ytt&auml;j&auml;tunnusta. Mik&auml;li haluat tunnistautua " +
-                    "Haka-tunnuksilla, ole hyv&auml; ja ota yhteytt&auml; organisaatiosi p&auml;&auml;k&auml;ytt&auml;j&auml;&auml;n.</p>" +
-                    "<p>Du har loggat in med HAKA-identiering, men i ditt HAKA-användarnamn ingår inte ett användarnamn till Studieinfo.fi. " +
-                    "Om du vill identifiera dig med ditt HAKA-användarnamn, bör du ta kontakt med den ansvariga användaren i din egen organisation.</p>");
+            String idpType = ((UnregisteredUserException) e).getIdpType();
+            if ("mpassid".equals(idpType)) {
+                error.put(ERROR_TITLE, "MPASSid-kirjautumista ei ole aktivoitu");
+                error.put(ERROR_TITLE_SV, "MPASSid-inloggning har inte aktiverats");
+                error.put(ERROR_DESC, "MPASSid-kirjautuminen onnistui, mutta Opintopolku-tiliisi ei ole liitetty MPASSid-tunnistetietoja. Mikäli haluat kirjautua MPASSid:llä Opintopolun virkailijapalveluihin, kirjaudu ensin Opintopolun tunnuksella tai suomi.fi-tunnistuksella. Lisää sitten MPASSid-tunnistetiedot omiin tietoihisi (https://virkailija.opintopolku.fi/henkilo-ui/omattiedot).");
+                error.put(ERROR_DESC_SV, "Du har loggat in med MPASSid, men dina MPASSid-identifikationsuppgifter har inte bifogats till dina användaruppgifter i Studieinfo. Om du vill logga in med MPASSid i Studieinfos administratörstjänster, logga då först in med Studieinfo-användarnamnet eller suomi.fi-identifiering. Lägg sedan till MPASSid-identifikationsuppgifterna till dina egna uppgifter (https://virkailija.opintopolku.fi/henkilo-ui/omattiedot).");
+            } else {
+                error.put(ERROR_TITLE, "Haka-tunnistautumista ei ole aktivoitu");
+                error.put(ERROR_TITLE_SV, "Haka-identifiering har inte aktiverats");
+                error.put(ERROR_DESC, "Haka-tunnistautuminen onnistui, mutta Opintopolku-tiliisi ei ole liitetty Haka-käyttäjätunnusta. Mikäli haluat tunnistautua Haka-tunnuksilla, ole hyvä ja ota yhteyttä organisaatiosi pääkäyttäjään.");
+                error.put(ERROR_DESC_SV, "Du har loggat in med Haka-identifiering, men Haka-användarnamnet har inte bifogats till dina användaruppgifter i Studieinfo för administratörer. Om du vill identifiera dig med ditt Haka-användarnamn, bör du ta kontakt med huvudanvändaren i din egen organisation.");
+            }
         }
-        else if (e instanceof RequiredSamlAttributeNotProvidedException
-                || (errorMsg != null && errorMsg.contains("RequiredSamlAttributeNotProvidedException"))) {
-            error.put(ERROR_TITLE, "Haka ei toimittanut vaadittuja tietoja");
-            error.put(ERROR_DESC, "<p>Palvelun k&auml;ytt&auml;minen vaatii, ett&auml; sallit HAKA:sta vaadittujen tietojen toimittamisen</p>");
+        else if (e instanceof RequiredSamlAttributeNotProvidedException) {
+            String idpType = ((RequiredSamlAttributeNotProvidedException) e).getIdpType();
+            if ("mpassid".equals(idpType)) {
+                error.put(ERROR_TITLE, "MPASSid ei toimittanut vaadittuja tietoja");
+                error.put(ERROR_TITLE_SV, "MPASSid förmedlade inte behövliga uppgifter");
+                error.put(ERROR_DESC, "Palvelun käyttäminen vaatii, että sallit MPASSid:stä vaadittujen tietojen toimittamisen.");
+                error.put(ERROR_DESC_SV, "För att använda tjänsten krävs att du tillåter att behövliga uppgifter från MPASSid kan förmedlas.");
+            } else {
+                error.put(ERROR_TITLE, "Haka ei toimittanut vaadittuja tietoja");
+                error.put(ERROR_TITLE_SV, "Haka förmedlade inte behövliga uppgifter");
+                error.put(ERROR_DESC, "Palvelun käyttäminen vaatii, että sallit Haka:sta vaadittujen tietojen toimittamisen.");
+                error.put(ERROR_DESC_SV, "För att använda tjänsten krävs att du tillåter att behövliga uppgifter från Haka kan förmedlas.");
+            }
         }
 
         if (error.get(ERROR_TITLE) == null) {
             error.put(ERROR_TITLE, "Odottamaton virhe tunnistautumisessa");
+            error.put(ERROR_TITLE_SV, "Oväntat fel vid identifiering");
             error.put(ERROR_DESC, "Tunnistautumisessa tapahtui odottamaton virhe: </p><p>" + e.getMessage());
+            error.put(ERROR_DESC_SV, "Ett oväntat fel inträffade vid identifiering: </p><p>" + e.getMessage());
         }
 
         logger.debug("Got a {}, sending following error page to user: {}: {}",

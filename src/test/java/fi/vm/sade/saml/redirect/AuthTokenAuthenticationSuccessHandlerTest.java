@@ -83,7 +83,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
         when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
-                .thenThrow(new UnregisteredUserException("exception from mock"));
+                .thenThrow(new UnregisteredUserException("exception from mock", "haka"));
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
     }
