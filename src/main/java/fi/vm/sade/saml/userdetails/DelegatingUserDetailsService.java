@@ -21,6 +21,7 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
     private final static Logger logger = LoggerFactory.getLogger(DelegatingUserDetailsService.class);
     static final String IDENTIFIER_ATTRIBUTE_HAKA = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
     static final String IDENTIFIER_ATTRIBUTE_MPASSID = "urn:oid:1.3.6.1.4.1.16161.1.1.27"; // oppijanumero
+    static final String ROLE_ATTRIBUTE_MPASSID = "urn:mpass.id:role";
 
     private String mpassidEntityId;
 
@@ -30,7 +31,10 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
     @Override
     public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
         if ("mpassid".equals(getIdpType(credential))) {
-            return new UserDetailsDto("mpassid", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID));
+            String rooli = getFirstAttributeValue(credential, ROLE_ATTRIBUTE_MPASSID);
+            String identifier = getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_MPASSID);
+            logger.info("MPASSid identifier: {}, rooli: {}", identifier, rooli);
+            return new UserDetailsDto("mpassid", identifier);
         } else {
             return new UserDetailsDto("haka", getUniqueIdentifier(credential, IDENTIFIER_ATTRIBUTE_HAKA));
         }
