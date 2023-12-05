@@ -57,7 +57,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
+                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
@@ -67,8 +67,8 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
-                                <echo message="${buildversiontxt}" />
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
                         </configuration>
@@ -81,9 +81,9 @@ buildTtime=${maven.build.timestamp}
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <buildversion_prefix />
+        <buildversion_prefix/>
         <cxf.version>2.7.18</cxf.version>
-        <gson.version>2.2.2</gson.version>
+        <gson.version>2.10.1</gson.version>
         <httpcomponents.version>4.5.3</httpcomponents.version>
         <jetty.version>9.4.35.v20201120</jetty.version>
         <junit.version>4.12</junit.version>
