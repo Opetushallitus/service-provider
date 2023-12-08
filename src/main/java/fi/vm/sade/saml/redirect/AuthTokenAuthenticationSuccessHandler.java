@@ -6,10 +6,10 @@ import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
 import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
+import fi.vm.sade.saml.exception.PasswordChangeException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import fi.vm.sade.saml.userdetails.AbstractIdpBasedAuthTokenProvider;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
-import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +45,12 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         setDefaultTargetUrl(ophProperties.url("cas.login"));
     }
 
+    private String loginTokenUrl(String henkiloOid, String urlKey) {
+        String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
+        String loginToken = kayttooikeusRestClient.createLoginToken(henkiloOid);
+        return ophProperties.url(urlKey, languageCode, loginToken);
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -69,19 +75,13 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                     AbstractIdpBasedAuthTokenProvider tokenProvider = tokenProviders.get(userDetails.getAuthenticationMethod());
                     authToken = tokenProvider.createAuthenticationToken((SAMLCredential) authentication.getCredentials(), userDetails);
                 } catch (NoStrongIdentificationException e) {
-                    String henkiloOid = e.getMessage();
-                    String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
-                    String loginToken = this.kayttooikeusRestClient.createLoginToken(henkiloOid);
-                    String strongIdentificationInfoRedirectUrl = this.ophProperties
-                            .url("henkilo-ui.strong-identification", languageCode, loginToken);
-                    getRedirectStrategy().sendRedirect(request, response, strongIdentificationInfoRedirectUrl);
+                    getRedirectStrategy().sendRedirect(request, response, loginTokenUrl(e.getMessage(), "henkilo-ui.strong-identification"));
                     return;
                 } catch (EmailVerificationException e) {
-                    String henkiloOid = e.getMessage();
-                    String languageCode = oppijanumeroRekisteriRestClient.getAsiointikieli(henkiloOid);
-                    String loginToken = this.kayttooikeusRestClient.createLoginToken(henkiloOid);
-                    String emailVerificationUrl = this.ophProperties.url("henkilo-ui.email-verification", languageCode, loginToken);
-                    getRedirectStrategy().sendRedirect(request, response, emailVerificationUrl);
+                    getRedirectStrategy().sendRedirect(request, response, loginTokenUrl(e.getMessage(), "henkilo-ui.email-verification"));
+                    return;
+                } catch (PasswordChangeException e) {
+                    getRedirectStrategy().sendRedirect(request, response, loginTokenUrl(e.getMessage(), "henkilo-ui.password-change"));
                     return;
                 } catch (UnregisteredUserException e) {
                     // poikkeusta käytetään virheilmoituksen näyttämiseen (kts. AuthenticationErrorHandlerServlet)

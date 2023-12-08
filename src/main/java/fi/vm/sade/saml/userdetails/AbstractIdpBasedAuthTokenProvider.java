@@ -3,6 +3,7 @@ package fi.vm.sade.saml.userdetails;
 import fi.vm.sade.saml.clients.KayttooikeusRestClient;
 import fi.vm.sade.saml.exception.EmailVerificationException;
 import fi.vm.sade.saml.exception.NoStrongIdentificationException;
+import fi.vm.sade.saml.exception.PasswordChangeException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
 
     public static final String STRONG_IDENTIFICATION = "STRONG_IDENTIFICATION";
     public static final String EMAIL_VERIFICATION = "EMAIL_VERIFICATION";
+    public static final String PASSWORD_CHANGE = "PASSWORD_CHANGE";
 
     public String createAuthenticationToken(SAMLCredential credential, UserDetailsDto userDetailsDto) throws Exception {
         // Checks if Henkilo with given IdP key and identifier exists
@@ -43,18 +45,13 @@ public abstract class AbstractIdpBasedAuthTokenProvider {
         boolean isStrongIdentificationRedirectAllowed = strongIdentificationRedirectAllowed(henkiloOid);
         boolean isEmailVerificationRedirectAllowed = emailVerificationRedirectAllowed(henkiloOid);
 
-        // Move to redirect
-        if( isStrongIdentificationRedirectAllowed || isEmailVerificationRedirectAllowed ) {
-            String redirectCode = kayttooikeusRestClient.getRedirectCodeByOid(henkiloOid);
-            
-            // isStrongIdentificationRedirectAllowed needs to be double checked here.
-            // This block may be run if isEmailVerificationRedirectAllowed is true and strong identification redirect is not wanted
-            // Same goes for email verification redirect
-            if(STRONG_IDENTIFICATION.equals(redirectCode) && isStrongIdentificationRedirectAllowed) {
-                throw new NoStrongIdentificationException(henkiloOid);
-            } else if(EMAIL_VERIFICATION.equals(redirectCode) && isEmailVerificationRedirectAllowed) {
-                throw new EmailVerificationException(henkiloOid);
-            }
+        String redirectCode = kayttooikeusRestClient.getRedirectCodeByOid(henkiloOid);
+        if(STRONG_IDENTIFICATION.equals(redirectCode) && isStrongIdentificationRedirectAllowed) {
+            throw new NoStrongIdentificationException(henkiloOid);
+        } else if(EMAIL_VERIFICATION.equals(redirectCode) && isEmailVerificationRedirectAllowed) {
+            throw new EmailVerificationException(henkiloOid);
+        } else if (PASSWORD_CHANGE.equals(redirectCode)) {
+            throw new PasswordChangeException(henkiloOid);
         }
 
         // Generates and returns auth token to Henkilo by OID
