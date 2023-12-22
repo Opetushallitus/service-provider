@@ -12,9 +12,11 @@
     <!-- Enable autowiring -->
     <context:annotation-config />
     <context:component-scan base-package="org.springframework.security.saml" />
+    <context:component-scan base-package="fi.vm.sade.saml" />
 
     <security:http entry-point-ref="samlEntryPoint"
         use-expressions="true">
+        <security:custom-filter position="FIRST" ref="requestIdFilter" />
         <security:intercept-url pattern="/buildversion.txt"
             access="permitAll" />
         <security:intercept-url pattern="/saml/web/**"
