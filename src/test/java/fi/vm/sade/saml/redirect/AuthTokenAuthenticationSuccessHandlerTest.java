@@ -1,7 +1,10 @@
 package fi.vm.sade.saml.redirect;
 
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.saml.clients.KayttooikeusRestClient;
+import fi.vm.sade.saml.clients.OppijanumeroRekisteriRestClient;
 import fi.vm.sade.saml.entry.RequestSavingSAMLEntryPoint;
+import fi.vm.sade.saml.exception.PasswordChangeException;
 import fi.vm.sade.saml.exception.UnregisteredUserException;
 import fi.vm.sade.saml.userdetails.UserDetailsDto;
 import fi.vm.sade.saml.userdetails.haka.HakaAuthTokenProvider;
@@ -30,6 +33,8 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
     private HttpSession httpSessionMock;
     private RedirectStrategy redirectStrategyMock;
     private HakaAuthTokenProvider hakaAuthTokenProviderMock;
+    private OppijanumeroRekisteriRestClient onrClient;
+    private KayttooikeusRestClient kayttooikeusRestClient;
     private final TestingAuthenticationToken authentication = new TestingAuthenticationToken(null, null);
 
     @Before
@@ -39,16 +44,21 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
         httpSessionMock = mock(HttpSession.class);
         redirectStrategyMock = mock(RedirectStrategy.class);
         hakaAuthTokenProviderMock = mock(HakaAuthTokenProvider.class);
+        onrClient = mock(OppijanumeroRekisteriRestClient.class);
+        kayttooikeusRestClient = mock(KayttooikeusRestClient.class);
         authentication.setDetails(new UserDetailsDto("haka", null));
         when(httpRequestMock.getSession()).thenReturn(httpSessionMock);
 
         OphProperties ophProperties = new OphProperties("/service-provider-oph.properties");
         ophProperties.addDefault("host.cas", "virkailija.opintopolku.fi");
         ophProperties.addDefault("host.virkailija", "virkailija.opintopolku.fi");
+        ophProperties.addDefault("henkilo-ui.password-change", "${url-virkailija}/henkilo-ui/kayttaja/salasananvaihto/$1/$2");
 
         handler = new AuthTokenAuthenticationSuccessHandler(ophProperties);
         handler.setRedirectStrategy(redirectStrategyMock);
         handler.setTokenProviders(Map.of("haka", hakaAuthTokenProviderMock));
+        handler.setOppijanumeroRekisteriRestClient(onrClient);
+        handler.setKayttooikeusRestClient(kayttooikeusRestClient);
         handler.initialize();
     }
 
@@ -86,6 +96,21 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
                 .thenThrow(new UnregisteredUserException("exception from mock", "haka"));
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
+    }
+
+    @Test
+    public void onAuthenticationSuccessShouldRedirectToPasswordChange() throws Exception {
+        when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
+                .thenReturn(null);
+        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
+                .thenThrow(new PasswordChangeException("oid"));
+        when(onrClient.getAsiointikieli(eq("oid"))).thenReturn("sv");
+        when(kayttooikeusRestClient.createLoginToken(eq("oid"))).thenReturn("logintokin");
+
+        handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
+
+        verify(redirectStrategyMock).sendRedirect(eq(httpRequestMock), eq(httpResponseMock),
+                eq("https://virkailija.opintopolku.fi/henkilo-ui/kayttaja/salasananvaihto/sv/logintokin"));
     }
 
 }
