@@ -89,7 +89,7 @@ buildTtime=${maven.build.timestamp}
         <junit.version>4.13.1</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <mockito.version>1.9.0</mockito.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <spring-security.version>3.2.10.RELEASE</spring-security.version>
         <spring.version>5.2.13.RELEASE</spring.version>
         <java-utils-properties.version>0.1.0-SNAPSHOT</java-utils-properties.version>
@@ -116,7 +116,7 @@ buildTtime=${maven.build.timestamp}
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
+                <artifactId>slf4j-reload4j</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
@@ -190,7 +190,7 @@ buildTtime=${maven.build.timestamp}
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-reload4j</artifactId>
         </dependency>
 
         <dependency>
