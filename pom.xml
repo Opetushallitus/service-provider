@@ -20,7 +20,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
+                <version>9.4.35.v20201120</version>
                 <configuration>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
                     <connectors>
@@ -54,8 +54,8 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
-                                <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
+                                <echo message="writing target/${project.build.finalName}/buildversion.txt"/>
+                                <echo file="target/${project.build.finalName}/buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
 buildNumber=${buildNumber}
@@ -64,7 +64,7 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
@@ -81,11 +81,8 @@ buildTtime=${maven.build.timestamp}
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
-        <buildversion_prefix/>
         <cxf.version>2.7.18</cxf.version>
-        <gson.version>2.10.1</gson.version>
-        <httpcomponents.version>4.5.13</httpcomponents.version>
-        <jetty.version>9.4.35.v20201120</jetty.version>
+        <httpcomponents.version>4.5.14</httpcomponents.version>
         <slf4j.version>1.7.36</slf4j.version>
         <spring-security.version>3.2.10.RELEASE</spring-security.version>
         <spring.version>5.3.31</spring.version>
@@ -208,7 +205,7 @@ buildTtime=${maven.build.timestamp}
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <version>2.10.1</version>
         </dependency>
 
         <dependency>
