@@ -21,8 +21,7 @@ public class SAMLLogoutFilterSkippingSingleLogoutForMpassid extends SAMLLogoutFi
     }
 
     private boolean isMpassid(Authentication auth) {
-        if (auth.getDetails() instanceof UserDetailsDto) {
-            UserDetailsDto details = (UserDetailsDto) auth.getDetails();
+        if (auth.getDetails() instanceof UserDetailsDto details) {
             return "mpassid".equals(details.getAuthenticationMethod());
         }
         return false;

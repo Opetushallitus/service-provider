@@ -65,12 +65,10 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         
         logger.info("Target url: " + targetUrl);
         
-        if (authentication instanceof AbstractAuthenticationToken) {
-            AbstractAuthenticationToken token = (AbstractAuthenticationToken) authentication;
-            if (StringUtils.isEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
+        if (authentication instanceof AbstractAuthenticationToken token) {
+            if (StringUtils.isEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto userDetails) {
                 String authToken;
                 try {
-                    UserDetailsDto userDetails = (UserDetailsDto) token.getDetails();
                     AbstractIdpBasedAuthTokenProvider tokenProvider = tokenProviders.get(userDetails.getAuthenticationMethod());
                     authToken = tokenProvider.createAuthenticationToken((SAMLCredential) authentication.getCredentials(), userDetails);
                 } catch (NoStrongIdentificationException e) {
@@ -100,9 +98,9 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
                 return;
             }
-            else if (StringUtils.isNotEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
+            else if (StringUtils.isNotEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto details) {
                 // Add userdetails to kayttooikeus-service.
-                kayttooikeusRestClient.updateKutsuHakaIdentifier(temporaryToken, ((UserDetailsDto) token.getDetails()).getIdentifier());
+                kayttooikeusRestClient.updateKutsuHakaIdentifier(temporaryToken, details.getIdentifier());
                 Map<String, String> queryParams = Map.of(HENKILO_UI_TOKEN_PARAMETER, temporaryToken);
                 String noAuthUrl = ophProperties.url("henkilo-ui.register", queryParams);
                 getRedirectStrategy().sendRedirect(request, response, noAuthUrl);
