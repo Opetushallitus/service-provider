@@ -14,16 +14,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>11</release>
-                </configuration>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
             </plugin>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
+                <version>9.4.53.v20231009</version>
                 <configuration>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
                     <connectors>
@@ -57,8 +54,8 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
-                                <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
+                                <echo message="writing target/${project.build.finalName}/buildversion.txt"/>
+                                <echo file="target/${project.build.finalName}/buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
 buildNumber=${buildNumber}
@@ -67,7 +64,7 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/buildversion.txt"/>
                                 <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
@@ -81,17 +78,13 @@ buildTtime=${maven.build.timestamp}
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <buildversion_prefix/>
-        <cxf.version>2.7.18</cxf.version>
-        <gson.version>2.10.1</gson.version>
-        <httpcomponents.version>4.5.13</httpcomponents.version>
-        <jetty.version>9.4.35.v20201120</jetty.version>
-        <junit.version>4.13.1</junit.version>
-        <log4j.version>1.2.17</log4j.version>
-        <mockito.version>1.9.0</mockito.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+        <httpcomponents.version>4.5.14</httpcomponents.version>
         <slf4j.version>1.7.36</slf4j.version>
         <spring-security.version>3.2.10.RELEASE</spring-security.version>
-        <spring.version>5.2.13.RELEASE</spring.version>
+        <spring.version>5.3.31</spring.version>
         <java-utils-properties.version>0.1.0-SNAPSHOT</java-utils-properties.version>
         <java-utils-http.version>0.5.0-SNAPSHOT</java-utils-http.version>
         <webapp.port>8180</webapp.port>
@@ -118,11 +111,6 @@ buildTtime=${maven.build.timestamp}
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-reload4j</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -156,12 +144,19 @@ buildTtime=${maven.build.timestamp}
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
-            <version>2.6.4</version><!-- transitiivisesti depsuttu 2.6.6 on MIA?! -->
+            <version>2.6.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security.extensions</groupId>
             <artifactId>spring-security-saml2-core</artifactId>
             <version>1.0.10.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                    <!-- transitiivisesti depsuttu 2.6.6 on MIA?! -->
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -207,34 +202,22 @@ buildTtime=${maven.build.timestamp}
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.15.0</version>
         </dependency>
 
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-            <version>${junit.version}</version>
+            <version>4.13.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -247,14 +230,13 @@ buildTtime=${maven.build.timestamp}
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-http</artifactId>
             <version>${java-utils-http.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-            <version>1.9.13</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-cache</artifactId>
@@ -264,31 +246,6 @@ buildTtime=${maven.build.timestamp}
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpcomponents.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-bundle</artifactId>
-            <version>${cxf.version}</version>
-            <exclusions>
-                <exclusion><!-- sisältyy nykyisin spring-coreen, tämä tuo epäyhteensopivan -->
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-asm</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.opensaml</groupId>
-                    <artifactId>xmltooling</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

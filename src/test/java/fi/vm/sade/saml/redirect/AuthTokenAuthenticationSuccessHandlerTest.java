@@ -13,13 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.RedirectStrategy;
 
 import java.util.Map;
@@ -66,7 +65,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
     public void onAuthenticationSuccessShouldRespectRedirectKey() throws Exception {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn("https://virkailija.opintopolku.fi/virkailijan-tyopoyta/authenticate");
-        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
+        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(), any()))
                 .thenReturn("authtoken123");
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
@@ -79,7 +78,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
     public void onAuthenticationSuccessShouldFallbackToDefaultTargetUrl() throws Exception {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
-        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
+        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(), any()))
                 .thenReturn("authtoken123");
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
@@ -92,7 +91,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
     public void onAuthenticationSuccessShouldNotCatchUnregisteredHakaUserException() throws Exception {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
-        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
+        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(), any()))
                 .thenThrow(new UnregisteredUserException("exception from mock", "haka"));
 
         handler.onAuthenticationSuccess(httpRequestMock, httpResponseMock, authentication);
@@ -102,7 +101,7 @@ public class AuthTokenAuthenticationSuccessHandlerTest {
     public void onAuthenticationSuccessShouldRedirectToPasswordChange() throws Exception {
         when(httpSessionMock.getAttribute(eq(RequestSavingSAMLEntryPoint.REDIRECT_KEY)))
                 .thenReturn(null);
-        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(SAMLCredential.class), any(UserDetailsDto.class)))
+        when(hakaAuthTokenProviderMock.createAuthenticationToken(any(), any()))
                 .thenThrow(new PasswordChangeException("oid"));
         when(onrClient.getAsiointikieli(eq("oid"))).thenReturn("sv");
         when(kayttooikeusRestClient.createLoginToken(eq("oid"))).thenReturn("logintokin");

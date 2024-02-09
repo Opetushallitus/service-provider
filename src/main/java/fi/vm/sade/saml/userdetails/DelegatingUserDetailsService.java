@@ -59,11 +59,11 @@ public class DelegatingUserDetailsService implements SAMLUserDetailsService {
         }
 
         XMLObject obj = attrib.getAttributeValues().get(0);
-        if (obj instanceof XSString) {
-            return ((XSString) obj).getValue();
+        if (obj instanceof XSString xsstring) {
+            return xsstring.getValue();
         }
-        if (obj instanceof XSAny) {
-            return ((XSAny) obj).getTextContent();
+        if (obj instanceof XSAny xsany) {
+            return xsany.getTextContent();
         }
 
         logger.error("Could not parse field {} of type {}.", obj.getElementQName(), obj.getSchemaType());

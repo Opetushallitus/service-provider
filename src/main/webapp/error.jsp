@@ -3,8 +3,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<spring:theme code="mobile.custom.css.file" var="mobileCss" text="" />
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 	<head>
 	    <title>Oppijan verkkopalvelu - Virkailijan palvelut - Sis&auml;&auml;nkirjautuminen</title>
@@ -12,12 +10,6 @@
              <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
              <meta name="apple-mobile-web-app-capable" content="yes" />
              <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
-
-             <!--<link type="text/css" rel="stylesheet" media="screen" href="<c:url value="/css/fss-framework-1.1.2.css" />" />
-             <link type="text/css" rel="stylesheet" href="<c:url value="/css/fss-mobile-${requestScope['browserType']}-layout.css" />" />
-
-             <link type="text/css" rel="stylesheet" href="${mobileCss}" />-->
         </c:if>
 
         <link type="text/css" rel="stylesheet" href="css/virkailija.css" />
@@ -29,13 +21,6 @@
 	<body class="fl-theme-iphone">
     <div id="wrapper" class="flc-screenNavigator-view-container">
         <div class="fl-screenNavigator-view">
-            <!--
-            <div id="header" class="flc-screenNavigator-navbar fl-navbar fl-table">
-				        <h1 id="company-name">Jasig</h1>
-                <h1 id="app-name" class="fl-table-cell">Central Authentication Service (CAS)</h1>
-            </div>
-
-          -->
             <div id="content" class="fl-screenNavigator-scroll-container">
 
 <header id="siteheader" class="width-100">
@@ -98,7 +83,5 @@
             <div class="clear"></div>
 
         </div>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
     </body>
 </html>

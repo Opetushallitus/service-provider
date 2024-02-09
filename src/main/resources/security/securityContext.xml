@@ -29,10 +29,6 @@
             access="permitAll" />
         <security:intercept-url pattern="/**"
             access="isFullyAuthenticated()" />
-        <security:intercept-url pattern="/logout.jsp"
-            access="permitAll" />
-        <security:intercept-url pattern="/login.jsp"
-            access="permitAll" />
         <security:intercept-url pattern="/favicon.ico"
             access="permitAll" />
         <security:custom-filter after="BASIC_AUTH_FILTER"
