@@ -38,8 +38,6 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
 
     protected void respond(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Throwable e = (Throwable) req.getAttribute("javax.servlet.error.exception");
-        String errorMsg = e.getMessage();
-
         Map<String, String> error = new HashMap<>();
         req.setAttribute(ERROR_ATTR, error);
 
@@ -80,10 +78,8 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
         }
 
         logger.debug("Got a {}, sending following error page to user: {}: {}",
-                new String[] { e.toString(), error.get(ERROR_TITLE), error.get(ERROR_DESC) });
+                e.toString(), error.get(ERROR_TITLE), error.get(ERROR_DESC));
         resp.setStatus(HttpServletResponse.SC_CONFLICT);
         req.getRequestDispatcher("/error.jsp").forward(req, resp);
-        //resp.sendRedirect("/error.jsp");
-
     }
 }

@@ -241,6 +241,7 @@ html input[type="button"],
 input[type="reset"],
 input[type="submit"] {
   -webkit-appearance: button;
+  appearance: button;
   /* 2 */
   cursor: pointer;
   /* 3 */ }
@@ -270,6 +271,7 @@ input[type="radio"] {
  */
 input[type="search"] {
   -webkit-appearance: textfield;
+  appearance: textfield;
   /* 1 */
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -1589,7 +1591,7 @@ hr {
   clear: both; }
 
 /*** Oppijan ja Virkailijan yhteisesti
-**** käyttämien html koodin tyyli
+**** kï¿½yttï¿½mien html koodin tyyli
 **** poikkeukset
 *************************************/
 #wrapper.virkailija legend.h3 {
@@ -1631,7 +1633,6 @@ hr {
 /*** Siteheader
 ************************************************/
 #siteheader {
-  background-image: url(../img/navigation-divider.jpg);
   background-repeat: repeat-x;
   background-attachment: scroll;
   background-position: left bottom;
@@ -1664,7 +1665,6 @@ hr {
 
 /*
 #siteheader {
-    @include background-image("navigation-divider.jpg");
     background-repeat: repeat-x;
     background-attachment: scroll;
     background-position: left bottom;
@@ -1910,7 +1910,6 @@ label, .label {
 
 #tools {
   height: 40px;
-  background-image: url("../images/navigation-divider.jpg");
   background-repeat: repeat-x;
   background-position: bottom left; }
   #tools .tool-row {
@@ -2256,7 +2255,7 @@ table.dropmenu-table {
   display: block; }
 
 /*
-	Taulukko tyyli perustietojen näyttämiselle, esim. hakijan henkilötietot
+	Taulukko tyyli perustietojen nï¿½yttï¿½miselle, esim. hakijan henkilï¿½tietot
 */
 .perustieto-table {
   width: 100%; }

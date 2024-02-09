@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -104,9 +103,7 @@ public class AuthTokenAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             else if (StringUtils.isNotEmpty(temporaryToken) && token.getDetails() != null && token.getDetails() instanceof UserDetailsDto) {
                 // Add userdetails to kayttooikeus-service.
                 kayttooikeusRestClient.updateKutsuHakaIdentifier(temporaryToken, ((UserDetailsDto) token.getDetails()).getIdentifier());
-                Map<String, String> queryParams = new HashMap<String, String>(){{
-                    put(HENKILO_UI_TOKEN_PARAMETER, temporaryToken);
-                }};
+                Map<String, String> queryParams = Map.of(HENKILO_UI_TOKEN_PARAMETER, temporaryToken);
                 String noAuthUrl = ophProperties.url("henkilo-ui.register", queryParams);
                 getRedirectStrategy().sendRedirect(request, response, noAuthUrl);
                 return;
