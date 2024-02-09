@@ -14,11 +14,11 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: "11"
-          distribution: "adopt"
+          java-version: "21"
+          distribution: "corretto"
           cache: "maven"
       - name: Maven version
         run: mvn --version
