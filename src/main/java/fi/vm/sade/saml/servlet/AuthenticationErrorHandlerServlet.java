@@ -45,11 +45,8 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
         ));
     }
 
-    protected void respond(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Throwable exception = (Throwable) req.getAttribute("javax.servlet.error.exception");
+    private Map<String, String> getErrorTranslations(Throwable exception) {
         Map<String, String> error = new HashMap<>();
-        req.setAttribute(ERROR_ATTR, error);
-
         if (exception instanceof UnregisteredUserException e) {
             if ("mpassid".equals(e.getIdpType())) {
                 putError(error,
@@ -84,8 +81,23 @@ public class AuthenticationErrorHandlerServlet extends HttpServlet {
             putError(error, "Odottamaton virhe tunnistautumisessa", "Oväntat fel vid identifiering", "Tunnistautumisessa tapahtui odottamaton virhe: </p><p>" + exception.getMessage(), "Ett oväntat fel inträffade vid identifiering: </p><p>" + exception.getMessage());
         }
 
+        return error;
+    }
+
+    protected void respond(HttpServletRequest req, HttpServletResponse resp) {
+        Throwable exception = (Throwable) req.getAttribute("javax.servlet.error.exception");
+        Map<String, String> error = getErrorTranslations(exception);
+        req.setAttribute(ERROR_ATTR, error);
+
         logger.debug("Got a {}, sending following error page to user: {}: {}", exception.toString(), error.get(ERROR_TITLE), error.get(ERROR_DESC));
         resp.setStatus(HttpServletResponse.SC_CONFLICT);
-        req.getRequestDispatcher("/error.jsp").forward(req, resp);
+
+        try {
+            req.getRequestDispatcher("/error.jsp").forward(req, resp);
+        } catch (ServletException e) {
+            logger.error("failed to redirect to error page", e);
+        } catch (IOException e) {
+            logger.error("failed to redirect to error page", e);
+        }
     }
 }
