@@ -84,7 +84,7 @@ buildTtime=${maven.build.timestamp}
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <slf4j.version>1.7.36</slf4j.version>
         <spring-security.version>3.2.10.RELEASE</spring-security.version>
-        <spring.version>5.3.31</spring.version>
+        <spring.version>6.0.0</spring.version>
         <java-utils-properties.version>0.1.0-SNAPSHOT</java-utils-properties.version>
         <java-utils-http.version>0.5.0-SNAPSHOT</java-utils-http.version>
         <webapp.port>8180</webapp.port>
